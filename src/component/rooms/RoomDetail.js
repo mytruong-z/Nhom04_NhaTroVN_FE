@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import {Image, Button} from 'react-bootstrap';
+import { API_URL } from "../../config/index";
 
 const RoomDetail = (props) => {
     const {match} = props;
@@ -9,7 +10,7 @@ const RoomDetail = (props) => {
 
     useEffect(() => {
         if (id >= 0) {
-            const url = `${process.env.REACT_APP_URL}api/room/search?id=${id}`;
+            const url = `${API_URL}room/search?id=${id}`;
             fetch(url)
                 .then(response => response.json())
                 .then(data => {
