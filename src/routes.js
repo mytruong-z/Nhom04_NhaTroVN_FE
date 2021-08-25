@@ -6,6 +6,7 @@ import Register from './component/register';
 import NewPostRoom from './component/newPost/newpostroom';
 import SavedRoom from './component/savedRoom/savedRoom';
 import Host from './component/host/host';
+import Profile from './component/host/profile';
 
 
 const routes = [
@@ -13,6 +14,11 @@ const routes = [
         path : '/saved_room',
         exact : false,
         main : ({ match, location }) => <SavedRoom match={match} location={location} />
+    },
+    {
+        path : '/profile',
+        exact : false,
+        main : ({ match, location }) => <Profile match={match} location={location} />
     },
     {
         path : '/host',

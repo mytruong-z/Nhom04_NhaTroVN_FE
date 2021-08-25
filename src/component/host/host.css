@@ -2,3 +2,7 @@
     /* width: 700px;
     max-width: calc(100% - 20px); */
 }
+
+.container {
+    text-align: center;
+  }
