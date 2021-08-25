@@ -8,6 +8,10 @@ function Profile() {
     const initial = JSON.parse(saved);
     const [profile, setprofile] = useState([]);
     const [showProfile, setShowProfile] = useState(false);
+    const [name, setName] = useState([]);
+    const [email, setEmail] = useState([]);
+    const [phone, setPhone] = useState([]);
+    const [cardId, setCardId] = useState([]);
     useEffect(async () => {
         await fetch("https://nhatrovn.herokuapp.com/api/user/information/" + initial.id, {
             method: 'GET',
@@ -18,6 +22,10 @@ function Profile() {
         }).then(async function (response) {
             const result = await response.json()
             setprofile(result)
+            setName(result.name)
+            setEmail(result.email)
+            setPhone(result.phone)
+            setCardId(result.cardId)
             console.log(result)
         }).catch((error) => {
             return error;
@@ -34,6 +42,23 @@ function Profile() {
 
     const hideDetailsModal = () => {
         setShowProfile(false);
+        setName(profile.name)
+        setEmail(profile.email)
+        setPhone(profile.phone)
+        setCardId(profile.cardId)
+    }
+
+    const ChangetxtName = (e) => {
+        setName(e.target.value);
+    }
+    const ChangetxtEmail = (e) => {
+        setEmail(e.target.value);    
+    }
+    const ChangetxtPhone = (e) => {
+        setPhone(e.target.value);    
+    }
+    const ChangetxtCardId = (e) => {
+        setCardId(e.target.value);    
     }
     return (
         <div>
@@ -100,22 +125,22 @@ function Profile() {
                     <Form className="mt-5">
                     <Form.Group className="mb-3" controlId="formBasicName" >
                             <Form.Label>Họ Tên</Form.Label>
-                            <Form.Control type="text" value = {profile.name} />
+                            <Form.Control type="text" value = {name} onChange={ChangetxtName}/>
                         </Form.Group>
 
                         <Form.Group className="mb-3" controlId="formBasicEmail" >
                             <Form.Label>Email</Form.Label>
-                            <Form.Control type="email" value = {profile.email} />
+                            <Form.Control type="email" value = {email} onChange={ChangetxtEmail}/>
                         </Form.Group>
 
                         <Form.Group className="mb-3" controlId="formBasicPhone">
                             <Form.Label>Điện Thoại</Form.Label>
-                            <Form.Control type="number" value = {profile.phone} />
+                            <Form.Control type="number" value = {phone} onChange={ChangetxtPhone}/>
                         </Form.Group>
 
                         <Form.Group className="mb-3" controlId="formBasicCardId">
                             <Form.Label>Chứng Minh Nhân Dân</Form.Label>
-                            <Form.Control type="number" value = {profile.cardId} />
+                            <Form.Control type="number" value = {cardId} onChange={ChangetxtCardId}/>
                         </Form.Group>
 
                         <Button variant="primary">
