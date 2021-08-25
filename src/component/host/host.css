@@ -3,6 +3,38 @@
     max-width: calc(100% - 20px); */
 }
 
-.container {
-    text-align: center;
+
+@media all and (min-width: 480px) {
+.profile{
+    font-size: 150%;
+    padding: 100px ;
+}
+
+.profile button {
+    font-family: "Roboto", sans-serif;
+    text-transform: uppercase;
+    outline: 0;
+    background: #f35a4c;
+    width: 10%;
+    border: 0;
+    color: #FFFFFF;
+    font-size: 14px;
+    -webkit-transition: all 0.3 ease;
+    transition: all 0.3 ease;
+    cursor: pointer;
   }
+  .profile button:hover,.form button:active,.form button:focus {
+    background: #f35a4c;
+  }
+}
+
+.row{
+    padding: 10px;
+}
+
+.card-body {
+    flex: 1 1 auto;
+    min-height: 1px;
+    padding: 1rem;
+}
+
