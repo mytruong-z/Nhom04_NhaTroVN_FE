@@ -6,8 +6,11 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 function Profile() {
     const saved = localStorage.getItem("user");
     const initial = JSON.parse(saved);
+    const history = useHistory()
+
     const [profile, setprofile] = useState([]);
     const [showProfile, setShowProfile] = useState(false);
+    const [id, setId] = useState([initial.id]);
     const [name, setName] = useState([]);
     const [email, setEmail] = useState([]);
     const [phone, setPhone] = useState([]);
@@ -32,7 +35,7 @@ function Profile() {
         });
     }, [])
 
-    const onShowProfile = () => {
+    const onShowProfile = (e) => {
         showProfileModal();
     }
 
@@ -40,25 +43,46 @@ function Profile() {
         setShowProfile(true);
     }
 
-    const hideDetailsModal = () => {
+    const hideProfileModal = () => {
         setShowProfile(false);
-        setName(profile.name)
-        setEmail(profile.email)
-        setPhone(profile.phone)
-        setCardId(profile.cardId)
     }
 
-    const ChangetxtName = (e) => {
-        setName(e.target.value);
-    }
-    const ChangetxtEmail = (e) => {
-        setEmail(e.target.value);    
-    }
-    const ChangetxtPhone = (e) => {
-        setPhone(e.target.value);    
-    }
-    const ChangetxtCardId = (e) => {
-        setCardId(e.target.value);    
+        const ChangetxtName = (e) => {
+            setName(e.target.value);
+        }
+        const ChangetxtEmail = (e) => {
+            setEmail(e.target.value);    
+        }
+        const ChangetxtPhone = (e) => {
+            setPhone(e.target.value);    
+        }
+        const ChangetxtCardId = (e) => {
+            setCardId(e.target.value); 
+        }   
+
+    async function saveProfile() {
+        console.warn(id, name, email, phone, cardId)
+        let item = {id, name, email, phone, cardId}
+        await fetch("https://nhatrovn.herokuapp.com/api/user/update", {
+            method: 'PATCH',
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": 'application/json'
+            },
+            body: JSON.stringify(item)
+        }).then(function (response) {
+            if (!response.ok) {
+                throw Error(response.statusText);
+            }
+            return response;
+        }).then(async function (response) {
+            alert("Cập nhật thành công")
+            hideProfileModal()
+           
+        }).catch(function (error) {
+            alert("Cập nhật thất bại")
+        });
+
     }
     return (
         <div>
@@ -72,7 +96,7 @@ function Profile() {
                             <h6 class="mb-0">Họ Tên</h6>
                         </div>
                         <div class="col-sm-9 text-secondary">
-                            {profile.name}
+                            {name}
                         </div>
                     </div>
 
@@ -81,7 +105,7 @@ function Profile() {
                             <h6 class="mb-0">Email</h6>
                         </div>
                         <div class="col-sm-9 text-secondary">
-                            {profile.email}
+                            {email}
                         </div>
                     </div>
 
@@ -90,7 +114,7 @@ function Profile() {
                             <h6 class="mb-0">Điện Thoại</h6>
                         </div>
                         <div class="col-sm-9 text-secondary">
-                            {profile.phone}
+                            {phone}
                         </div>
                     </div>
 
@@ -99,22 +123,20 @@ function Profile() {
                             <h6 class="mb-0">CMND</h6>
                         </div>
                         <div class="col-sm-9 text-secondary">
-                            {profile.cardId}
+                            {cardId}
                         </div>
                     </div>
+                </div>
 
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <button class="btn btn-info " onClick={(e) => onShowProfile()}>Edit</button>
-                        </div>
-                    </div>
+                <div class="col-sm-12" >
+                    <button  class="btn btn-info " onClick={onShowProfile}>Thay Đổi</button>
                 </div>
             </div>
 
             <Modal
                 className="details_modal"
                 show={showProfile}
-                onHide={hideDetailsModal}
+                onHide={hideProfileModal}
                 keyboard={false}
             >
                 <Modal.Header closeButton>
@@ -140,17 +162,17 @@ function Profile() {
 
                         <Form.Group className="mb-3" controlId="formBasicCardId">
                             <Form.Label>Chứng Minh Nhân Dân</Form.Label>
-                            <Form.Control type="number" value = {cardId} onChange={ChangetxtCardId}/>
+                            <Form.Control type="number" value = {cardId} onChange={ChangetxtCardId}/>    
                         </Form.Group>
-
-                        <Button variant="primary">
-                            Lưu
-                        </Button>
                     </Form>
                     </div>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="secondary" onClick={hideDetailsModal}>
+                    <Button variant="primary" onClick={saveProfile}>
+                        Lưu
+                    </Button>
+
+                    <Button variant="secondary" onClick={hideProfileModal}>
                         Đóng
                     </Button>
                 </Modal.Footer>
