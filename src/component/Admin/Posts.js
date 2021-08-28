@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
-import {FaSearch} from "react-icons/fa";
 import CardItem from "./partials/cardItem";
 import {Tab, TabList, TabPanel, Tabs} from "react-tabs";
+import Header from "./partials/header";
 
 const listPostsVerification = [
     {
@@ -54,18 +54,7 @@ const listPostsWaiting = [
 function Posts() {
     return (
         <>
-            <div id="admin-banner">
-                <div className="admin-banner p-2 pl-2 mt-4 mb-2 rounded-3 bold text-white bg-dark text-uppercase">
-                    Xác minh bài viết
-                </div>
-                <div className="admin-header rounded bg-light p-2">
-                    <div className="input-group search-field w-25">
-                        <input type="search" className="form-control rounded" placeholder="Search" aria-label="Search"
-                               aria-describedby="search-addon"/>
-                        <span className="input-group-text border-0" id="search-addon"><FaSearch/></span>
-                    </div>
-                </div>
-            </div>
+            <Header title={'Xác minh bài viết'} />
             <Tabs className="admin-tabs mt-2">
                 <TabList>
                     <Tab>Chưa duyệt</Tab>
@@ -75,14 +64,14 @@ function Posts() {
                 <TabPanel>
                     <div className="container py-5">
                         {listPostsVerification.map((item, i) => (
-                            <CardItem src={item.image} title={item.title} subTitle={item.description} btnText={'Chi tiết'}/>
+                            <CardItem src={item.image} title={item.title} subTitle={item.description} btnText={'Chi tiết'} linkBtn={`/admin/post/${item.id}`}/>
                         ))}
                     </div>
                 </TabPanel>
                 <TabPanel>
                     <div className="container py-5">
                         {listPostsWaiting.map((item, i) => (
-                            <CardItem src={item.image} title={item.title} subTitle={item.description} btnText={'Chi tiết'}/>
+                            <CardItem src={item.image} title={item.title} subTitle={item.description} btnText={'Chi tiết'} linkBtn={`/admin/post/${item.id}`}/>
                         ))}
                     </div>
                 </TabPanel>
