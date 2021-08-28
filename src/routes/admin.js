@@ -1,4 +1,5 @@
 import React from 'react';
+import Login from '../component/Admin/login';
 import ListBills from '../component/Admin/listBill';
 import News from '../component/Admin/News';
 import Posts from "../component/Admin/Posts";
@@ -8,6 +9,11 @@ import New from "../component/Admin/News";
 import Dashboard from "../component/Admin/Dashboard";
 
 const adminRoutes = [
+    {
+        path : '/admin/login',
+        exact : false,
+        main : ({ match, location }) => <Login match={match} location={location} />
+    },
     {
         path : '/admin/bills',
         exact : false,

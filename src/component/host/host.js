@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Button, Modal, Card, Table, Form } from 'react-bootstrap';
 import { Settings } from '@material-ui/icons';
+import './host.css';
 
 function Host() {
     const [data, setData] = useState([]);

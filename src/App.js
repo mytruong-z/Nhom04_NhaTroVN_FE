@@ -10,11 +10,15 @@ import {API_URL} from "./config";
 
 function App() {
     const [adminPage, setAdminPage] = useState(false);
+    const [adminLogin, setAdminLogin] = useState(false);
 
     useEffect(async () => {
         const location = window.location.pathname;
         if(location.startsWith('/admin')){
             setAdminPage(true);
+        }
+        if(location.startsWith('/admin/login')){
+            setAdminLogin(true);
         }
     }, [adminPage]);
 
@@ -52,15 +56,25 @@ function App() {
                 </Router>
                 : //Admin pages
                 <Router>
-                    <div className="App row w-100">
-                        <div className="col-3">
-                            <Sidebar/>
-                        </div>
-                        <div className="col-9">
+                    <div className="App row w-100 p-0">
+                        {!adminLogin ?
+                            <>
+                                <div className="col-3 p-0">
+                                    <Sidebar/>
+                                </div>
+                                <div className="col-9 p-0">
+                                    <Switch>
+                                        { showContentMenu(adminRoutes) }
+                                    </Switch>
+                                </div>
+                            </>
+                        : //Login to admin
+                        <div className="col">
                             <Switch>
                                 { showContentMenu(adminRoutes) }
                             </Switch>
                         </div>
+                        }
                     </div>
                 </Router>}
         </>
