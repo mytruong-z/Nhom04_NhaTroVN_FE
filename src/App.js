@@ -1,28 +1,24 @@
-import React, { Component } from 'react';
+import React, {Component, useEffect, useState} from 'react';
 import './App.css';
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import Menu from './component/Menu';
 import Footer from './component/footer';
-import routes from './routes';
+import routes from './routes/routes';
+import adminRoutes from './routes/admin';
+import Sidebar from "./component/Admin/partials/sidebar";
+import {API_URL} from "./config";
 
-class App extends Component {
-    render() {
-        return (
-            <Router>
-                <div className="App">
-                    {/* Menu */}
-                    <Menu />
-                    {/* Noi Dung */}
-                    <Switch>
-                        { this.showContentMenu(routes) }
-                    </Switch>
-                    <Footer/>
-                </div>
-            </Router>
-        );
-    }
+function App() {
+    const [adminPage, setAdminPage] = useState(false);
 
-    showContentMenu = (routes) => {
+    useEffect(async () => {
+        const location = window.location.pathname;
+        if(location.startsWith('/admin')){
+            setAdminPage(true);
+        }
+    }, [adminPage]);
+
+    function showContentMenu(routes){
         var result = null;
 
         if (routes.length > 0) {
@@ -40,6 +36,35 @@ class App extends Component {
 
         return result;
     }
+    return (
+        <>
+            {!adminPage?
+                <Router>
+                    <div className="App">
+                        {/* Menu */}
+                        <Menu />
+                        {/* Noi Dung */}
+                        <Switch>
+                            { showContentMenu(routes) }
+                        </Switch>
+                        <Footer/>
+                    </div>
+                </Router>
+                : //Admin pages
+                <Router>
+                    <div className="App row w-100">
+                        <div className="col-3">
+                            <Sidebar/>
+                        </div>
+                        <div className="col-9">
+                            <Switch>
+                                { showContentMenu(adminRoutes) }
+                            </Switch>
+                        </div>
+                    </div>
+                </Router>}
+        </>
+    )
 }
 
 export default App;

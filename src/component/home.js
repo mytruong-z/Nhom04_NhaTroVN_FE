@@ -98,13 +98,21 @@ function Home() {
                             <Card style={{width: '18rem'}}>
                                 <Card.Img variant="top" src={`/assets/images/rooms/${item.image ? item.image.name : '/no-img.png'}`}/>
                                 <Card.Body>
-                                    <Card.Title>{item.address}</Card.Title>
+                                    <Card.Title>{item.address && item.address}</Card.Title>
                                     <Card.Text>
-                                        {item.addition_infor} <br/>
+                                        {item.addition_infor && item.addition_infor} <br/>
                                         Giá: <span className="fw-bold">{item.price}</span> <br/>
-                                        {item.district.prefix}: {item.district.name} <br/>
-                                        {item.ward.prefix}: {item.ward.name} <br/>
-                                        {item.province.name}
+                                        { item.district.name &&
+                                            <>
+                                                {item.district.prefix}: {item.district.name} <br/>
+                                            </>
+                                        }
+                                        {item.ward.name &&
+                                            <>
+                                                {item.ward.prefix}: {item.ward.name} <br/>
+                                            </>
+                                        }
+                                        {item.province && item.province.name}
                                     </Card.Text>
                                     <a href={`/room/${item.id}`} className="btn btn-default text-white">Chi tiết</a>
                                 </Card.Body>

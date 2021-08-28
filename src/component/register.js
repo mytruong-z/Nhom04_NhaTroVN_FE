@@ -38,31 +38,34 @@ function Register() {
     return (
         <div className="Login">
         <Form className="mt-5">
+            <div className="form-title">
+                <h2>Đăng Kí</h2>
+            </div>
             <Form.Group className="mb-3" controlId="formBasicName">
-                <Form.Label>Họ Tên</Form.Label>
+                <Form.Label className="float-left">Họ Tên</Form.Label>
                 <Form.Control type="text" onChange={(e) => setName(e.target.value)} placeholder="Nhập Họ Tên" />
             </Form.Group>
             
             <Form.Group className="mb-3" controlId="formBasicPhone">
-                <Form.Label>Điện thoại</Form.Label>
+                <Form.Label className="float-left">Điện thoại</Form.Label>
                 <Form.Control type="number" onChange={(e) => setPhone(e.target.value)} placeholder="Nhập số điện thoại" />
             </Form.Group>
 
             <Form.Group className="mb-3" controlId="formBasicCardId">
-                <Form.Label>Chứng minh nhân dân</Form.Label>
+                <Form.Label className="float-left">Chứng minh nhân dân</Form.Label>
                 <Form.Control type="number" onChange={(e) => setCardId(e.target.value)} placeholder="Nhập số chứng minh nhân dân" />
             </Form.Group>
 
             <Form.Group className="mb-3" controlId="formBasicEmail">
-                <Form.Label>Email</Form.Label>
+                <Form.Label className="float-left">Email</Form.Label>
                 <Form.Control type="email" onChange={(e) => setEmail(e.target.value)} placeholder="Nhập email" />
             </Form.Group>
 
             <Form.Group className="mb-3" controlId="formBasicPassword">
-                <Form.Label>Mật Khẩu</Form.Label>
+                <Form.Label className="float-left">Mật Khẩu</Form.Label>
                 <Form.Control type="password" onChange={(e) => setPassword(e.target.value)} placeholder="Nhập mật khẩu" />
             </Form.Group>
-            <Button onClick={() => { if (window.confirm('Bạn muốn tiếp tục không')) register()}} variant="primary">
+            <Button className="mt-3 btn btn-default text-white" onClick={() => { if (window.confirm('Bạn muốn tiếp tục không')) register()}} variant="primary">
                 Đăng kí
             </Button>
         </Form>
