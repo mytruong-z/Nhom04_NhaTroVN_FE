@@ -2,6 +2,7 @@ import React, { Component, useState, useEffect } from "react";
 import { useHistory } from 'react-router-dom';
 import { Button, Modal, Card, Table, Form } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import './host.css';
 
 function Profile() {
     const saved = localStorage.getItem("user");

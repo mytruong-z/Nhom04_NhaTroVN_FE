@@ -56,7 +56,7 @@ function listBill() {
             <Tabs className="admin-tabs mt-2">
                 <TabList>
                     <Tab>Đã thanh toán (2)</Tab>
-                    <Tab>Chưa thanh toán (1)</Tab>
+                    <Tab>Chưa thanh toán (3)</Tab>
                 </TabList>
 
                 <TabPanel>
