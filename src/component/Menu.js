@@ -21,11 +21,6 @@ function Menu() {
             name: 'Đăng ký',
             to: '/register',
             exact: false
-        },
-        {
-            name: 'Nhà đã lưu',
-            to: '/saved_room',
-            exact: false
         }
     ];
 
