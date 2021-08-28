@@ -7,7 +7,7 @@ class Footer extends Component {
         return (
             <div className="container-fluid pb-0 mb-0 justify-content-center text-light bg-dark">
                 <footer>
-                    <div className="row mt-5 justify-content-center py-5">
+                    <div className="row justify-content-center py-5">
                         <div className="col-11">
                             <div className="row ">
                                 <div className="col-lg-4 col-12 my-auto mx-auto a">

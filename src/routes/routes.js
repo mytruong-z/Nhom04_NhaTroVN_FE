@@ -1,11 +1,10 @@
 import React from 'react';
-import Rooms from './component/rooms';
-import Login from './component/login';
-import Home from './component/home';
-import Register from './component/register';
-import NewPostRoom from './component/newPost/newpostroom';
-import SavedRoom from './component/savedRoom/savedRoom';
-
+import Rooms from '../component/rooms';
+import Login from '../component/login';
+import Home from '../component/home';
+import Register from '../component/register';
+import NewPostRoom from '../component/newPost/newpostroom';
+import SavedRoom from '../component/savedRoom/savedRoom';
 
 const routes = [
     {

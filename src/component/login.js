@@ -47,24 +47,27 @@ function Login() {
 
     return (
         <div className="Login">
-        <Form className="mt-5">
-            <Form.Group className="mb-3" controlId="formBasicEmail" >
-                <Form.Label>Email</Form.Label>
-                <Form.Control type="email" onChange={(e) => setEmail(e.target.value)} placeholder="Nhập email" />
-            </Form.Group>
+            <Form className="mt-5">
+                <div className="form-title">
+                    <h2>Đăng Nhập</h2>
+                </div>
+                <Form.Group className="mb-3" controlId="formBasicEmail" >
+                    <Form.Label className="float-left">Email</Form.Label>
+                    <Form.Control type="email" onChange={(e) => setEmail(e.target.value)} placeholder="Nhập email" />
+                </Form.Group>
 
-            <Form.Group className="mb-3" controlId="formBasicPassword">
-                <Form.Label>Mật Khẩu</Form.Label>
-                <Form.Control type="password" onChange={(e) => setPassword(e.target.value)} placeholder="Nhập mật khẩu" />
-            </Form.Group>   
+                <Form.Group className="mb-3" controlId="formBasicPassword">
+                    <Form.Label className="float-left">Mật Khẩu</Form.Label>
+                    <Form.Control type="password" onChange={(e) => setPassword(e.target.value)} placeholder="Nhập mật khẩu" />
+                </Form.Group>
 
-            <Form.Group className="mb-3" controlId="formBasicCheckbox">
-                <Form.Check type="checkbox" label="Nhớ mật khẩu" />
-            </Form.Group>
-            <Button onClick={login} variant="primary">
-                Đăng nhập
-            </Button>
-        </Form>
+                <Form.Group className="mb-3" controlId="formBasicCheckbox">
+                    <Form.Check className="float-left" type="checkbox" label="Nhớ mật khẩu" />
+                </Form.Group>
+                <Button className="mt-3 btn btn-default text-white" onClick={login} variant="primary">
+                    Đăng nhập
+                </Button>
+            </Form>
         </div>
     );
 }

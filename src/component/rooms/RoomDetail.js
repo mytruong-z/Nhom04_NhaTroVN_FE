@@ -23,7 +23,7 @@ const RoomDetail = (props) => {
     }, []);
 
     return (
-        <div>
+        <div className="mb-4">
             {
                 Object.keys(room).length !== 0 ?
                     <div className="room-box">
@@ -38,7 +38,7 @@ const RoomDetail = (props) => {
                             <span className="bold">Địa chỉ: </span>{room.address},
                             &nbsp;{room.ward.prefix} {room.ward.name},
                             &nbsp;{room.district.prefix} {room.district.name},
-                            &nbsp;{room.province.name}
+                            &nbsp;{room.province && room.province.name}
                         </p>
                         <p>
                             <span className="bold">Chi tiết: </span>
