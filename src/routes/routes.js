@@ -8,34 +8,39 @@ import SavedRoom from '../component/savedRoom/savedRoom';
 
 const routes = [
     {
-        path : '/saved_room',
-        exact : false,
-        main : ({ match, location }) => <SavedRoom match={match} location={location} />
+        path: '/saved_room',
+        exact: false,
+        main: ({match, location}) => <SavedRoom match={match} location={location}/>
     },
     {
-        path : '/room',
-        exact : false,
-        main : ({ match, location }) => <Rooms match={match} location={location} />
+        path: '/profile',
+        exact: false,
+        main: ({match, location}) => <Profile match={match} location={location}/>
     },
     {
-        path : '/login',
-        exact : false,
-        main : ({location}) => <Login location={location} />
+        path: '/room',
+        exact: false,
+        main: ({match, location}) => <Rooms match={match} location={location}/>
     },
     {
-        path : '/register',
-        exact : false,
-        main : ({location}) => <Register location={location} />
+        path: '/login',
+        exact: false,
+        main: ({location}) => <Login location={location}/>
     },
     {
-        path : '/postStatus',
-        exact : false,
-        main : ({location}) => <NewPostRoom location={location} />
+        path: '/register',
+        exact: false,
+        main: ({location}) => <Register location={location}/>
     },
     {
-        path : '/',
-        exact : false,
-        main : ({location}) => <Home location={location} />
+        path: '/postStatus',
+        exact: false,
+        main: ({location}) => <NewPostRoom location={location}/>
+    },
+    {
+        path: '/',
+        exact: false,
+        main: ({location}) => <Home location={location}/>
     }
 ];
 
