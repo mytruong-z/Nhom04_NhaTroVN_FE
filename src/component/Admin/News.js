@@ -32,7 +32,7 @@ function News() {
                 <TabPanel>
                     <div className="container py-5">
                         {news.map((item, i) => (
-                            <CardItem src={item.image} title={item.title} subTitle={item.price} btnText={'Chi tiết'}/>
+                            <CardItem src={item.image} title={item.title} subTitle={item.price} btnText={'Chi tiết'} linkBtn={`/admin/new/${item.id}`}/>
                         ))}
                     </div>
                 </TabPanel>

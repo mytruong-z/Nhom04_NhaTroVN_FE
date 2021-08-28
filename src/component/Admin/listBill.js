@@ -62,14 +62,14 @@ function listBill() {
                 <TabPanel>
                     <div className="container py-5">
                         {bills.map((item, i) => (
-                            <CardItem src={item.image} title={item.title} subTitle={item.price} subTitle1={item.des} btnText={'Chi tiết'}/>
+                            <CardItem src={item.image} title={item.title} subTitle={item.price} subTitle1={item.des} btnText={'Chi tiết'} linkBtn={`/admin/bill/${item.id}`}/>
                         ))}
                     </div>
                 </TabPanel>
                 <TabPanel>
                     <div className="container py-5">
                         {noRefund.map((item, i) => (
-                            <CardItem src={item.image} title={item.title} subTitle={item.price} subTitle1={item.des} btnText={'Chi tiết'}/>
+                            <CardItem src={item.image} title={item.title} subTitle={item.price} subTitle1={item.des} btnText={'Chi tiết'} linkBtn={`/admin/bill/${item.id}`}/>
                         ))}
                     </div>
                 </TabPanel>

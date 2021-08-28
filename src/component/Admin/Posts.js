@@ -64,14 +64,14 @@ function Posts() {
                 <TabPanel>
                     <div className="container py-5">
                         {listPostsVerification.map((item, i) => (
-                            <CardItem src={item.image} title={item.title} subTitle={item.description} btnText={'Chi tiết'}/>
+                            <CardItem src={item.image} title={item.title} subTitle={item.description} btnText={'Chi tiết'} linkBtn={`/admin/post/${item.id}`}/>
                         ))}
                     </div>
                 </TabPanel>
                 <TabPanel>
                     <div className="container py-5">
                         {listPostsWaiting.map((item, i) => (
-                            <CardItem src={item.image} title={item.title} subTitle={item.description} btnText={'Chi tiết'}/>
+                            <CardItem src={item.image} title={item.title} subTitle={item.description} btnText={'Chi tiết'} linkBtn={`/admin/post/${item.id}`}/>
                         ))}
                     </div>
                 </TabPanel>
