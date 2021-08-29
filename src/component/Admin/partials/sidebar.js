@@ -1,7 +1,7 @@
 import React, {Component, useEffect, useState} from 'react';
 import { Route, Link } from 'react-router-dom';
 import {Nav, NavLink} from 'react-bootstrap';
-import {FaChartBar, FaCoins, FaNewspaper, FaClipboardCheck} from "react-icons/fa";
+import {FaChartBar, FaCoins, FaNewspaper, FaClipboardCheck, FaUserAlt} from "react-icons/fa";
 
 function SideBar() {
     const menus = [
@@ -9,6 +9,12 @@ function SideBar() {
             name: 'Báo Cáo',
             to: '/admin',
             icon: <FaChartBar/>,
+            exact: true
+        },
+        {
+            name: 'Danh sách người dùng',
+            to: '/admin/users',
+            icon: <FaUserAlt/>,
             exact: true
         },
         {

@@ -6,6 +6,7 @@ import Posts from "../component/Admin/Posts";
 import Post from "../component/Admin/Post";
 import Bill from "../component/Admin/Bill";
 import New from "../component/Admin/News";
+import Users from "../component/Admin/Users";
 import Dashboard from "../component/Admin/Dashboard";
 
 const adminRoutes = [
@@ -18,6 +19,11 @@ const adminRoutes = [
         path : '/admin/bills',
         exact : false,
         main : ({ match, location }) => <ListBills match={match} location={location} />
+    },
+    {
+        path : '/admin/users',
+        exact : false,
+        main : ({ match, location }) => <Users match={match} location={location} />
     },
     {
         path : '/admin/bill',
