@@ -66,21 +66,6 @@ function Table({columns, data}) {
     // Render the UI for your table
     return (
         <>
-      <pre>
-        <code>
-          {JSON.stringify(
-              {
-                  pageIndex,
-                  pageSize,
-                  pageCount,
-                  canNextPage,
-                  canPreviousPage,
-              },
-              null,
-              2
-          )}
-        </code>
-      </pre>
             <table className="table table-dark table-hover" {...getTableProps()}>
                 <thead>
                 {headerGroups.map(headerGroup => (
@@ -149,7 +134,7 @@ function Table({columns, data}) {
     )
 }
 
-function UserTable(Users) {
+function UserTable({userData}) {
     const columns = React.useMemo(
         () => [
             {
@@ -179,7 +164,7 @@ function UserTable(Users) {
         ],
         []
     )
-    const data = React.useMemo(() => [Users],[]);
+    const data = React.useMemo(() => userData,[]);
 
     return (
         <Styles>

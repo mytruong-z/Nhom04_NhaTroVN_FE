@@ -3,7 +3,7 @@ import {Tab, TabList, TabPanel, Tabs} from "react-tabs";
 import Header from "./partials/header";
 import UserTable from "./User/UserTable";
 
-const users = [
+const data = [
     {
         "Id": 175,
         "phone": "01234566",
@@ -101,7 +101,7 @@ function Users() {
 
                 <TabPanel>
                     <div className="container py-5">
-                        <UserTable Users={users}/>
+                        <UserTable userData={data}/>
                     </div>
                 </TabPanel>
             </Tabs>

@@ -12,7 +12,7 @@ function SideBar() {
             exact: true
         },
         {
-            name: 'Danh sách người dùng',
+            name: 'DS Người dùng',
             to: '/admin/users',
             icon: <FaUserAlt/>,
             exact: true
