@@ -69,7 +69,7 @@ function App() {
                                 </div>
                             </>
                         : //Login to admin
-                        <div className="col">
+                        <div id="login-page" className="col">
                             <Switch>
                                 { showContentMenu(adminRoutes) }
                             </Switch>
