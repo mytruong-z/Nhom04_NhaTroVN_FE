@@ -19,7 +19,7 @@ function Home() {
                 return error;
             });
         }
-        console.log(rooms);
+
     }, []);
 
     return (

@@ -66,8 +66,8 @@ function Table({columns, data}) {
     // Render the UI for your table
     return (
         <>
-            <table className="table table-dark table-hover" {...getTableProps()}>
-                <thead>
+            <table className="table table-striped table-hover" {...getTableProps()}>
+                <thead className="bg-dark text-white">
                 {headerGroups.map(headerGroup => (
                     <tr {...headerGroup.getHeaderGroupProps()}>
                         {headerGroup.headers.map(column => (
@@ -95,6 +95,11 @@ function Table({columns, data}) {
       */}
             <div className="pagination d-flex justify-content-between">
                 <div>
+                    <span>
+                        Page{' '}<strong>{pageIndex + 1} of {pageOptions.length}</strong>{' '}
+                    </span>
+                </div>
+                <div>
                     <button className={`btn btn-sm mx-1 ${!canPreviousPage ? 'btn-secondary' : 'btn-dark'}`} onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
                         {'<<'}
                     </button>
@@ -112,10 +117,7 @@ function Table({columns, data}) {
                     </button>
                     {' '}
                 </div>
-                <div className="d-flex w-25">
-                    <span className="w-75">
-                        Page{' '}<strong>{pageIndex + 1} of {pageOptions.length}</strong>{' '}
-                    </span>
+                <div>
                     <select className="form-select"
                             value={pageSize}
                             onChange={e => {
@@ -142,7 +144,7 @@ function UserTable({userData}) {
                 accessor: 'Id',
             },
             {
-                Header: 'Name',
+                Header: 'Tên',
                 accessor: 'name',
             },
             {
@@ -150,16 +152,20 @@ function UserTable({userData}) {
                 accessor: 'email',
             },
             {
-                Header: 'Phone',
+                Header: 'Số điện thoại',
                 accessor: 'phone',
             },
             {
-                Header: 'Balance',
+                Header: 'Số dư TK',
                 accessor: 'balance',
             },
             {
-                Header: 'Status',
+                Header: 'Trạng thái',
                 accessor: 'status',
+            },
+            {
+                Header: 'Thao tác',
+                accessor: 'actions',
             },
         ],
         []
