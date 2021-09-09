@@ -6,6 +6,7 @@ import Register from '../component/register';
 import NewPostRoom from '../component/newPost/newpostroom';
 import SavedRoom from '../component/savedRoom/savedRoom';
 import Profile from '../component/host/profile';
+import Payment from '../component/Payment/payment';
 
 const routes = [
     {
@@ -38,6 +39,13 @@ const routes = [
         exact: false,
         main: ({location}) => <NewPostRoom location={location}/>
     },
+
+    {
+        path: '/payment',
+        exact: false,
+        main: ({location}) => <Payment location={location}/>
+    },
+    
     {
         path: '/',
         exact: false,

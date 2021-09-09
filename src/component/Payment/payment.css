@@ -1,0 +1,138 @@
+@import url('https://fonts.googleapis.com/css?family=Open+Sans');
+
+
+
+body {
+  font-family: 'Open Sans', sans-serif;
+}
+
+body a{
+    color: #4285f4;
+    text-decoration: none;
+}
+
+.lasagna {
+  position: relative;
+  width: 50%;
+  max-width: 700px;
+  height: 100%;
+  background: #efefef;
+  margin: auto;
+  padding: 0 15px 50px 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  
+}
+.lasagna .close {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    height: 40px;
+    width: 40px;
+    margin: 5px;
+    text-align: center;
+    font-size: 28px;
+    line-height: 40px;
+    background: rgba(0,0,0,0.02);
+    border-radius: 100%;
+    transition: 0.15s;
+
+}
+
+    .lasagna .close :hover {
+    cursor: pointer;
+    background: rgba(0,0,0,0.09)
+  }
+  
+.lasagna .user {
+    margin-top: 70px;
+    font-size: 12px;
+   
+  }
+
+  .lasagna .user img {
+    width: 40px;
+    height: 40px;
+    padding: 2px;
+    background: url('https://ssl.gstatic.com/subscriptions/management/home/ring_d6782665db13b3e4ef42926f822afd71.svg');
+    background-size: 40px;
+    border-radius: 50%;
+  }
+  
+.lasagna .upgrade {
+    margin: 40px 0;
+  }
+  
+    .lasagna .upgrade h2 {
+    font-size: 2.25rem;
+    padding: 10px 0;
+    }
+
+    .lasagna .upgrade p {
+        font-size: 1.5rem;
+        margin: 10px 0 26px 0;
+    }
+
+    .lasagna .upgrade  h5 {
+        font-size: .875rem;
+        line-height: 1.5rem;
+    }
+
+.lasagna .current {
+    background: #dadce0 !important;
+  }
+
+.lasagna .plan {
+    width: 75%;
+    background: #fff;
+    border: 1px solid #dadce0;
+    border-radius: 8px;
+    padding: 50px 0px 40px 0;
+    margin-bottom: 20px;
+   }
+
+   .lasagna .plan h3 {
+        font-size: 28px;
+      }  
+      .lasagna .plan  p {
+        line-height: 5rem;
+      }
+      
+      .lasagna .plan a {
+        display: block;
+        border: 1px solid #4285f4;
+        border-radius: 5px;
+        background: rgba(66,133,244,0.0);
+        width: 150px;
+        height: 35px;
+        line-height: 33px;
+        margin: auto;
+        transition: 0.15s;   
+    }
+    
+    .lasagna .plan a:hover {
+        background: rgba(66,133,244,0.05);
+    }
+
+.lasagna .includes {
+      text-align: left;
+      border-top: 1px solid #ccc;
+      padding: 20px 20px 0 20px;
+      font-size: 0.875rem;
+     
+    }
+    .lasagna .includes ul {
+        margin-top: 15px;
+        
+      }
+      .lasagna .includes ul li {
+        margin-left: 40px;
+        
+      }
+      .lasagna .includes ul li:before {
+        content:"\2713\0020";
+        color: #4285f4;
+        font-size: 16px;
+      }
