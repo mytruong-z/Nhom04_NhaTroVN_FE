@@ -13,49 +13,40 @@ function Payment() {
                 <h2>Mua quyền <b>Đăng Nhà trọ</b> </h2>
                 <p>Để có thể tăng số lượng và thời gian bài đăng</p>
             </div>
-            <div class="plan current">
-                <h3>15 GB</h3>
-                <p>Free</p>
-                <p><b>Current plan</b></p>
+            <div class="plan">
+                <h3>Gói Đồng</h3>
+                <p>$100.000 vnd</p>
+                <a href="">Mua</a>
                 &nbsp;
                 <div class="includes">
                     Includes
                     <ul>
-                        <li>15 GB storage</li>
+                        <li>Có thể đăng 10 bài đăng</li>
                     </ul>
                 </div>
             </div>
             <div class="plan">
-                <h3>100 GB</h3>
-                <p>$1.99 / month</p>
+                <h3>Gói Bạc</h3>
+                <p>$450.000 vnd</p>
                 <p></p>
-                <p><a href="">Upgrade</a>
-                    $19.99 / year (save $3.89)
-                </p>
-                <div class="includes">
-                    Google One includes
-                    <ul>
-                        <li>100 GB storage</li>
-                        <li>Access to Google experts</li>
-                        <li>Option to add your family</li>
-                        <li>Extra member benefits</li>
-                    </ul>
-                </div>
-            </div>
-            <div class="plan">
-                <h3>200 GB</h3>
-                <p>$2.99 / month</p>
-                <p><a href="">Upgrade</a>
-                    $29.99 / year (save $5.89)
-                </p>
+                <a href="">Mua</a>
                 &nbsp;
                 <div class="includes">
-                    Google One includes
+                    includes
                     <ul>
-                        <li>200 GB storage</li>
-                        <li>Access to Google experts</li>
-                        <li>Option to add your family</li>
-                        <li>Extra member benefits</li>
+                        <li>Có thể đăng 50 bài đăng</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="plan">
+                <h3>Gói Vàng</h3>
+                <p>$900.000 vnd</p>
+                <a href="">Mua</a>
+                &nbsp;
+                <div class="includes">
+                    includes
+                    <ul>
+                        <li>Có thể đăng 100 bài đăng</li>
                     </ul>
                 </div>
             </div>
