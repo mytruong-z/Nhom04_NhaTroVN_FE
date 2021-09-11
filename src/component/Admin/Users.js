@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import {Tab, TabList, TabPanel, Tabs} from "react-tabs";
+import { Badge } from 'react-bootstrap';
 import Header from "./partials/header";
 import UserTable from "./User/UserTable";
 import {API_URL} from "../../config";
@@ -23,9 +24,9 @@ function Users() {
                         "name": val.name,
                         "email": val.email,
                         "balance": val.balance,
-                        "status": val.activate_status,
+                        "status": val.activate_status ? <Badge bg="success">Active</Badge> : <Badge bg="secondary">Inactive</Badge>,
                         "cardId": val.cardId,
-                        "actions": <a href="#" className="btn btn-sm btn-dark">Chi tiết</a>
+                        "actions": <a href={`user/${val.Id}`} className="btn btn-sm btn-dark">Chi tiết</a>
                     }
                 });
                 setData(listUsers);
@@ -51,8 +52,10 @@ function Users() {
 
                 <TabPanel>
                     <div className="container py-5">
-                        { data.length > 0 &&
+                        { data.length > 0 ?
                             <UserTable userData={data}/>
+                            :
+                            <div>Loading...</div>
                         }
                     </div>
                 </TabPanel>
