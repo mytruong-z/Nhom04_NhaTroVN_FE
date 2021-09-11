@@ -45,6 +45,12 @@ const routes = [
         exact: false,
         main: ({location}) => <Payment location={location}/>
     },
+
+    {
+        path: '/logout',
+        exact: false,
+        main: ({location}) => <Home location={location} />
+    },
     
     {
         path: '/',

@@ -11,6 +11,10 @@ function App() {
     const [adminPage, setAdminPage] = useState(false);
     const [adminLogin, setAdminLogin] = useState(false);
 
+    const logout = () => {
+        localStorage.setItem("user", "");
+    };
+
     useEffect(async () => {
         const location = window.location.pathname;
         if(location.startsWith('/admin')){
@@ -19,7 +23,17 @@ function App() {
         if(location.startsWith('/admin/login')){
             setAdminLogin(true);
         }
+
     }, [adminPage]);
+
+    useEffect(async () => {
+        const location = window.location.pathname;
+        if (location.startsWith('/logout')) {
+            logout();
+        }
+    }, []);
+
+
 
     function showContentMenu(routes){
         var result = null;
