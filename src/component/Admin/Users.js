@@ -3,16 +3,20 @@ import {Tab, TabList, TabPanel, Tabs} from "react-tabs";
 import Header from "./partials/header";
 import UserTable from "./User/UserTable";
 import {API_URL} from "../../config";
-import axios from "axios";
 
 function Users() {
     const [data, setData] = useState([]);
+    const [loading, setLoading] = useState(false);
 
     useEffect(async () => {
-        await axios.get(API_URL + "user/information").then((response) => {
-            console.log(response.data);
-            if(response.data){
-                let listUsers = response.data.map((val) => {
+        if(!loading) {
+            await fetch(API_URL + "user/information",{ method: 'GET'}).then((response) => {
+                if(response.ok){
+                    return response.json();
+                }
+                throw response;
+            }).then(data => {
+                let listUsers = data.map((val) => {
                     return {
                         "Id": val.Id,
                         "phone": val.phone,
@@ -25,12 +29,17 @@ function Users() {
                     }
                 });
                 setData(listUsers);
-            }
-            throw response;
-        }).catch((error) => {
-            return error;
-        });
+            }).catch((error) => {
+                return error;
+            });
+        }
     }, []);
+
+    useEffect(async () => {
+        if (data) {
+            setLoading(true);
+        }
+    }, [data])
 
     return (
         <>
@@ -42,7 +51,9 @@ function Users() {
 
                 <TabPanel>
                     <div className="container py-5">
-                        <UserTable userData={data}/>
+                        { data.length > 0 &&
+                            <UserTable userData={data}/>
+                        }
                     </div>
                 </TabPanel>
             </Tabs>
