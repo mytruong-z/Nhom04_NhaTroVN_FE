@@ -8,7 +8,7 @@ function Payment () {
 
     const saved = localStorage.getItem('user');
     const initial = JSON.parse(saved);
-    const [userID, setId] = useState([initial.id]);
+    const [userID, setId] = useState([]);
     const [Notification, setNotification] = useState('');
     const [showNotification, setShowNotification] = useState(false);
 
@@ -17,6 +17,9 @@ function Payment () {
     useEffect(() => {
         if (!localStorage.getItem('user')) {
             history.push('/');
+        }
+        else{
+            setId(initial.id)
         }
     }, []);
 
@@ -30,7 +33,6 @@ function Payment () {
 
     async function payment (sub_id) {
         let item = {userID, sub_id};
-        console.log(JSON.stringify(item));
         await fetch('https://nhatrovn.herokuapp.com/api/payment/submit', {
             method: 'POST',
             headers: {
@@ -52,7 +54,7 @@ function Payment () {
 
     return (
         <div>
-            <div className="lasagna">
+            <div className="mt-3 mb-3 lasagna">
                 <div className="upgrade">
                     <h2>Mua quyền <b>Đăng Nhà trọ</b></h2>
                     <p>Để có thể tăng số lượng và thời gian bài đăng</p>
