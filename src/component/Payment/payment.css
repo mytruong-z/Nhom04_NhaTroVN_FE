@@ -100,20 +100,18 @@ body a{
         line-height: 5rem;
       }
       
-      .lasagna .plan a {
-        display: block;
-        border: 1px solid #4285f4;
-        border-radius: 5px;
-        background: rgba(66,133,244,0.0);
-        width: 150px;
-        height: 35px;
-        line-height: 33px;
-        margin: auto;
-        transition: 0.15s;   
+      .lasagna .plan button {
+      width: 50%;
+      padding: 15px;
+      color: #FFFFFF;
+      font-size: 14px;
+      -webkit-transition: all 0.3 ease;
+      transition: all 0.3 ease;
+      cursor: pointer;
     }
     
-    .lasagna .plan a:hover {
-        background: rgba(66,133,244,0.05);
+    .lasagna .plan button:hover,.form button:active,.form button:focus {
+      background: #f35a4c;
     }
 
 .lasagna .includes {
