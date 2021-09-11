@@ -1,6 +1,6 @@
 import React from 'react';
 import { Route } from 'react-router-dom';
-import UserDetail from './UserDetail';
+import User from "../User/UserDetail";
 
 const Users = (props) => {
     const {match} = props;
@@ -9,7 +9,7 @@ const Users = (props) => {
     return (
         <div className="container">
             <div className="row">
-                <Route path={`${url}/:id`} component={UserDetail}/>
+                <Route path={`${url}/:id`} component={User}/>
             </div>
 
         </div>

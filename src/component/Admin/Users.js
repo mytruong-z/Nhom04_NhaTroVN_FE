@@ -4,6 +4,7 @@ import { Badge } from 'react-bootstrap';
 import Header from "./partials/header";
 import UserTable from "./User/UserTable";
 import {API_URL} from "../../config";
+import NumberFormat from 'react-number-format';
 
 function Users() {
     const [data, setData] = useState([]);
@@ -23,13 +24,14 @@ function Users() {
                         "phone": val.phone,
                         "name": val.name,
                         "email": val.email,
-                        "balance": val.balance,
+                        "balance": <NumberFormat value={val.balance} displayType={'text'} thousandSeparator={true} />,
                         "status": val.activate_status ? <Badge bg="success">Active</Badge> : <Badge bg="secondary">Inactive</Badge>,
                         "cardId": val.cardId,
-                        "actions": <a href={`user/${val.Id}`} className="btn btn-sm btn-dark">Chi tiết</a>
+                        "actions": <a href={`/admin/user/${val.Id}`} className="btn btn-sm btn-dark">Chi tiết</a>
                     }
                 });
                 setData(listUsers);
+                setLoading(true);
             }).catch((error) => {
                 return error;
             });
@@ -37,8 +39,10 @@ function Users() {
     }, []);
 
     useEffect(async () => {
-        if (data) {
+        if (data.length > 0 ) {
             setLoading(true);
+        } else {
+            setLoading(false);
         }
     }, [data])
 
@@ -52,7 +56,7 @@ function Users() {
 
                 <TabPanel>
                     <div className="container py-5">
-                        { data.length > 0 ?
+                        { loading ?
                             <UserTable userData={data}/>
                             :
                             <div>Loading...</div>
