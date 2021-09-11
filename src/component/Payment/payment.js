@@ -4,7 +4,7 @@ import { Button, Modal, Card, Table, Form } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './payment.css';
 
-function Payment () {
+function Payment() {
 
     const saved = localStorage.getItem('user');
     const initial = JSON.parse(saved);
@@ -18,7 +18,7 @@ function Payment () {
         if (!localStorage.getItem('user')) {
             history.push('/');
         }
-        else{
+        else {
             setId(initial.id)
         }
     }, []);
@@ -31,8 +31,8 @@ function Payment () {
         setShowNotification(false);
     };
 
-    async function payment (sub_id) {
-        let item = {userID, sub_id};
+    async function payment(sub_id) {
+        let item = { userID, sub_id };
         await fetch('https://nhatrovn.herokuapp.com/api/payment/submit', {
             method: 'POST',
             headers: {
@@ -63,10 +63,10 @@ function Payment () {
                     <h3>Gói Đồng</h3>
                     <p>$199.000 vnd</p>
                     <Button className="mt-3 mb-3 btn btn-default text-white "
-                            onClick={() => { payment(2); }}>Mua</Button>
+                        onClick={() => { payment(2); }}>Mua</Button>
                     &nbsp;
                     <div className="includes">
-                        Includes
+                        Bao gồm
                         <ul>
                             <li>Có thể đăng và duy trì bài đăng trong 3 tháng</li>
                         </ul>
@@ -77,10 +77,10 @@ function Payment () {
                     <p>$399.000 vnd</p>
                     <p></p>
                     <Button className="mt-3 mb-3 btn btn-default text-white "
-                            onClick={() => { payment(3); }}>Mua</Button>
+                        onClick={() => { payment(3); }}>Mua</Button>
                     &nbsp;
                     <div className="includes">
-                        includes
+                        Bao gồm
                         <ul>
                             <li>Có thể đăng và duy trì bài đăng trong 5 tháng</li>
                         </ul>
@@ -90,10 +90,10 @@ function Payment () {
                     <h3>Gói Vàng</h3>
                     <p>$599.000 vnd</p>
                     <Button className="mt-3 mb-3 btn btn-default text-white "
-                            onClick={() => { payment(4); }}>Mua</Button>
+                        onClick={() => { payment(4); }}>Mua</Button>
                     &nbsp;
                     <div className="includes">
-                        includes
+                        Bao gồm
                         <ul>
                             <li>Có thể đăng và duy trì bài đăng trong 12 tháng</li>
                         </ul>
