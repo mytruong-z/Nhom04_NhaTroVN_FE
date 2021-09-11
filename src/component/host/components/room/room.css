@@ -1,0 +1,10 @@
+.room-container {
+  width: 75%;
+}
+
+@media screen and (max-width: 1400px) {
+  .room-container {
+    width: 100%;
+    overflow-x: scroll;
+  }  
+}

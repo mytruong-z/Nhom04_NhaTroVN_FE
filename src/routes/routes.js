@@ -7,8 +7,14 @@ import NewPostRoom from '../component/newPost/newpostroom';
 import SavedRoom from '../component/savedRoom/savedRoom';
 import Profile from '../component/host/profile';
 import Payment from '../component/Payment/payment';
+import Host from '../component/host/host';
 
 const routes = [
+    {
+        path: '/host/rooms',
+        exact: false,
+        main: ({match, location}) => <Host match={match} location={location}/>
+    },
     {
         path: '/saved_room',
         exact: false,
