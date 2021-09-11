@@ -47,12 +47,12 @@ const User = (props) => {
                         <Card.Body>
                             <Card.Title>ID: {data.Id}</Card.Title>
                             <Card.Text>
-                                <span className="bold w-150px d-inline-block">Email:</span> {data.email} <br/>
-                                <span className="bold w-150px d-inline-block">Số điện thoại:</span> {data.phone} <br/>
-                                <span className="bold w-150px d-inline-block">Số dư:</span> <NumberFormat value={data.balance} displayType={'text'} thousandSeparator={true} /> <br/>
-                                <span className="bold w-150px d-inline-block">Ngày tạo tài khoản:</span> {(new Date(data.created_at)).toLocaleDateString('en-US', DATE_OPTIONS)} <br/>
-                                <span className="bold w-150px d-inline-block">Trạng thái:</span> {data.activate_status ? <Badge bg="success">Active</Badge> : <Badge bg="secondary">Inactive</Badge>} <br/>
-                                <span className="bold w-150px d-inline-block">Mã thẻ:</span> {data.cardId} <br/>
+                                <span className="bold w-150px d-block d-sm-inline-block">Email:</span> {data.email} <br/>
+                                <span className="bold w-150px d-block d-sm-inline-block">Số điện thoại:</span> {data.phone} <br/>
+                                <span className="bold w-150px d-block d-sm-inline-block">Số dư:</span> <NumberFormat value={data.balance} displayType={'text'} thousandSeparator={true} /> <br/>
+                                <span className="bold w-150px d-block d-sm-inline-block">Ngày tạo tài khoản:</span> {(new Date(data.created_at)).toLocaleDateString('en-US', DATE_OPTIONS)} <br/>
+                                <span className="bold w-150px d-block d-sm-inline-block">Trạng thái:</span> {data.activate_status ? <Badge bg="success">Active</Badge> : <Badge bg="secondary">Inactive</Badge>} <br/>
+                                <span className="bold w-150px d-block d-sm-inline-block">Mã thẻ:</span> {data.cardId} <br/>
                             </Card.Text>
                         </Card.Body>
                     </Card>
