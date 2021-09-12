@@ -1,10 +1,10 @@
-.makeStyles-root-1, .makeStyles-root-8 {
+.host-container {
     width: 80% !important;
     max-width: 100% !important;
 }
 
 @media screen and (max-width: 1400px) {
-    .makeStyles-root-1, .makeStyles-root-8 {
+    .host-container {
         width: 100% !important;
         max-width: 100% !important;
     }    

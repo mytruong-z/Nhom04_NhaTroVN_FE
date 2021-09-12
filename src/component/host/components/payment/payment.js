@@ -3,7 +3,7 @@ import { useHistory } from 'react-router-dom';
 import { Button, Modal, Card, Table, Form } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './payment.css';
-import { Typography } from 'antd';
+import { div } from 'antd';
 
 function Payment() {
 
@@ -58,11 +58,11 @@ function Payment() {
             <div className="mt-3 mb-3 lasagna">
                 <div className="upgrade">
                     <h2>Mua quyền <b>Đăng Nhà trọ</b></h2>
-                    <Typography>Để có thể tăng số lượng và thời gian bài đăng</Typography>
+                    <div>Để có thể tăng số lượng và thời gian bài đăng</div>
                 </div>
                 <div className="plan">
                     <h3>Gói Đồng</h3>
-                    <Typography>$199.000 vnd</Typography>
+                    <div>$199.000 vnd</div>
                     <Button className="mt-3 mb-3 btn btn-default text-white "
                         onClick={() => { payment(2); }}>Mua</Button>
                     &nbsp;
@@ -75,8 +75,8 @@ function Payment() {
                 </div>
                 <div className="plan">
                     <h3>Gói Bạc</h3>
-                    <Typography>$399.000 vnd</Typography>
-                    <Typography></Typography>
+                    <div>$399.000 vnd</div>
+                    <div></div>
                     <Button className="mt-3 mb-3 btn btn-default text-white "
                         onClick={() => { payment(3); }}>Mua</Button>
                     &nbsp;
@@ -89,7 +89,7 @@ function Payment() {
                 </div>
                 <div className="plan">
                     <h3>Gói Vàng</h3>
-                    <Typography>$599.000 vnd</Typography>
+                    <div>$599.000 vnd</div>
                     <Button className="mt-3 mb-3 btn btn-default text-white "
                         onClick={() => { payment(4); }}>Mua</Button>
                     &nbsp;

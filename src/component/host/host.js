@@ -4,7 +4,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
-import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import Room from './components/room/room';
 import Profile from './components/profile/profile';
@@ -24,7 +23,7 @@ function TabPanel(props) {
         >
             {value === index && (
                 <Box p={3}>
-                    <Typography>{children}</Typography>
+                    <div>{children}</div>
                 </Box>
             )}
         </div>
@@ -62,7 +61,7 @@ export default function SimpleTabs() {
     };
 
     return (
-        <div className={classes.root}>
+        <div className={[classes.root, "host-container"].join(" ")}>
             <AppBar position="static">
                 <Tabs value={value} onChange={handleChange} aria-label="simple tabs example">
                     <Tab label="Thôn tin cá nhân" {...a11yProps(0)} />

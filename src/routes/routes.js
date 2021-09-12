@@ -9,7 +9,7 @@ import Host from '../component/host/host';
 
 const routes = [
     {
-        path: '/host/rooms',
+        path: '/host',
         exact: false,
         main: ({match, location}) => <Host match={match} location={location}/>
     },
