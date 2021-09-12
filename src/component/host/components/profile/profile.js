@@ -3,6 +3,7 @@ import { useHistory } from 'react-router-dom';
 import { Button, Modal, Card, Table, Form } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './profile.css';
+import { Typography } from 'antd';
 
 function Profile () {
     const saved = localStorage.getItem('user');
@@ -166,7 +167,7 @@ function Profile () {
                 keyboard={false}
             >
                 <Modal.Header closeButton>
-                    <Modal.Title><h2 className="float-left">Thay Đổi Thông Tin</h2></Modal.Title>
+                    <Modal.Title><Typography className="float-left">Thay Đổi Thông Tin</Typography></Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <Form className="mt-1">

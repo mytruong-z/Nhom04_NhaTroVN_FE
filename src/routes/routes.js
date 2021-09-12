@@ -5,8 +5,6 @@ import Home from '../component/home';
 import Register from '../component/register';
 import NewPostRoom from '../component/newPost/newpostroom';
 import SavedRoom from '../component/savedRoom/savedRoom';
-import Profile from '../component/host/profile';
-import Payment from '../component/Payment/payment';
 import Host from '../component/host/host';
 
 const routes = [
@@ -19,11 +17,6 @@ const routes = [
         path: '/saved_room',
         exact: false,
         main: ({match, location}) => <SavedRoom match={match} location={location}/>
-    },
-    {
-        path: '/profile',
-        exact: false,
-        main: ({match, location}) => <Profile match={match} location={location}/>
     },
     {
         path: '/room',
@@ -45,13 +38,6 @@ const routes = [
         exact: false,
         main: ({location}) => <NewPostRoom location={location}/>
     },
-
-    {
-        path: '/payment',
-        exact: false,
-        main: ({location}) => <Payment location={location}/>
-    },
-
     {
         path: '/logout',
         exact: false,

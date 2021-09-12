@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Button, Modal, Card, Table, Form } from 'react-bootstrap';
+import { Typography } from 'antd';
 import { Settings } from '@material-ui/icons';
 import './room.css';
+import { API_URL } from "../../../../config/index";
 
 function Room() {
     const [data, setData] = useState([]);
@@ -15,6 +17,7 @@ function Room() {
     const [selectedCity, setSelectedCity] = useState();
     const [selectedDistrict, setSelectedDistrict] = useState();
     const [selectedWard, setSelectedWard] = useState();
+    const [hostId, setHostId] = useState(0);
 
     const [formData, setFormData] = useState({
         address: "",
@@ -25,21 +28,26 @@ function Room() {
         ward: "",
     })
 
-    const API_URL = "http://localhost:4000/";
-    const HOST_ID = 1;
     const GHN_TOKEN = 'b08e0769-130e-11ec-b8c6-fade198b4859';
 
+    useEffect(() => {
+        // get host id
+        setHostId(JSON.parse(localStorage.getItem('user')).id);
+    }, [])
 
     useEffect(() => {
         axios(
-            `${API_URL}api/room/searchByhost/${HOST_ID}`,
+            `${API_URL}room/searchByhost/${hostId}`,
         ).then((res) => {
-            console.log("rooms: ", res.data);
-            setData(res.data);
+            if (Array.isArray(res.data)) {
+                console.log(res);
+                setData(res.data);
+            }
         });
 
+        // get cities data
         getCities();
-    }, [])
+    }, [hostId])
 
     const getCities = () => {
         fetch('https://dev-online-gateway.ghn.vn/shiip/public-api/master-data/province'
@@ -106,12 +114,15 @@ function Room() {
     }
 
     useEffect(() => {
-        getDistricts(selectedCity);
+        if (selectedCity) {
+            getDistricts(selectedCity);
+        }
     }, [selectedCity])
 
     useEffect(() => {
-        getWards(selectedDistrict);
-        console.log("District changed: ", wards);
+        if (selectedDistrict) {
+            getWards(selectedDistrict);
+        }
     }, [selectedDistrict])
 
     const handleCityOnChange = (e) => {
@@ -124,6 +135,7 @@ function Room() {
         }
         setFormData(newFormData);
         setSelectedCity(valueSplitted[0]);
+        setWards([]);
     }   
 
     const handleDistrictOnChange = (e) => {
@@ -182,7 +194,7 @@ function Room() {
         <div className="wrapper m-auto pt-3 room-container">
             <Card>
                 <Card.Header className="d-flex justify-content-between align-items-center">
-                    <p className="bold">Danh sách nhà</p>
+                    <Typography className="bold">Danh sách nhà</Typography>
                     <button onClick={onShowNew} className="btn btn-sm btn-success">Thêm</button>
                 </Card.Header>
                 <Card.Body>
@@ -265,7 +277,7 @@ function Room() {
                         <Form.Label>Địa chỉ</Form.Label>
                         <Form.Control type="text" placeholder="Nhập địa chỉ" onChange={(e) => setFormData({ ...formData, address: e.target.value })} />
                     </Form.Group>
-                    <Form.Group>
+                    <Form.Group className="mb-3" controlId="">
                         <Form.Label>Tỉnh thành</Form.Label>
                         <Form.Select aria-label="" onChange={(e) => handleCityOnChange(e)}>
                             <option>Chọn tỉnh thành</option>
@@ -276,7 +288,7 @@ function Room() {
                             }
                         </Form.Select>
                     </Form.Group>
-                    <Form.Group>
+                    <Form.Group className="mb-3" controlId="">
                         <Form.Label>Quận/ huyện</Form.Label>
                         <Form.Select aria-label="" onChange={(e) => handleDistrictOnChange(e)}>
                             <option>Chọn quận huyện</option>
@@ -287,7 +299,7 @@ function Room() {
                             }
                         </Form.Select>
                     </Form.Group>
-                    <Form.Group>
+                    <Form.Group className="mb-3" controlId="">
                         <Form.Label>Xã/ phường</Form.Label>
                         <Form.Select aria-label="" onChange={(e) => handleWardOnChange(e)}>
                             <option>Chọn xã phường</option>
@@ -298,7 +310,7 @@ function Room() {
                             }
                         </Form.Select>
                     </Form.Group>
-                    <Form.Group>
+                    <Form.Group className="mb-3" controlId="">
                         <Form.Label>Giá</Form.Label>
                         <Form.Control type="number" placeholder="Nhập giá" onChange={(e) => setFormData({ ...formData, price: e.target.value })} />
                     </Form.Group>
