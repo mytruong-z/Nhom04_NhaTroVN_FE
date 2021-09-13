@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Button, Modal, Card, Table, Form } from 'react-bootstrap';
-import { div } from 'antd';
-import { Settings } from '@material-ui/icons';
+import { Button, Modal, Card, Table, Form, Row, Col } from 'react-bootstrap';
 import './room.css';
 import { API_URL } from "../../../../config/index";
+import { DataGrid } from '@material-ui/data-grid';
 
 function Room() {
     const [data, setData] = useState([]);
+    const [rows, setRows] = useState([]);
     const [showDetails, setShowDetails] = useState(false);
     const [showNew, setShowNew] = useState(false);
     const [details, setDetails] = useState(null);
@@ -48,23 +48,25 @@ function Room() {
     }, [])
 
     useEffect(() => {
-        axios(
-            `${API_URL}room/searchByhost/${hostId}`,
-        ).then((res) => {
-            if (Array.isArray(res.data)) {
-                console.log(res);
-                setData(res.data);
-            }
-        });
+        if (hostId != 0) {
+            axios(
+                `${API_URL}room/searchByhost/${hostId}`,
+            ).then((res) => {
+                if (Array.isArray(res.data)) {
+                    console.log(res);
+                    setData(res.data);
+                }
+            });
 
-        // update hostid in form data
-        setFormData({
-            ...formData,
-            hostID: hostId
-        })
+            // update hostid in form data
+            setFormData({
+                ...formData,
+                hostID: hostId
+            })
 
-        // get cities data
-        getCities();
+            // get cities data
+            getCities();
+        }
     }, [hostId])
 
     const getCities = () => {
@@ -205,10 +207,10 @@ function Room() {
             "ward": "Cầu thị nghè",
             "hostID": 1
         }
+        console.log(temp);
 
         console.log(formData);
 
-        console.log(temp);
 
         axios.post(`${API_URL}room/add`, formData, {
             headers: {
@@ -261,6 +263,83 @@ function Room() {
         setShowNew(false);
     }
 
+    const columns = [
+        { field: 'id', headerName: 'ID' },
+        {
+            field: 'address',
+            headerName: 'Địa chỉ',
+            editable: false,
+            width: 200
+        },
+        {
+            field: 'province',
+            headerName: 'Tỉnh thành',
+            editable: false,
+            width: 150
+        },
+        {
+            field: 'district',
+            headerName: 'Quận huyện',
+            editable: false,
+            width: 200
+        },
+        {
+            field: 'ward',
+            headerName: 'Phường xã',
+            editable: false,
+            width: 150
+        },
+        {
+            field: 'price',
+            headerName: 'Giá',
+            editable: false,
+            width: 100
+        },
+        {
+            field: 'area',
+            headerName: 'Diện tích',
+            editable: false,
+            width: 200,
+            renderCell: (params) => (
+                <div>{params.value} <small>m2</small></div>
+            ),
+        },
+        {
+            field: 'action',
+            headerName: '',
+            sortable: false,
+            option: false,
+            renderCell: (params) => (
+                <strong>
+                    <button className="btn btn-sm btn-primary m-1" onClick={(e) => onShowDetails(params.value)}>Chi tiết</button>
+                    <button className="btn btn-sm btn-secondary m-1">Chỉnh sửa</button>
+                    <button className="btn btn-sm btn-danger m-1">Xóa</button>
+                </strong>
+            ),
+            width: 300
+        }
+    ];
+
+    useEffect(() => {
+        var renderRows = [];
+        if (data) {
+            data.map((item, index) => {
+                renderRows.push({
+                    id: index+1,
+                    address: item.address,
+                    province: item.city,
+                    district: item.district,
+                    ward: item.ward,
+                    price: item.price,
+                    area: item.area,
+                    action: item
+                })
+            })
+
+            setRows(renderRows);
+        }
+    }, [data])
+
     return (
         <div className="wrapper m-auto pt-3 room-container">
             <Card>
@@ -269,7 +348,15 @@ function Room() {
                     <button onClick={onShowNew} className="btn btn-sm btn-success">Thêm</button>
                 </Card.Header>
                 <Card.Body>
-                    <Table striped bordered hover>
+                    <div style={{ height: 400, width: '100%' }}>
+                        <DataGrid
+                            rows={rows}
+                            columns={columns}
+                            pageSize={5}
+                            disableSelectionOnClick
+                        />
+                    </div>
+                    {/* <Table striped bordered hover>
                         <thead>
                             <tr>
                                 <th>#</th>
@@ -297,7 +384,7 @@ function Room() {
                                 })
                             }
                         </tbody>
-                    </Table>
+                    </Table> */}
                 </Card.Body>
             </Card>
 
@@ -308,7 +395,7 @@ function Room() {
                 keyboard={false}
             >
                 <Modal.Header closeButton>
-                    <Modal.Title>Chi tiết bài đăng</Modal.Title>
+                    <Modal.Title>Chi tiết nhà</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <Form>
@@ -317,12 +404,38 @@ function Room() {
                             <img className="mw-100" src={`/assets/images/rooms/${details?.image?.name ? details?.image?.name : '/no-img.png'}`} alt="" />
                         </Form.Group>
                         <Form.Group className="mb-3">
-                            <Form.Label>Tiêu đề</Form.Label>
-                            <Form.Control disabled type="text" value={details?.post?.title} />
+                            <Form.Label>Địa chỉ</Form.Label>
+                            <Form.Control disabled type="text" value={details?.address} />
                         </Form.Group>
+                        <Row>
+                            <Col className="mb-3">
+                                <Form.Label>Tỉnh thành</Form.Label>
+                                <Form.Control disabled type="text" value={details?.city} />
+                            </Col>
+                            <Col className="mb-3">
+                                <Form.Label>Quận huyện</Form.Label>
+                                <Form.Control disabled type="text" value={details?.district} />
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col className="mb-3">
+                                <Form.Label>Xã phường</Form.Label>
+                                <Form.Control disabled type="text" value={details?.ward} />
+                            </Col>
+                            <Col className="mb-3">
+                                <Form.Label>Giá (VND)</Form.Label>
+                                <Form.Control disabled type="text" value={details?.price} />
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col className="mb-3">
+                                <Form.Label>Diện tích (m2)</Form.Label>
+                                <Form.Control disabled type="text" value={details?.area} />
+                            </Col>
+                        </Row>
                         <Form.Group className="mb-3">
                             <Form.Label>Chi tiết</Form.Label>
-                            <Form.Control disabled as="textarea" rows={5} value={details?.post?.description} />
+                            <Form.Control disabled as="textarea" rows={8} value={details?.addition_infor} />
                         </Form.Group>
                     </Form>
                 </Modal.Body>

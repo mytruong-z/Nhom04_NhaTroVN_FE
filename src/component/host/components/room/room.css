@@ -1,3 +1,7 @@
 .text-danger {
   color: rgba(var(--bs-danger-rgb),var(--bs-text-opacity)) !important;
 }
+
+.MuiDataGrid-columnHeaderTitle {
+  font-weight: bold !important;
+}
