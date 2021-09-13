@@ -43,6 +43,12 @@ const routes = [
         exact: false,
         main: ({location}) => <Home location={location} />
     },
+
+    {
+        path: '/activate-account/:code',
+        exact: false,
+        main: ({location}) => <Login location={location}/>
+    },
     
     {
         path: '/',

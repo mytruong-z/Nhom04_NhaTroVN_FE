@@ -6,35 +6,52 @@ import './profile.css';
 import { div } from 'antd';
 
 function Profile () {
+    const TYPE_LEVEL_1=1; //goi dong
+    const TYPE_LEVEL_2=2; //goi bac
+    const TYPE_LEVEL_3=3; //goi vang
+    const TYPE_LEVEL_4=4; //goi vang
+
     const saved = localStorage.getItem('user');
-    const initial = JSON.parse(saved);
+    const initial = JSON.parse(saved); //pls check
     const history = useHistory();
 
     const [profile, setprofile] = useState([]);
     const [showProfile, setShowProfile] = useState(false);
-    const [id, setId] = useState([initial.id]);
+    const [id, setId] = useState([]);
     const [name, setName] = useState([]);
     const [email, setEmail] = useState([]);
     const [phone, setPhone] = useState([]);
     const [cardId, setCardId] = useState([]);
+    const [transactions, setTransactions] = useState([]);
+
     useEffect(async () => {
-        await fetch('https://nhatrovn.herokuapp.com/api/user/information/' + initial.id, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-            },
-        }).then(async function (response) {
-            const result = await response.json();
-            setprofile(result);
-            setName(result.name);
-            setEmail(result.email);
-            setPhone(result.phone);
-            setCardId(result.cardId);
-            console.log(result);
-        }).catch((error) => {
-            return error;
-        });
+        if (!saved) {
+            history.push('/');
+        }
+        else {
+            setId(initial.id);
+            await fetch('https://nhatrovn.herokuapp.com/api/user/information/' + initial.id, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+            }).then(async function (response) {
+                const result = await response.json();
+                setprofile(result);
+                setName(result.name);
+                setEmail(result.email);
+                setPhone(result.phone);
+                setCardId(result.cardId);
+                if(typeof result.transaction_history !== 'undefined') {
+                    setTransactions(result.transaction_history);
+                }
+                console.log(result);
+            }).catch((error) => {
+                return error;
+            });
+        }
+
     }, []);
 
     const onShowProfile = (e) => {
@@ -157,7 +174,53 @@ function Profile () {
                             Đổi</Button>
                     </div>
                 </div>
+                <div className="transactions">
+                    <h3>Lịch Sử Thanh Toán</h3>
+                    <Table striped bordered hover size="sm">
+                        <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Mã Thanh Toán</th>
+                            <th>Loại Gói Đăng Ký</th>
+                            <th>Ngày Thanh Toán</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {
+                            transactions.length ?
+                                transactions.length.map((item, index) => {
+                                    let level = "";
+                                    switch (item.subscription_id) {
+                                        case TYPE_LEVEL_1:
+                                            level = "Gói Đồng";
+                                            break;
+                                        case TYPE_LEVEL_2:
+                                            level = "Gói Bạc";
+                                            break;
+                                        case TYPE_LEVEL_3:
+                                            level = "Gói Vàng";
+                                            break;
+                                        case TYPE_LEVEL_4:
+                                            level = "Gói Vàng";
+                                            break;
+                                        default:
+                                            level = "Không xác định"
 
+                                    }
+                                    return (
+                                        <tr>
+                                            <td>{index}</td>
+                                            <td>{item.unique_key}</td>
+                                            <td>{level}</td>
+                                            <td>{item.paid_date}</td>
+                                        </tr>
+                                    )
+                                })
+                                : ""
+                        }
+                        </tbody>
+                    </Table>
+                </div>
             </div>
 
             <Modal
