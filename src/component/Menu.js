@@ -1,11 +1,11 @@
-import React, {Component, useEffect, useState} from 'react';
+import React, { Component, useEffect, useState } from 'react';
 import { Route, Link } from 'react-router-dom';
-import {Nav, NavLink} from 'react-bootstrap';
+import { Nav, NavLink } from 'react-bootstrap';
 
 //@LoanNgo, You can rely on this variable to check the login status: localStorage;
-console.log(localStorage.user);
 
-function Menu() {
+const Menu = (props) => {
+    const {userLogin} = props;
     const menus = [
         {
             name: 'Trang Chủ',
@@ -36,7 +36,7 @@ function Menu() {
                 exact={activeOnlyWhenExact}
                 children={({match}) => {
                     const active = match ? 'active bg-pink' : '';
-                    const loginStatus = (localStorage.user && (to === '/login' || to === '/register')) ? 'hidden' : '';
+                    const loginStatus = (userLogin && (to === '/login' || to === '/register')) ? 'hidden' : '';
 
                     return (
                         <Nav.Item as="li" className={`my-li align-items-center d-grid ${active} ${loginStatus}`}>
@@ -48,13 +48,18 @@ function Menu() {
         );
     };
 
-    function showMenus(menus) {
+    function showMenus (menus) {
         var result = null;
 
-        if (localStorage.user) {
+        if (userLogin) {
             menus.push({
                 name: 'Đăng xuất',
-                to: '/out',
+                to: '/logout',
+                exact: false
+            });
+            menus.push({
+                name: 'Cá Nhân',
+                to: '/host',
                 exact: false
             });
         }
@@ -87,6 +92,6 @@ function Menu() {
             </Nav>
         </div>
     );
-}
+};
 
 export default Menu;

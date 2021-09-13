@@ -6,16 +6,25 @@ import Footer from './component/footer';
 import routes from './routes/routes';
 import adminRoutes from './routes/admin';
 import Sidebar from "./component/Admin/partials/sidebar";
+import Login from "./component/login";
 
 function App() {
     const [adminPage, setAdminPage] = useState(false);
     const [adminLogin, setAdminLogin] = useState(false);
+    const [userLogin, setUserLogin] = useState(false);
 
     const logout = () => {
         localStorage.setItem("user", "");
+        setUserLogin(false);
     };
 
-    useEffect(async () => {
+    const handleUserLogin = () => {
+        setUserLogin(true);
+    };
+
+    console.log("userLogin", userLogin);
+
+    useEffect(() => {
         const location = window.location.pathname;
         if(location.startsWith('/admin')){
             setAdminPage(true);
@@ -26,10 +35,14 @@ function App() {
 
     }, [adminPage]);
 
-    useEffect(async () => {
+    useEffect(() => {
         const location = window.location.pathname;
         if (location.startsWith('/logout')) {
             logout();
+        }
+
+        if (localStorage.getItem('user')) {
+            setUserLogin(true);
         }
     }, []);
 
@@ -40,6 +53,9 @@ function App() {
 
         if (routes.length > 0) {
             result = routes.map((route, index) => {
+                if (route.path === '/login') {
+                    route.main = ({location}) => <Login setUserLogin={handleUserLogin} location={location}/>;
+                }
                 return (
                     <Route
                         key={index}
@@ -59,12 +75,12 @@ function App() {
                 <Router>
                     <div className="App">
                         {/* Menu */}
-                        <Menu />
+                        <Menu userLogin={userLogin} />
                         {/* Noi Dung */}
                         <Switch>
                             { showContentMenu(routes) }
                         </Switch>
-                        <Footer/>
+                        <Footer userLogin={userLogin} />
                     </div>
                 </Router>
                 : //Admin pages

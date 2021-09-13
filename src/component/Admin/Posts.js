@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 import CardItem from "./partials/cardItem";
 import {Tab, TabList, TabPanel, Tabs} from "react-tabs";
 import Header from "./partials/header";
