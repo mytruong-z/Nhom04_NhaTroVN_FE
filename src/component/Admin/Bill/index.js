@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import { Route, NavLink } from 'react-router-dom';
+import React from 'react';
+import { Route } from 'react-router-dom';
 import Bill from "../Bill/billDetail";
 
 const BillDetails = (props) => {

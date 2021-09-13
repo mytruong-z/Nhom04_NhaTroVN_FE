@@ -1,5 +1,5 @@
-import React, {useState, useEffect, useCallback} from 'react';
-import {Image, Button} from 'react-bootstrap';
+import React from 'react';
+import {Image} from 'react-bootstrap';
 import Header from "../partials/header";
 
 const room = {

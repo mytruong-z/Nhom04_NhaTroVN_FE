@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import { Route, NavLink } from 'react-router-dom';
+import React    from 'react';
+import { Route } from 'react-router-dom';
 import Posts from "../Post/postsDetail";
 
 const PostsDetails = (props) => {
