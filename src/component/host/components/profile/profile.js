@@ -31,7 +31,7 @@ function Profile () {
         }
         else {
             const initial = JSON.parse(saved);
-            setId(initial.id)
+            setId(initial.id);
             await fetch('https://nhatrovn.herokuapp.com/api/user/information/' + initial.id, {
                 method: 'GET',
                 headers: {
@@ -45,13 +45,10 @@ function Profile () {
                 setEmail(result.email);
                 setPhone(result.phone);
                 setCardId(result.cardId);
-                //Xem lại dòng này sao nha Mỵ 
-                //để nó không chạy
-                
-                /*if(typeof result.transaction_history !== 'undefined') {
+
+                if(typeof result.transaction_history !== 'undefined') {
                     setTransactions(result.transaction_history);
-                }*/
-                console.log(result);
+                }
             }).catch((error) => {
                 return error;
             });
@@ -135,11 +132,11 @@ function Profile () {
             <div className="mt-3">
                 <div className="profile">
                     <div className="d-flex justify-content-between align-items-center mb-3">
-                        <h4 className="text-right">Thông Tin Tài Khoản</h4>
+                        <h3 className="w-100 bold">Thông Tin Tài Khoản</h3>
                     </div>
-                    <div className="card-body">
+                    <div className="card-body text-left">
                         <div className="row">
-                            <div className="col-sm-3">
+                            <div className="col-sm-3 vertical-base">
                                 <h6 className="mb-0 float-left">Họ Tên</h6>
                             </div>
                             <div className="col-sm-9 text-secondary">
@@ -148,7 +145,7 @@ function Profile () {
                         </div>
 
                         <div className="row">
-                            <div className="col-sm-3">
+                            <div className="col-sm-3 vertical-base">
                                 <h6 className="mb-0 float-left">Email</h6>
                             </div>
                             <div className="col-sm-9 text-secondary">
@@ -157,7 +154,7 @@ function Profile () {
                         </div>
 
                         <div className="row">
-                            <div className="col-sm-3">
+                            <div className="col-sm-3 vertical-base">
                                 <h6 className="mb-0 float-left">Điện Thoại</h6>
                             </div>
                             <div className="col-sm-9 text-secondary">
@@ -166,7 +163,7 @@ function Profile () {
                         </div>
 
                         <div className="row">
-                            <div className="col-sm-3">
+                            <div className="col-sm-3 vertical-base">
                                 <h6 className="mb-0 float-left">CMND</h6>
                             </div>
                             <div className="col-sm-9 text-secondary">
@@ -181,7 +178,7 @@ function Profile () {
                     </div>
                 </div>
                 <div className="transactions">
-                    <h3>Lịch Sử Thanh Toán</h3>
+                    <h3 className="bold">Lịch Sử Thanh Toán</h3>
                     <Table striped bordered hover size="sm">
                         <thead>
                         <tr>
@@ -193,8 +190,8 @@ function Profile () {
                         </thead>
                         <tbody>
                         {
-                            transactions.length ?
-                                transactions.length.map((item, index) => {
+                            transactions !== null && transactions.length ?
+                                transactions.map((item, index) => {
                                     let level = "";
                                     switch (item.subscription_id) {
                                         case TYPE_LEVEL_1:
@@ -215,7 +212,7 @@ function Profile () {
                                     }
                                     return (
                                         <tr>
-                                            <td>{index}</td>
+                                            <td>{index + 1}</td>
                                             <td>{item.unique_key}</td>
                                             <td>{level}</td>
                                             <td>{item.paid_date}</td>

@@ -68,6 +68,32 @@ code {
     float: left;
 }
 
+.float-right {
+    float: right;
+}
+
+.forgot-pass {
+    font-weight: bold;
+    color: black;
+}
+
+.text-left {
+    text-align: left;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.vertical-base {
+    display: block!important;
+    margin: auto 0!important;
+}
+.profile .vertical-base h6 {
+    font-weight: 600;
+    font-size: 19px;
+}
+
 .search-sec {
     padding: 2rem;
 }

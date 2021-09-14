@@ -6,12 +6,18 @@ import Register from '../component/register';
 import NewPostRoom from '../component/newPost/newpostroom';
 import SavedRoom from '../component/savedRoom/savedRoom';
 import Host from '../component/host/host';
+import ForgotPassword from '../component/forgotPassword';
 
 const routes = [
     {
         path: '/host',
         exact: false,
         main: ({match, location}) => <Host match={match} location={location}/>
+    },
+    {
+        path: '/forgot_pass',
+        exact: false,
+        main: ({location}) => <ForgotPassword location={location}/>
     },
     {
         path: '/saved_room',

@@ -83,6 +83,12 @@ const Login = (props) => {
                 </Form.Group>
 
                 <Form.Group className="mb-3" controlId="formBasicCheckbox">
+                    <Form.Label className="float-right"><a href="/forgot_pass" className="forgot-pass">Quên Mật Khẩu?</a></Form.Label>
+                </Form.Group>
+
+                <br/>
+
+                <Form.Group className="mb-3" controlId="formBasicCheckbox">
                     <Form.Check className="float-left" type="checkbox" label="Nhớ mật khẩu"/>
                 </Form.Group>
                 <Button className="mt-3 btn btn-default text-white" onClick={login} variant="primary">
@@ -91,6 +97,6 @@ const Login = (props) => {
             </Form>
         </div>
     );
-}
+};
 
 export default Login;
