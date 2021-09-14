@@ -11,8 +11,9 @@ function Profile () {
     const TYPE_LEVEL_3=3; //goi vang
     const TYPE_LEVEL_4=4; //goi vang
 
-    const saved = localStorage.getItem('user');
-    const initial = JSON.parse(saved); //pls check
+   
+    const saved = localStorage.getItem('user');;
+    
     const history = useHistory();
 
     const [profile, setprofile] = useState([]);
@@ -25,11 +26,12 @@ function Profile () {
     const [transactions, setTransactions] = useState([]);
 
     useEffect(async () => {
-        if (!saved) {
+        if (!localStorage.getItem('user')) {
             history.push('/');
         }
         else {
-            setId(initial.id);
+            const initial = JSON.parse(saved);
+            setId(initial.id)
             await fetch('https://nhatrovn.herokuapp.com/api/user/information/' + initial.id, {
                 method: 'GET',
                 headers: {
@@ -43,9 +45,12 @@ function Profile () {
                 setEmail(result.email);
                 setPhone(result.phone);
                 setCardId(result.cardId);
-                if(typeof result.transaction_history !== 'undefined') {
+                //Xem lại dòng này sao nha Mỵ 
+                //để nó không chạy
+                
+                /*if(typeof result.transaction_history !== 'undefined') {
                     setTransactions(result.transaction_history);
-                }
+                }*/
                 console.log(result);
             }).catch((error) => {
                 return error;
@@ -89,6 +94,7 @@ function Profile () {
     };
 
     async function saveProfile () {
+        const  initial = JSON.parse(saved);
         console.warn(id, name, email, phone, cardId);
         let item = {id, name, email, phone, cardId};
         await fetch('https://nhatrovn.herokuapp.com/api/user/update', {
