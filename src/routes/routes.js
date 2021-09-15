@@ -6,7 +6,7 @@ import Register from '../component/register';
 import NewPostRoom from '../component/newPost/newpostroom';
 import SavedRoom from '../component/savedRoom/savedRoom';
 import Host from '../component/host/host';
-import ForgotPassword from '../component/forgotPassword';
+import ForgotPassword from '../component/host/components/password/forgotPassword';
 
 const routes = [
     {

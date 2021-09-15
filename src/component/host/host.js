@@ -8,6 +8,7 @@ import Box from '@material-ui/core/Box';
 import Room from './components/room/room';
 import Profile from './components/profile/profile';
 import Payment from './components/payment/payment';
+import ChangePassword from './components/password/changePassword';
 import './host.css';
 import { positions, Provider } from "react-alert";
 import AlertTemplate from "react-alert-template-basic";
@@ -72,10 +73,11 @@ export default function SimpleTabs() {
             <div className={[classes.root, "host-container"].join(" ")}>
                 <AppBar position="static">
                     <Tabs value={value} onChange={handleChange} aria-label="simple tabs example">
-                        <Tab label="Thôn tin cá nhân" {...a11yProps(0)} />
+                        <Tab label="Thông tin cá nhân" {...a11yProps(0)} />
                         <Tab label="Danh sách nhà" {...a11yProps(1)} />
                         <Tab label="Danh sách bài đăng" {...a11yProps(2)} />
                         <Tab label="Thanh toán" {...a11yProps(3)} />
+                        <Tab label="Thay đổi mật khẩu" {...a11yProps(4)} />
                     </Tabs>
                 </AppBar>
                 <TabPanel value={value} index={0}>
@@ -89,6 +91,9 @@ export default function SimpleTabs() {
                 </TabPanel>
                 <TabPanel value={value} index={3}>
                     <Payment />
+                </TabPanel>
+                <TabPanel value={value} index={4}>
+                    <ChangePassword />
                 </TabPanel>
             </div>
         </Provider>

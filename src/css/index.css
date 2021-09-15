@@ -137,7 +137,13 @@ code {
 
 .room-box-img img {
     max-height: 500px;
-    width: auto;
+    width: 100%;
+}
+.room-slide-img .slick-dots li button:before {
+    font-size: 0.5rem;
+}
+.room-slide-img .slick-dots li.slick-active button:before {
+    font-size: 1rem;
 }
 
 .nav .hidden {

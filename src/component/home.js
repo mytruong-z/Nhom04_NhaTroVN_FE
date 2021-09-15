@@ -1,9 +1,8 @@
 import React, {useState, useEffect} from 'react';
 import {Carousel, Card } from 'react-bootstrap';
-import { API_URL } from "../config/index";
+import { API_URL, CLOUD_IMG } from "../config/index";
 
 function Home() {
-    const MAIN_IMG="https://res.cloudinary.com/nhom4/image/upload/v1631451498/room/";
     const [rooms, setRooms] = useState([]);
 
     useEffect(async () => {
@@ -104,7 +103,7 @@ function Home() {
                             <div key={i} className="col-lg-4 col-12 d-grid justify-content-center pb-5">
                                 <Card style={{width: '18rem'}}>
                                     <Card.Img variant="top"
-                                              src={`${MAIN_IMG}${img}`}/>
+                                              src={`${CLOUD_IMG}${img}`}/>
                                     <Card.Body>
                                         <Card.Title>{item.address && item.address}</Card.Title>
                                         <Card.Text>
