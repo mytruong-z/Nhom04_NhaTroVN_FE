@@ -3,7 +3,7 @@ import {Carousel, Card } from 'react-bootstrap';
 import { API_URL } from "../config/index";
 
 function Home() {
-
+    const MAIN_IMG="https://res.cloudinary.com/nhom4/image/upload/v1631451498/room/";
     const [rooms, setRooms] = useState([]);
 
     useEffect(async () => {
@@ -92,33 +92,42 @@ function Home() {
                 </div>
             </section>
             <div className="container py-5 w-75">
-                <div className="row">
-                    {rooms.map((item, i) => (
-                        <div key={i} className="col-lg-4 col-12 d-grid justify-content-center pb-5">
-                            <Card style={{width: '18rem'}}>
-                                <Card.Img variant="top" src={`/assets/images/rooms/${item.image ? item.image.name : '/no-img.png'}`}/>
-                                <Card.Body>
-                                    <Card.Title>{item.address && item.address}</Card.Title>
-                                    <Card.Text>
-                                        {item.addition_infor && item.addition_infor} <br/>
-                                        Giá: <span className="fw-bold">{item.price}</span> <br/>
-                                        { item.district.name &&
+                <div className="row room-items">
+                    {rooms.map((item, i) => {
+                        let img = "no-img.png";
+                        if (typeof item.image !== 'undefined' && item.image.length) {
+                            if(typeof item.image[0].name !== 'undefined') {
+                                img = item.image[0].name;
+                            }
+                        }
+                        return (
+                            <div key={i} className="col-lg-4 col-12 d-grid justify-content-center pb-5">
+                                <Card style={{width: '18rem'}}>
+                                    <Card.Img variant="top"
+                                              src={`${MAIN_IMG}${img}`}/>
+                                    <Card.Body>
+                                        <Card.Title>{item.address && item.address}</Card.Title>
+                                        <Card.Text>
+                                            {item.addition_infor && item.addition_infor} <br/>
+                                            Giá: <span className="fw-bold">{item.price}</span> <br/>
+                                            {item.district.name &&
                                             <>
                                                 {item.district.prefix}: {item.district.name} <br/>
                                             </>
-                                        }
-                                        {item.ward.name &&
+                                            }
+                                            {item.ward.name &&
                                             <>
                                                 {item.ward.prefix}: {item.ward.name} <br/>
                                             </>
-                                        }
-                                        {item.province && item.province.name}
-                                    </Card.Text>
-                                    <a href={`/room/${item.id}`} className="btn btn-default text-white">Chi tiết</a>
-                                </Card.Body>
-                            </Card>
-                        </div>
-                    ))}
+                                            }
+                                            {item.province && item.province.name}
+                                        </Card.Text>
+                                        <a href={`/room/${item.id}`} className="cs-btn-detail btn btn-default text-white">Chi tiết</a>
+                                    </Card.Body>
+                                </Card>
+                            </div>
+                        );
+                    })}
                 </div>
             </div>
         </>

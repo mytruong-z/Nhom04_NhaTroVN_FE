@@ -189,6 +189,21 @@ code {
     top: 80px;
     left: 370px;
 }
+.room-items .card-img-top {
+    height: 250px;
+}
+
+.room-items .card-text {
+    display: block;
+    min-height: 100px;
+}
+
+.room-items .cs-btn-detail {
+    position: absolute;
+    bottom: 1rem;
+}
+
+
 @media (min-width: 992px) {
     .search-sec {
         position: relative;

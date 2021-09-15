@@ -25,11 +25,26 @@ const Login = (props) => {
 
     const activeAccount = () => {
         if (code) {
-            fetch(`https://nhatrovietnam.herokuapp.com/api/verify/activate-account/${code}`)
-                .then(response => response.json())
-                .then(data => {
-                    console.log(data);
-                });
+            let item = {code};
+            fetch(`https://nhatrovn.herokuapp.com/api/verify/activate-account`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify(item)
+            }).then(response => {
+                if (response.ok) {
+                    return response.json();
+                }
+            }).then(data => {
+                if(typeof (data) !== 'undefined') {
+                    alert("Kích hoạt thành công. Vui lòng đăng nhập lại!");
+                } else {
+                    alert("Đường dẫn kích hoạt không đúng hoặc đã tồn tại!");
+                }
+
+            });
         }
     };
 
@@ -57,11 +72,12 @@ const Login = (props) => {
                 localStorage.setItem('user', JSON.stringify(result));
                 setUserLogin();
                 console.log(result);
-                history.push('/');
+                //history.push('/');
             }
         }).catch(function (error) {
             alert('Sai email hoặc password');
         });
+        history.push('/');
 
     }
 
