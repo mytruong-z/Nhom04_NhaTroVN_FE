@@ -5,13 +5,17 @@ import './room.css';
 import { API_URL } from "../../../../config/index";
 import { DataGrid } from '@material-ui/data-grid';
 import { useAlert } from "react-alert";
+import DoneOutlineIcon from '@material-ui/icons/DoneOutline';
+import Tooltip from '@material-ui/core/Tooltip';
 
 function Room() {
     const [data, setData] = useState([]);
     const [rows, setRows] = useState([]);
     const [showDetails, setShowDetails] = useState(false);
+    const [showPostDetails, setShowPostDetails] = useState(false);
     const [showNew, setShowNew] = useState(false);
     const [details, setDetails] = useState(null);
+    const [postDetails, setPostDetails] = useState(null);
     const [citiesData, setCitiesData] = useState([]);
     const [districts, setDistricts] = useState([]);
     const [wards, setWards] = useState([]);
@@ -231,12 +235,25 @@ function Room() {
         setDetails(item);
     }
 
+    const onShowPostDetails = (item) => {
+        showPostDetailsModal();
+        setPostDetails(item);
+    }
+
     const showDetailsModal = () => {
         setShowDetails(true);
     }
 
     const hideDetailsModal = () => {
         setShowDetails(false);
+    }
+
+    const showPostDetailsModal = () => {
+        setShowPostDetails(true);
+    }
+
+    const hidePostDetailsModal = () => {
+        setShowPostDetails(false);
     }
 
     const onShowNew = (item) => {
@@ -253,6 +270,39 @@ function Room() {
 
     const columns = [
         { field: 'id', headerName: 'ID' },
+        {
+            field: 'post',
+            headerName: 'Bài đăng',
+            editable: false,
+            sortable: false,
+            width: 200,
+            renderCell: (params) => (
+                <strong>
+                    <a className="m-1" onClick={(e) => onShowPostDetails(params.value)}>Xem chi tiết</a>
+                    <a className="m-1 text-dark" >Chỉnh sửa</a>
+                </strong>
+            ),
+        },
+        {
+            field: 'post_status',
+            headerName: 'Trạng thái',
+            editable: false,
+            sortable: false,
+            width: 100,
+            renderCell: (params) => (
+                <strong>
+                    {params.value?.status?.name == "active" ? 
+                     <Tooltip title="Đã duyệt" aria-label="add">
+                        <DoneOutlineIcon style={{fill: "green"}}/>
+                    </Tooltip>
+                    : 
+                    <Tooltip title="Chưa duyệt" aria-label="add">
+                        <DoneOutlineIcon/>
+                    </Tooltip>
+                }
+                </strong>
+            ),
+        },
         {
             field: 'address',
             headerName: 'Địa chỉ',
@@ -317,17 +367,19 @@ function Room() {
     useEffect(() => {
         var renderRows = [];
         if (data) {
-            data.map((item, index) => {
+            data.map((item, index) => {            
                 renderRows.push({
                     id: index+1,
-                    address: item.address,
-                    province: item.city,
-                    district: item.district,
-                    ward: item.ward,
-                    price: item.price,
-                    area: item.area,
-                    addition_infor: item.addition_infor,
-                    action: item
+                    address: item?.address,
+                    province: item?.city,
+                    district: item?.district,
+                    ward: item?.ward,
+                    price: item?.price,
+                    area: item?.area,
+                    addition_infor: item?.addition_infor,
+                    action: item,
+                    post: item?.post[0],
+                    post_status: item?.post[0]
                 })
             })
 
@@ -343,43 +395,14 @@ function Room() {
                     <button onClick={onShowNew} className="btn btn-sm btn-success">Thêm</button>
                 </Card.Header>
                 <Card.Body>
-                    <div style={{ height: 400, width: '100%' }}>
+                    <div style={{ height: '650px', width: '100%' }}>
                         <DataGrid
                             rows={rows}
                             columns={columns}
-                            pageSize={5}
+                            pageSize={10}
                             disableSelectionOnClick
                         />
                     </div>
-                    {/* <Table striped bordered hover>
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th className="d-none">id</th>
-                                <th>Địa chỉ</th>
-                                <th>Giá</th>
-                                <th>Thông tin</th>
-                                <th className="col-2 text-center"><Settings /></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {
-                                data.map((item, index) => {
-                                    return <tr key={index}>
-                                        <td>{index + 1}</td>
-                                        <td>{item.address}</td>
-                                        <td>{item.price}</td>
-                                        <td>{item.addition_infor}</td>
-                                        <td>
-                                            <button className="btn btn-sm btn-primary m-1" onClick={(e) => onShowDetails(item)}>Chi tiết</button>
-                                            <button className="btn btn-sm btn-secondary m-1">Chỉnh sửa</button>
-                                            <button className="btn btn-sm btn-danger m-1">Xóa</button>
-                                        </td>
-                                    </tr>
-                                })
-                            }
-                        </tbody>
-                    </Table> */}
                 </Card.Body>
             </Card>
 
@@ -436,6 +459,38 @@ function Room() {
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={hideDetailsModal}>
+                        Đóng
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+
+            <Modal
+                className="post_details_modal"
+                show={showPostDetails}
+                onHide={hidePostDetailsModal}
+                keyboard={false}
+            >
+                <Modal.Header closeButton>
+                    <Modal.Title>Chi tiết bài đăng</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <Form>
+                        <Form.Group className="mb-3">
+                            <Form.Label>Hình ảnh</Form.Label>
+                            <img className="mw-100" src={`/assets/images/rooms/${postDetails?.image?.name ? postDetails?.image?.name : '/no-img.png'}`} alt="" />
+                        </Form.Group>
+                        <Form.Group className="mb-3">
+                            <Form.Label>Tiêu đề</Form.Label>
+                            <Form.Control disabled type="text" value={postDetails?.title} />
+                        </Form.Group>
+                        <Form.Group className="mb-3">
+                            <Form.Label>Chi tiết</Form.Label>
+                            <Form.Control disabled as="textarea" rows={8} value={postDetails?.description}  />
+                        </Form.Group>
+                    </Form>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={hidePostDetailsModal}>
                         Đóng
                     </Button>
                 </Modal.Footer>
