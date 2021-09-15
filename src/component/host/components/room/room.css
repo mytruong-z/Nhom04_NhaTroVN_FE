@@ -5,3 +5,8 @@
 .MuiDataGrid-columnHeaderTitle {
   font-weight: bold !important;
 }
+
+.modal.show .modal-dialog {
+  width: 700px !important;
+  max-width: 100% !important;
+}

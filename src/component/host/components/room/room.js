@@ -4,6 +4,7 @@ import { Button, Modal, Card, Table, Form, Row, Col } from 'react-bootstrap';
 import './room.css';
 import { API_URL } from "../../../../config/index";
 import { DataGrid } from '@material-ui/data-grid';
+import { useAlert } from "react-alert";
 
 function Room() {
     const [data, setData] = useState([]);
@@ -18,6 +19,7 @@ function Room() {
     const [selectedDistrict, setSelectedDistrict] = useState();
     const [selectedWard, setSelectedWard] = useState();
     const [hostId, setHostId] = useState(0);
+    const alert = useAlert();
 
     const [formData, setFormData] = useState({
         address: "",
@@ -197,31 +199,17 @@ function Room() {
             }
         }
 
-        var temp = {
-            "address": "222222",
-            "price": 1000000,
-            "area": 50,
-            "addition_infor": "Phòng xấu quắc",
-            "city": "HCM",
-            "district": "Quận 3",
-            "ward": "Cầu thị nghè",
-            "hostID": 1
-        }
-        console.log(temp);
-
-        console.log(formData);
-
-
         axios.post(`${API_URL}room/add`, formData, {
             headers: {
                 'Content-Type': 'application/json'
             }
         })
             .then(function (response) {
-                console.log(response);
+                setShowNew(false);
+                alert.success("Thêm nhà thành công");
             })
             .catch(function (error) {
-                console.log(error);
+                alert.error(error);
             });
     }
 
@@ -299,10 +287,16 @@ function Room() {
             field: 'area',
             headerName: 'Diện tích',
             editable: false,
-            width: 200,
+            width: 150,
             renderCell: (params) => (
                 <div>{params.value} <small>m2</small></div>
             ),
+        },
+        {
+            field: 'addition_infor',
+            headerName: 'Khác',
+            editable: false,
+            width: 200
         },
         {
             field: 'action',
@@ -332,6 +326,7 @@ function Room() {
                     ward: item.ward,
                     price: item.price,
                     area: item.area,
+                    addition_infor: item.addition_infor,
                     action: item
                 })
             })
@@ -457,7 +452,7 @@ function Room() {
                     <Modal.Title>Thêm nhà mới</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <Form.Group className="mb-3" controlId="">
+                    <Form.Group className="mb-3" controlid="">
                         <Form.Label>Địa chỉ</Form.Label>
                         <Form.Control type="text" placeholder="Nhập địa chỉ" onChange={(e) => {
                             setFormData({ ...formData, address: e.target.value })
@@ -467,68 +462,72 @@ function Room() {
                             Vui lòng nhập thông tin
                         </Form.Text>
                     </Form.Group>
-                    <Form.Group className="mb-3" controlId="">
-                        <Form.Label>Tỉnh thành</Form.Label>
-                        <Form.Select aria-label="" onChange={(e) => {
-                            handleCityOnChange(e)
-                            setFormErrorMessageToFalse();
-                        }}>
-                            <option value="null">Chọn tỉnh thành</option>
-                            {
-                                citiesData.map((item, index) => {
-                                    return <option key={item.ProvinceID} value={`${item.ProvinceID},${item.ProvinceName}`}>{item.ProvinceName}</option>
-                                })
-                            }
-                        </Form.Select>
-                        <Form.Text className="text-muted text-danger" style={{ display: showFormErrorMessage.city ? 'block' : 'none' }}>
-                            Vui lòng nhập thông tin
-                        </Form.Text>
-                    </Form.Group>
-                    <Form.Group className="mb-3" controlId="">
-                        <Form.Label>Quận/ huyện</Form.Label>
-                        <Form.Select aria-label="" onChange={(e) => {
-                            handleDistrictOnChange(e)
-                            setFormErrorMessageToFalse();
-                        }}>
-                            <option value="null">Chọn quận huyện</option>
-                            {
-                                districts.map(item => {
-                                    return <option key={item?.DistrictID} value={`${item?.DistrictID},${item?.DistrictName}`}>{item?.DistrictName}</option>
-                                })
-                            }
-                        </Form.Select>
-                        <Form.Text className="text-muted text-danger" style={{ display: showFormErrorMessage.district ? 'block' : 'none' }}>
-                            Vui lòng nhập thông tin
-                        </Form.Text>
-                    </Form.Group>
-                    <Form.Group className="mb-3" controlId="">
-                        <Form.Label>Xã/ phường</Form.Label>
-                        <Form.Select aria-label="" onChange={(e) => {
-                            handleWardOnChange(e)
-                            setFormErrorMessageToFalse();
-                        }}>
-                            <option value="null">Chọn xã phường</option>
-                            {
-                                wards.map(item => {
-                                    return <option key={item?.WardCode} value={`${item?.WardCode},${item?.WardName}`}>{item?.WardName}</option>
-                                })
-                            }
-                        </Form.Select>
-                        <Form.Text className="text-muted text-danger" style={{ display: showFormErrorMessage.ward ? 'block' : 'none' }}>
-                            Vui lòng nhập thông tin
-                        </Form.Text>
-                    </Form.Group>
-                    <Form.Group className="mb-3" controlId="">
-                        <Form.Label>Giá</Form.Label>
-                        <Form.Control type="number" placeholder="Nhập giá" onChange={(e) => {
-                            setFormData({ ...formData, price: parseInt(e.target.value) })
-                            setFormErrorMessageToFalse();
-                        }} />
-                        <Form.Text className="text-muted text-danger" style={{ display: showFormErrorMessage.price ? 'block' : 'none' }}>
-                            Vui lòng nhập thông tin
-                        </Form.Text>
-                    </Form.Group>
-                    <Form.Group className="mb-3" controlId="">
+                    <Row>
+                        <Col className="mb-3" controlid="">
+                            <Form.Label>Tỉnh thành</Form.Label>
+                            <Form.Select aria-label="" onChange={(e) => {
+                                handleCityOnChange(e)
+                                setFormErrorMessageToFalse();
+                            }}>
+                                <option value="null">Chọn tỉnh thành</option>
+                                {
+                                    citiesData.map((item, index) => {
+                                        return <option key={item.ProvinceID} value={`${item.ProvinceID},${item.ProvinceName}`}>{item.ProvinceName}</option>
+                                    })
+                                }
+                            </Form.Select>
+                            <Form.Text className="text-muted text-danger" style={{ display: showFormErrorMessage.city ? 'block' : 'none' }}>
+                                Vui lòng nhập thông tin
+                            </Form.Text>
+                        </Col>
+                        <Col className="mb-3" controlid="">
+                            <Form.Label>Quận/ huyện</Form.Label>
+                            <Form.Select aria-label="" onChange={(e) => {
+                                handleDistrictOnChange(e)
+                                setFormErrorMessageToFalse();
+                            }}>
+                                <option value="null">Chọn quận huyện</option>
+                                {
+                                    districts.map(item => {
+                                        return <option key={item?.DistrictID} value={`${item?.DistrictID},${item?.DistrictName}`}>{item?.DistrictName}</option>
+                                    })
+                                }
+                            </Form.Select>
+                            <Form.Text className="text-muted text-danger" style={{ display: showFormErrorMessage.district ? 'block' : 'none' }}>
+                                Vui lòng nhập thông tin
+                            </Form.Text>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col className="mb-3" controlid="">
+                            <Form.Label>Xã/ phường</Form.Label>
+                            <Form.Select aria-label="" onChange={(e) => {
+                                handleWardOnChange(e)
+                                setFormErrorMessageToFalse();
+                            }}>
+                                <option value="null">Chọn xã phường</option>
+                                {
+                                    wards.map(item => {
+                                        return <option key={item?.WardCode} value={`${item?.WardCode},${item?.WardName}`}>{item?.WardName}</option>
+                                    })
+                                }
+                            </Form.Select>
+                            <Form.Text className="text-muted text-danger" style={{ display: showFormErrorMessage.ward ? 'block' : 'none' }}>
+                                Vui lòng nhập thông tin
+                            </Form.Text>
+                        </Col>
+                        <Col className="mb-3" controlid="">
+                            <Form.Label>Giá</Form.Label>
+                            <Form.Control type="number" placeholder="Nhập giá" onChange={(e) => {
+                                setFormData({ ...formData, price: parseInt(e.target.value) })
+                                setFormErrorMessageToFalse();
+                            }} />
+                            <Form.Text className="text-muted text-danger" style={{ display: showFormErrorMessage.price ? 'block' : 'none' }}>
+                                Vui lòng nhập thông tin
+                            </Form.Text>
+                        </Col>
+                    </Row>
+                    <Form.Group className="mb-3" controlid="">
                         <Form.Label>Diện tích (m2)</Form.Label>
                         <Form.Control type="number" placeholder="Nhập diện tich" onChange={(e) => {
                             setFormData({ ...formData, area: parseInt(e.target.value) })
@@ -548,7 +547,7 @@ function Room() {
                             Vui lòng nhập thông tin
                         </Form.Text>
                     </Form.Group>
-                    {/* <Form.Group controlId="formFile" className="mb-3">
+                    {/* <Form.Group controlid="formFile" className="mb-3">
                         <Form.Label>Hình ảnh</Form.Label>
                         <Form.Control type="file" />
                         <Form.Text className="text-muted">

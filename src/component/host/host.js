@@ -9,6 +9,8 @@ import Room from './components/room/room';
 import Profile from './components/profile/profile';
 import Payment from './components/payment/payment';
 import './host.css';
+import { positions, Provider } from "react-alert";
+import AlertTemplate from "react-alert-template-basic";
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -60,28 +62,35 @@ export default function SimpleTabs() {
         setValue(newValue);
     };
 
+    const alertOptions = {
+        timeout: 5000,
+        position: positions.TOP_CENTER
+      };
+
     return (
-        <div className={[classes.root, "host-container"].join(" ")}>
-            <AppBar position="static">
-                <Tabs value={value} onChange={handleChange} aria-label="simple tabs example">
-                    <Tab label="Thôn tin cá nhân" {...a11yProps(0)} />
-                    <Tab label="Danh sách nhà" {...a11yProps(1)} />
-                    <Tab label="Danh sách bài đăng" {...a11yProps(2)} />
-                    <Tab label="Thanh toán" {...a11yProps(3)} />
-                </Tabs>
-            </AppBar>
-            <TabPanel value={value} index={0}>
-                <Profile />
-            </TabPanel>
-            <TabPanel value={value} index={1}>
-                <Room />
-            </TabPanel>
-            <TabPanel value={value} index={2}>
-                Item Three
-            </TabPanel>
-            <TabPanel value={value} index={3}>
-                <Payment />
-            </TabPanel>
-        </div>
+        <Provider template={AlertTemplate} {...alertOptions}>
+            <div className={[classes.root, "host-container"].join(" ")}>
+                <AppBar position="static">
+                    <Tabs value={value} onChange={handleChange} aria-label="simple tabs example">
+                        <Tab label="Thôn tin cá nhân" {...a11yProps(0)} />
+                        <Tab label="Danh sách nhà" {...a11yProps(1)} />
+                        <Tab label="Danh sách bài đăng" {...a11yProps(2)} />
+                        <Tab label="Thanh toán" {...a11yProps(3)} />
+                    </Tabs>
+                </AppBar>
+                <TabPanel value={value} index={0}>
+                    <Profile />
+                </TabPanel>
+                <TabPanel value={value} index={1}>
+                    <Room />
+                </TabPanel>
+                <TabPanel value={value} index={2}>
+                    Item Three
+                </TabPanel>
+                <TabPanel value={value} index={3}>
+                    <Payment />
+                </TabPanel>
+            </div>
+        </Provider>
     );
 }
