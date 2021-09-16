@@ -8,7 +8,7 @@ import { useAlert } from 'react-alert';
 import DoneOutlineIcon from '@material-ui/icons/DoneOutline';
 import Tooltip from '@material-ui/core/Tooltip';
 
-function Room () {
+function Room() {
     const [data, setData] = useState([]);
     const [rows, setRows] = useState([]);
     const [showDetails, setShowDetails] = useState(false);
@@ -262,7 +262,7 @@ function Room () {
             }
         }
 
-        axios.post(`http://localhost:4000/api/room/update`, formUpdateRoomData, {
+        axios.post(`${API_URL}/room/update`, formUpdateRoomData, {
             headers: {
                 'Content-Type': 'application/json',
                 "Access-Control-Allow-Origin": "*"
@@ -331,7 +331,15 @@ function Room () {
 
     const onShowImagesDetails = (item) => {
         setShowImagesDetails(true);
-        // setImages(item);
+
+        const imagesData = {
+            image: item.image,
+            roomID: item.id
+        }
+
+        console.log(imagesData);
+
+        setImages(imagesData);
     }
 
     const hideImagesDetailsModal = () => {
@@ -360,7 +368,7 @@ function Room () {
     }
 
     const columns = [
-        {field: 'id', headerName: 'ID'},
+        { field: 'id', headerName: 'ID' },
         {
             field: 'post',
             headerName: 'Bài đăng',
@@ -401,9 +409,11 @@ function Room () {
             sortable: true,
             width: 150,
             renderCell: (params) => {
-                const imageUrl = (params?.value?.length > 0) ? `${imageBaseUrl}${params?.value[0]?.name}` : '/assets/images/rooms/no-img.png';
-                return <Tooltip title="Click để xem" aria-label="add"><img onClick={(e) => onShowImagesDetails(params.value)} className="room-image mw-100" src={imageUrl} alt=""/></Tooltip>
-                
+                const imageUrl = (params?.value?.image?.length > 0) ? `${imageBaseUrl}${params?.value?.image[0]?.name}` : '/assets/images/rooms/no-img.png';
+                return <Tooltip title="Click để xem" aria-label="add">
+                    <img onClick={(e) => onShowImagesDetails(params.value)} className="room-image mw-100" src={imageUrl} alt="" />
+                </Tooltip>
+
             },
         },
         {
@@ -485,7 +495,7 @@ function Room () {
                     action: item,
                     post: item?.post[0],
                     post_status: item?.post[0],
-                    image: item?.image
+                    image: item
                 })
             })
 
@@ -501,7 +511,7 @@ function Room () {
                     <button onClick={onShowNew} className="btn btn-sm btn-success">Thêm</button>
                 </Card.Header>
                 <Card.Body>
-                    <div style={{height: '650px', width: '100%'}}>
+                    <div style={{ height: '650px', width: '100%' }}>
                         <DataGrid
                             rows={rows}
                             columns={columns}
@@ -525,37 +535,37 @@ function Room () {
                     <Form>
                         <Form.Group className="mb-3">
                             <Form.Label>Địa chỉ</Form.Label>
-                            <Form.Control disabled type="text" value={details?.address}/>
+                            <Form.Control disabled type="text" value={details?.address} />
                         </Form.Group>
                         <Row>
                             <Col className="mb-3">
                                 <Form.Label>Tỉnh thành</Form.Label>
-                                <Form.Control disabled type="text" value={details?.city}/>
+                                <Form.Control disabled type="text" value={details?.city} />
                             </Col>
                             <Col className="mb-3">
                                 <Form.Label>Quận huyện</Form.Label>
-                                <Form.Control disabled type="text" value={details?.district}/>
+                                <Form.Control disabled type="text" value={details?.district} />
                             </Col>
                         </Row>
                         <Row>
                             <Col className="mb-3">
                                 <Form.Label>Xã phường</Form.Label>
-                                <Form.Control disabled type="text" value={details?.ward}/>
+                                <Form.Control disabled type="text" value={details?.ward} />
                             </Col>
                             <Col className="mb-3">
                                 <Form.Label>Giá (VND)</Form.Label>
-                                <Form.Control disabled type="text" value={details?.price}/>
+                                <Form.Control disabled type="text" value={details?.price} />
                             </Col>
                         </Row>
                         <Row>
                             <Col className="mb-3">
                                 <Form.Label>Diện tích (m2)</Form.Label>
-                                <Form.Control disabled type="text" value={details?.area}/>
+                                <Form.Control disabled type="text" value={details?.area} />
                             </Col>
                         </Row>
                         <Form.Group className="mb-3">
                             <Form.Label>Chi tiết</Form.Label>
-                            <Form.Control disabled as="textarea" rows={8} value={details?.addition_infor}/>
+                            <Form.Control disabled as="textarea" rows={8} value={details?.addition_infor} />
                         </Form.Group>
                     </Form>
                 </Modal.Body>
@@ -578,14 +588,8 @@ function Room () {
                 <Modal.Body>
                     <Form>
                         <Form.Group className="mb-3">
-                            <Form.Label>Hình ảnh</Form.Label>
-                            <img className="mw-100"
-                                 src={`/assets/images/rooms/${postDetails?.image?.name ? postDetails?.image?.name : '/no-img.png'}`}
-                                 alt=""/>
-                        </Form.Group>
-                        <Form.Group className="mb-3">
                             <Form.Label>Tiêu đề</Form.Label>
-                            <Form.Control disabled type="text" value={postDetails?.title}/>
+                            <Form.Control disabled type="text" value={postDetails?.title} />
                         </Form.Group>
                         <Form.Group className="mb-3">
                             <Form.Label>Chi tiết</Form.Label>
@@ -612,13 +616,32 @@ function Room () {
                 <Modal.Body>
                     <Form>
                         <Form.Group className="mb-3">
-                            <Form.Label>Hình ảnh</Form.Label>
+                            <div className="images-container">
+                            {
+                                (images?.image?.length > 0) ? images?.image?.map((item, index) => {
+                                    return <img key={index} className="room-image-detail" src={`${imageBaseUrl}${item?.name}`} alt="" />
+                                }) : null
+                            }
+                                                        {
+                                (images?.image?.length > 0) ? images?.image?.map((item, index) => {
+                                    return <img key={index} className="room-image-detail" src={`${imageBaseUrl}${item?.name}`} alt="" />
+                                }) : null
+                            }
+                                                        {
+                                (images?.image?.length > 0) ? images?.image?.map((item, index) => {
+                                    return <img key={index} className="room-image-detail" src={`${imageBaseUrl}${item?.name}`} alt="" />
+                                }) : null
+                            }
+                            </div>
                         </Form.Group>
                     </Form>
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={hideImagesDetailsModal}>
                         Đóng
+                    </Button>
+                    <Button variant="primary" onClick={hideImagesDetailsModal}>
+                        Cập nhật
                     </Button>
                 </Modal.Footer>
             </Modal>
@@ -637,11 +660,11 @@ function Room () {
                     <Form.Group className="mb-3" controlid="">
                         <Form.Label>Địa chỉ</Form.Label>
                         <Form.Control type="text" placeholder="Nhập địa chỉ" onChange={(e) => {
-                            setFormData({...formData, address: e.target.value});
+                            setFormData({ ...formData, address: e.target.value });
                             setFormErrorMessageToFalse();
-                        }}/>
+                        }} />
                         <Form.Text className="text-muted text-danger"
-                                   style={{display: showFormErrorMessage.address ? 'block' : 'none'}}>
+                            style={{ display: showFormErrorMessage.address ? 'block' : 'none' }}>
                             Vui lòng nhập thông tin
                         </Form.Text>
                     </Form.Group>
@@ -656,12 +679,12 @@ function Room () {
                                 {
                                     citiesData.map((item, index) => {
                                         return <option key={item.ProvinceID}
-                                                       value={`${item.ProvinceID},${item.ProvinceName}`}>{item.ProvinceName}</option>;
+                                            value={`${item.ProvinceID},${item.ProvinceName}`}>{item.ProvinceName}</option>;
                                     })
                                 }
                             </Form.Select>
                             <Form.Text className="text-muted text-danger"
-                                       style={{display: showFormErrorMessage.city ? 'block' : 'none'}}>
+                                style={{ display: showFormErrorMessage.city ? 'block' : 'none' }}>
                                 Vui lòng nhập thông tin
                             </Form.Text>
                         </Col>
@@ -675,12 +698,12 @@ function Room () {
                                 {
                                     districts.map(item => {
                                         return <option key={item?.DistrictID}
-                                                       value={`${item?.DistrictID},${item?.DistrictName}`}>{item?.DistrictName}</option>;
+                                            value={`${item?.DistrictID},${item?.DistrictName}`}>{item?.DistrictName}</option>;
                                     })
                                 }
                             </Form.Select>
                             <Form.Text className="text-muted text-danger"
-                                       style={{display: showFormErrorMessage.district ? 'block' : 'none'}}>
+                                style={{ display: showFormErrorMessage.district ? 'block' : 'none' }}>
                                 Vui lòng nhập thông tin
                             </Form.Text>
                         </Col>
@@ -696,23 +719,23 @@ function Room () {
                                 {
                                     wards.map(item => {
                                         return <option key={item?.WardCode}
-                                                       value={`${item?.WardCode},${item?.WardName}`}>{item?.WardName}</option>;
+                                            value={`${item?.WardCode},${item?.WardName}`}>{item?.WardName}</option>;
                                     })
                                 }
                             </Form.Select>
                             <Form.Text className="text-muted text-danger"
-                                       style={{display: showFormErrorMessage.ward ? 'block' : 'none'}}>
+                                style={{ display: showFormErrorMessage.ward ? 'block' : 'none' }}>
                                 Vui lòng nhập thông tin
                             </Form.Text>
                         </Col>
                         <Col className="mb-3" controlid="">
                             <Form.Label>Giá</Form.Label>
                             <Form.Control type="number" placeholder="Nhập giá" onChange={(e) => {
-                                setFormData({...formData, price: parseInt(e.target.value)});
+                                setFormData({ ...formData, price: parseInt(e.target.value) });
                                 setFormErrorMessageToFalse();
-                            }}/>
+                            }} />
                             <Form.Text className="text-muted text-danger"
-                                       style={{display: showFormErrorMessage.price ? 'block' : 'none'}}>
+                                style={{ display: showFormErrorMessage.price ? 'block' : 'none' }}>
                                 Vui lòng nhập thông tin
                             </Form.Text>
                         </Col>
@@ -720,22 +743,22 @@ function Room () {
                     <Form.Group className="mb-3" controlid="">
                         <Form.Label>Diện tích (m2)</Form.Label>
                         <Form.Control type="number" placeholder="Nhập diện tich" onChange={(e) => {
-                            setFormData({...formData, area: parseInt(e.target.value)});
+                            setFormData({ ...formData, area: parseInt(e.target.value) });
                             setFormErrorMessageToFalse();
-                        }}/>
+                        }} />
                         <Form.Text className="text-muted text-danger"
-                                   style={{display: showFormErrorMessage.area ? 'block' : 'none'}}>
+                            style={{ display: showFormErrorMessage.area ? 'block' : 'none' }}>
                             Vui lòng nhập thông tin
                         </Form.Text>
                     </Form.Group>
                     <Form.Group>
                         <Form.Label>Thông tin khác</Form.Label>
                         <Form.Control as="textarea" rows={5} placeholder="Nhập thông tin khác" onChange={(e) => {
-                            setFormData({...formData, addition_infor: e.target.value});
+                            setFormData({ ...formData, addition_infor: e.target.value });
                             setFormErrorMessageToFalse();
-                        }}/>
+                        }} />
                         <Form.Text className="text-muted text-danger"
-                                   style={{display: showFormErrorMessage.addition_infor ? 'block' : 'none'}}>
+                            style={{ display: showFormErrorMessage.addition_infor ? 'block' : 'none' }}>
                             Vui lòng nhập thông tin
                         </Form.Text>
                     </Form.Group>
