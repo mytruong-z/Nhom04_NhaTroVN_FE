@@ -9,6 +9,7 @@ const Login = (props) => {
     const [password, setPassword] = useState('');
     const history = useHistory();
     const params = useParams();
+    const [errorMessage, setErrorMessage] = useState('');
     const {code} = params;
     const location = window.location.pathname;
 
@@ -25,16 +26,37 @@ const Login = (props) => {
 
     const activeAccount = () => {
         if (code) {
-            fetch(`https://nhatrovietnam.herokuapp.com/api/verify/activate-account/${code}`)
-                .then(response => response.json())
-                .then(data => {
-                    console.log(data);
-                });
+            let item = {code};
+            fetch(`https://nhatrovn.herokuapp.com/api/verify/activate-account`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify(item)
+            }).then(response => {
+                if (response.ok) {
+                    return response.json();
+                }
+            }).then(data => {
+                if(typeof (data) !== 'undefined') {
+                    alert("Kích hoạt thành công. Vui lòng đăng nhập lại!");
+                } else {
+                    alert("Đường dẫn kích hoạt không đúng hoặc đã tồn tại!");
+                }
+
+            });
         }
     };
 
     async function login () {
-        console.warn(email, password);
+        if(email == ""){
+            setErrorMessage("Vui lòng nhập địa chỉ email")
+        }
+        else if (password == "") {
+            setErrorMessage("Vui lòng nhập mật khẩu")
+        } else {
+    
         let item = {email, password};
         await fetch('https://nhatrovn.herokuapp.com/api/login', {
             method: 'POST',
@@ -51,7 +73,7 @@ const Login = (props) => {
         }).then(async function (response) {
             const result = await response.json();
             if (result.status === 0) {
-                alert('Tài Khoản chưa được kích hoạt, Vui lòng vào Email kích hoạt');
+                setErrorMessage("Tài Khoản chưa được kích hoạt, Vui lòng vào Email kích hoạt")
             }
             else {
                 localStorage.setItem('user', JSON.stringify(result));
@@ -60,9 +82,9 @@ const Login = (props) => {
                 history.push('/');
             }
         }).catch(function (error) {
-            alert('Sai email hoặc password');
+            setErrorMessage("Sai email hoặc mật khẩu")
         });
-
+    }
     }
 
     return (
@@ -71,6 +93,10 @@ const Login = (props) => {
                 <div className="form-title">
                     <h2>Đăng Nhập</h2>
                 </div>
+                <Form.Group className="mb-3" controlId="formBasicEmail">
+                    <Form.Label className="text-danger">{errorMessage}</Form.Label>
+                </Form.Group>
+                
                 <Form.Group className="mb-3" controlId="formBasicEmail">
                     <Form.Label className="float-left">Email</Form.Label>
                     <Form.Control type="email" onChange={(e) => setEmail(e.target.value)} placeholder="Nhập email"/>

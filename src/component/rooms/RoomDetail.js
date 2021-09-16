@@ -1,5 +1,6 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import {Image, Button} from 'react-bootstrap';
+import React, { useState, useEffect } from 'react';
+import {Button} from 'react-bootstrap';
+import ImageSlider from "./ImageSlider";
 import { API_URL } from "../../config/index";
 
 const RoomDetail = (props) => {
@@ -10,13 +11,16 @@ const RoomDetail = (props) => {
 
     useEffect(() => {
         if (id >= 0) {
-            const url = `${API_URL}room/search?id=${id}`;
+            const url = `${API_URL}room/searchByRoomId/${id}`;
             fetch(url)
                 .then(response => response.json())
                 .then(data => {
-                    if (typeof data.id !== 'undefined') {
-                        setRoom(data);
-                        console.log(data);
+                    if (typeof data.length !== 'undefined') {
+                        if(typeof data[0].post[0] !== 'undefined') {
+                            data[0].post = data[0].post[0];
+                        }
+                        setRoom(data[0]);
+                        console.log(data[0].image);
                     }
                 });
         }
@@ -27,18 +31,19 @@ const RoomDetail = (props) => {
             {
                 Object.keys(room).length !== 0 ?
                     <div className="room-box">
-                        <div className="room-box-img">
-                            <Image src={`/assets/images/rooms/${room.image.name}`} fluid/>
-                            {/*<Image src={`/assets/images/rooms/room_1.jpeg`} fluid/>*/}
+                        <div className="room-slide-img">
+                            <ImageSlider images={room.image} />
                         </div>
+                        <br/>
+                        <br/>
                         <h1>
                             {typeof room.post.title !== 'undefined' ? room.post.title  : ""}
                         </h1>
                         <p>
                             <span className="bold">Địa chỉ: </span>{room.address},
-                            &nbsp;{room.ward.prefix} {room.ward.name},
-                            &nbsp;{room.district.prefix} {room.district.name},
-                            &nbsp;{room.province && room.province.name}
+                            &nbsp;{room.ward},
+                            &nbsp;{room.district},
+                            &nbsp;{room.city}
                         </p>
                         <p>
                             <span className="bold">Chi tiết: </span>
