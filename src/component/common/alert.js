@@ -4,19 +4,16 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 //type: success, warning, error, info
 const Alert = (props) => {
-    const {status, type, title} = props;
-
-    const [alertStatus, setAlertStatus] = useState(status);
+    const {status, type, title, setIsAlert} = props;
 
     function HideAlert () {
-        setAlertStatus(false);
+        setIsAlert(false);
     }
 
-    console.log('status' + alertStatus);
     return (
         <div className="">
             <ReactJsAlert
-                status={alertStatus}   // true or false
+                status={status}   // true or false
                 type={type}   // success, warning, error, info
                 title={title}   // title you want to display
                 Close={HideAlert}   // callback method for hide

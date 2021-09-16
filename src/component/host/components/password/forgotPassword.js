@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Form, Button } from 'react-bootstrap';
 import { useHistory } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import Alert from '../../../common/alert';
 
 const ForgotPassword = () => {
     const [email, setEmail] = useState('');
@@ -10,6 +11,8 @@ const ForgotPassword = () => {
     const [newPassword, setNewPassWord] = useState('');
     const [screen, setScreen] = useState(1);
     const history = useHistory();
+    const [alertError, setAlertError] = useState('');
+    const [isAlert, setIsAlert] = useState(false);
 
     const request = () => {
         let item = {email};
@@ -22,15 +25,16 @@ const ForgotPassword = () => {
             body: JSON.stringify(item)
         }).then(function (response) {
             if (response.status === 204) {
-                alert('Vượt quá số lượt cho phép trong ngày (3 lượt). Vui lòng quay lại sau!');
+                setAlertError('Vượt quá số lượt cho phép trong ngày (3 lượt). Vui lòng quay lại sau!');
             } else if (response.ok) {
                 setScreen(2);
                 return response;
             } else {
-                alert('Tài khoản không tồn tại vui lòng kiểm tra lại');
+                setIsAlert(true);
+                setAlertError('Tài khoản không tồn tại vui lòng kiểm tra lại');
             }
         }).catch(function (error) {
-            alert('Tài khoản không tồn tại vui lòng kiểm tra lại');
+            setAlertError('Tài khoản không tồn tại vui lòng kiểm tra lại');
         });
     };
 
@@ -48,19 +52,19 @@ const ForgotPassword = () => {
                 setScreen(3);
                 return response.json();
             } else {
-                alert('Sai mã xác nhận. Vui lòng kiểm tra lại Email!');
+                setAlertError('Sai mã xác nhận. Vui lòng kiểm tra lại Email!');
             }
         }).then(function (response) {
-            if(typeof response) {
+            if (typeof response) {
                 setUserId(response);
             }
         }).catch(function (error) {
-            alert('Sai mã xác nhận. Vui lòng kiểm tra lại Email!');
+            setAlertError('Sai mã xác nhận. Vui lòng kiểm tra lại Email!');
         });
     };
 
     const changePass = () => {
-        let item = {userId ,newPassword};
+        let item = {userId, newPassword};
         fetch('https://nhatrovn.herokuapp.com/api/password/recover-password', {
             method: 'POST',
             headers: {
@@ -70,18 +74,19 @@ const ForgotPassword = () => {
             body: JSON.stringify(item)
         }).then(function (response) {
             if (!response.ok) {
-                alert('Thay đổi mật khẩu không thành công. Vui lòng thử lại!');
+                setAlertError('Thay đổi mật khẩu không thành công. Vui lòng thử lại!');
             } else {
                 history.push('/login');
                 return response;
             }
         }).catch(function (error) {
-            alert('Thay đổi mật khẩu không thành công. Vui lòng thử lại!');
+            setAlertError('Thay đổi mật khẩu không thành công. Vui lòng thử lại!');
         });
     };
 
     return (
         <div className="Login">
+            <Alert status={isAlert} setIsAlert={setIsAlert} type="error" title={alertError}/>
             <Form className="mt-5">
                 {
                     screen === 1 ?
@@ -91,13 +96,13 @@ const ForgotPassword = () => {
                             </div>
                             <Form.Group className='mb-3' controlId='formBasicEmail'>
                                 <Form.Label className='float-left'>Email</Form.Label>
-                                <Form.Control type="email" onChange={(e) => setEmail(e.target.value)}
+                                <Form.Control required type="email" onChange={(e) => setEmail(e.target.value)}
                                               placeholder="Nhập email"/>
                             </Form.Group>
                             <Button className="mt-3 btn btn-default text-white" onClick={request} variant="primary">
                                 Gửi yêu cầu
                             </Button>
-                        </div> : ""
+                        </div> : ''
                 }
 
                 {
@@ -108,7 +113,7 @@ const ForgotPassword = () => {
                             </div>
                             < Form.Group className='mb-3' controlId='formBasicEmail'>
                                 <Form.Label className='float-left'>Mã xác nhận</Form.Label>
-                                <Form.Control type="number" onChange={(e) => setKeyCode(e.target.value)}
+                                <Form.Control required type="number" onChange={(e) => setKeyCode(e.target.value)}
                                               placeholder="Nhập mã xác nhận"/>
                             </Form.Group>
                             <Button className="mt-3 btn btn-default text-white" onClick={confirmCode} variant="primary">
@@ -117,7 +122,7 @@ const ForgotPassword = () => {
                             <Button className="mt-3 btn btn-default text-white" onClick={request} variant="primary">
                                 Gửi lại xác nhận
                             </Button>
-                        </div> : ""
+                        </div> : ''
                 }
 
                 {
@@ -128,13 +133,13 @@ const ForgotPassword = () => {
                             </div>
                             < Form.Group className='mb-3' controlId='formBasicEmail'>
                                 <Form.Label className='float-left'>Mật Khẩu</Form.Label>
-                                <Form.Control type="password" onChange={(e) => setNewPassWord(e.target.value)}
+                                <Form.Control required type="password" onChange={(e) => setNewPassWord(e.target.value)}
                                               placeholder="Nhập mật khẩu"/>
                             </Form.Group>
                             <Button className="mt-3 btn btn-default text-white" onClick={changePass} variant="primary">
                                 Gửi yêu cầu
                             </Button>
-                        </div> : ""
+                        </div> : ''
                 }
             </Form>
         </div>
