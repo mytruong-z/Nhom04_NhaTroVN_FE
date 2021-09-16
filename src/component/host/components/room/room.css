@@ -10,3 +10,8 @@
   width: 700px !important;
   max-width: 100% !important;
 }
+
+.room-image {
+  width: 100%;
+  height: 100%;
+}

@@ -13,9 +13,13 @@ function Room() {
     const [rows, setRows] = useState([]);
     const [showDetails, setShowDetails] = useState(false);
     const [showPostDetails, setShowPostDetails] = useState(false);
+    const [showImagesDetails, setShowImagesDetails] = useState(false);
     const [showNew, setShowNew] = useState(false);
+    const [showUpdateRoom, setShowUpdateRoom] = useState(false);
     const [details, setDetails] = useState(null);
+    const [roomUpdateDetails, setRoomUpdateDetails] = useState(null);
     const [postDetails, setPostDetails] = useState(null);
+    const [images, setImages] = useState([]);
     const [citiesData, setCitiesData] = useState([]);
     const [districts, setDistricts] = useState([]);
     const [wards, setWards] = useState([]);
@@ -46,23 +50,46 @@ function Room() {
         area: false
     })
 
+    const [formUpdateRoomData, setFormUpdateRoomData] = useState({
+        id: 0,
+        address: "",
+        price: 0,
+        addition_infor: "",
+        city: "",
+        district: "",
+        ward: "",
+        area: 0
+    })
+
+    const [showFormUpdateRoomErrorMessage, setFormUpdateRoomErrorMessage] = useState({
+        address: false,
+        price: false,
+        addition_infor: false,
+        area: false
+    })
+
     const GHN_TOKEN = 'b08e0769-130e-11ec-b8c6-fade198b4859';
+    const imageBaseUrl = 'https://res.cloudinary.com/nhom4/image/upload/v1631451498/room/';
 
     useEffect(() => {
         // get host id
         setHostId(JSON.parse(localStorage.getItem('user')).id);
     }, [])
 
+    const getRooms = (hostId) => {
+        axios(
+            `${API_URL}room/searchByhost/${hostId}`,
+        ).then((res) => {
+            if (Array.isArray(res.data)) {
+                console.log(res);
+                setData(res.data);
+            }
+        });
+    }
+
     useEffect(() => {
         if (hostId != 0) {
-            axios(
-                `${API_URL}room/searchByhost/${hostId}`,
-            ).then((res) => {
-                if (Array.isArray(res.data)) {
-                    console.log(res);
-                    setData(res.data);
-                }
-            });
+            getRooms(hostId);
 
             // update hostid in form data
             setFormData({
@@ -210,6 +237,7 @@ function Room() {
         })
             .then(function (response) {
                 setShowNew(false);
+                getRooms(hostId);
                 alert.success("Thêm nhà thành công");
             })
             .catch(function (error) {
@@ -217,55 +245,119 @@ function Room() {
             });
     }
 
+    const submitUpdateRoom = async () => {
+        await setFormUpdateRoomErrorMessage({
+            address: (formUpdateRoomData.address == "") ? true : false,
+            price: (formUpdateRoomData.price == "") ? true : false,
+            addition_infor: (formUpdateRoomData.addition_infor == "") ? true : false,
+            area: (formUpdateRoomData.area == 0) ? true : false
+        })
+
+        console.log(formUpdateRoomData);
+
+        for (var i in formUpdateRoomData) {
+            if (formUpdateRoomData[i] === "" || formUpdateRoomData[i] === 0) {
+                console.log(i);
+                console.log(formUpdateRoomData[i]);
+                return;
+            }
+        }
+
+        axios.post(`http://localhost:4000/api/room/update`, formUpdateRoomData, {
+            headers: {
+                'Content-Type': 'application/json',
+                "Access-Control-Allow-Origin": "*"
+            }
+        })
+            .then(function (response) {
+                setShowUpdateRoom(false);
+                getRooms(hostId);
+                alert.success("Sửa nhà thành công");
+            })
+            .catch(function (error) {
+                alert.error("Sửa không thành công");
+            });
+    }
+
     const setFormErrorMessageToFalse = () => {
-        setFormErrorMessage({
+        setFormUpdateRoomErrorMessage({
             address: false,
             price: false,
             addition_infor: false,
-            city: false,
+            area: false,
             district: false,
-            ward: false,
+            city: false,
+            ward: false
+        })
+    }
+
+    const setFormUpdateRoomErrorMessageToFalse = () => {
+        setFormUpdateRoomErrorMessage({
+            address: false,
+            price: false,
+            addition_infor: false,
             area: false,
         })
     }
 
-
     const onShowDetails = (item) => {
-        showDetailsModal();
+        setShowDetails(true);
         setDetails(item);
     }
 
+    const onShowUpdateRoom = (item) => {
+        var dataCopied = {
+            ...formUpdateRoomData,
+            "address": item.address,
+            "id": item.id,
+            "price": item.price,
+            "area": item.area,
+            "addition_infor": item.addition_infor,
+            "city": item.city,
+            "district": item.district,
+            "ward": item.ward
+        };
+
+        console.log("update room data: ", dataCopied);
+
+        setFormUpdateRoomData(dataCopied);
+        setShowUpdateRoom(true);
+        setRoomUpdateDetails(item);
+    }
+
     const onShowPostDetails = (item) => {
-        showPostDetailsModal();
+        setShowPostDetails(true);
         setPostDetails(item);
     }
 
-    const showDetailsModal = () => {
-        setShowDetails(true);
+    const onShowImagesDetails = (item) => {
+        setShowImagesDetails(true);
+        // setImages(item);
+    }
+
+    const hideImagesDetailsModal = () => {
+        setShowImagesDetails(false);
+    }
+
+    const onShowNew = (item) => {
+        setShowNew(true);
     }
 
     const hideDetailsModal = () => {
         setShowDetails(false);
     }
 
-    const showPostDetailsModal = () => {
-        setShowPostDetails(true);
-    }
-
     const hidePostDetailsModal = () => {
         setShowPostDetails(false);
     }
 
-    const onShowNew = (item) => {
-        showNewModal();
-    }
-
-    const showNewModal = () => {
-        setShowNew(true);
-    }
-
     const hideNewModal = () => {
         setShowNew(false);
+    }
+
+
+    const hideUpdateRoom = () => {
+        setShowUpdateRoom(false);
     }
 
     const columns = [
@@ -287,21 +379,33 @@ function Room() {
             field: 'post_status',
             headerName: 'Trạng thái',
             editable: false,
-            sortable: false,
+            sortable: true,
             width: 100,
             renderCell: (params) => (
                 <strong>
-                    {params.value?.status?.name == "active" ? 
-                     <Tooltip title="Đã duyệt" aria-label="add">
-                        <DoneOutlineIcon style={{fill: "green"}}/>
-                    </Tooltip>
-                    : 
-                    <Tooltip title="Chưa duyệt" aria-label="add">
-                        <DoneOutlineIcon/>
-                    </Tooltip>
-                }
+                    {params.value?.status?.name == "active" ?
+                        <Tooltip title="Đã duyệt" aria-label="add">
+                            <DoneOutlineIcon style={{ fill: "green" }} />
+                        </Tooltip>
+                        :
+                        <Tooltip title="Chưa duyệt" aria-label="add">
+                            <DoneOutlineIcon />
+                        </Tooltip>
+                    }
                 </strong>
             ),
+        },
+        {
+            field: 'image',
+            headerName: 'Hình ảnh',
+            editable: false,
+            sortable: true,
+            width: 150,
+            renderCell: (params) => {
+                const imageUrl = (params?.value?.length > 0) ? `${imageBaseUrl}${params?.value[0]?.name}` : '/assets/images/rooms/no-img.png';
+                return <Tooltip title="Click để xem" aria-label="add"><img onClick={(e) => onShowImagesDetails(params.value)} className="room-image mw-100" src={imageUrl} alt=""/></Tooltip>
+                
+            },
         },
         {
             field: 'address',
@@ -309,24 +413,24 @@ function Room() {
             editable: false,
             width: 200
         },
-        {
-            field: 'province',
-            headerName: 'Tỉnh thành',
-            editable: false,
-            width: 150
-        },
-        {
-            field: 'district',
-            headerName: 'Quận huyện',
-            editable: false,
-            width: 200
-        },
-        {
-            field: 'ward',
-            headerName: 'Phường xã',
-            editable: false,
-            width: 150
-        },
+        // {
+        //     field: 'province',
+        //     headerName: 'Tỉnh thành',
+        //     editable: false,
+        //     width: 150
+        // },
+        // {
+        //     field: 'district',
+        //     headerName: 'Quận huyện',
+        //     editable: false,
+        //     width: 200
+        // },
+        // {
+        //     field: 'ward',
+        //     headerName: 'Phường xã',
+        //     editable: false,
+        //     width: 150
+        // },
         {
             field: 'price',
             headerName: 'Giá',
@@ -356,7 +460,7 @@ function Room() {
             renderCell: (params) => (
                 <strong>
                     <button className="btn btn-sm btn-primary m-1" onClick={(e) => onShowDetails(params.value)}>Chi tiết</button>
-                    <button className="btn btn-sm btn-secondary m-1">Chỉnh sửa</button>
+                    <button className="btn btn-sm btn-secondary m-1" onClick={(e) => onShowUpdateRoom(params.value)}>Chỉnh sửa</button>
                     <button className="btn btn-sm btn-danger m-1">Xóa</button>
                 </strong>
             ),
@@ -367,9 +471,9 @@ function Room() {
     useEffect(() => {
         var renderRows = [];
         if (data) {
-            data.map((item, index) => {            
+            data.map((item, index) => {
                 renderRows.push({
-                    id: index+1,
+                    id: index + 1,
                     address: item?.address,
                     province: item?.city,
                     district: item?.district,
@@ -379,7 +483,8 @@ function Room() {
                     addition_infor: item?.addition_infor,
                     action: item,
                     post: item?.post[0],
-                    post_status: item?.post[0]
+                    post_status: item?.post[0],
+                    image: item?.image
                 })
             })
 
@@ -417,10 +522,6 @@ function Room() {
                 </Modal.Header>
                 <Modal.Body>
                     <Form>
-                        <Form.Group className="mb-3">
-                            <Form.Label>Hình ảnh</Form.Label>
-                            <img className="mw-100" src={`/assets/images/rooms/${details?.image?.name ? details?.image?.name : '/no-img.png'}`} alt="" />
-                        </Form.Group>
                         <Form.Group className="mb-3">
                             <Form.Label>Địa chỉ</Form.Label>
                             <Form.Control disabled type="text" value={details?.address} />
@@ -485,12 +586,35 @@ function Room() {
                         </Form.Group>
                         <Form.Group className="mb-3">
                             <Form.Label>Chi tiết</Form.Label>
-                            <Form.Control disabled as="textarea" rows={8} value={postDetails?.description}  />
+                            <Form.Control disabled as="textarea" rows={8} value={postDetails?.description} />
                         </Form.Group>
                     </Form>
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={hidePostDetailsModal}>
+                        Đóng
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+
+            <Modal
+                className="images_details_modal"
+                show={showImagesDetails}
+                onHide={hideImagesDetailsModal}
+                keyboard={false}
+            >
+                <Modal.Header closeButton>
+                    <Modal.Title>Hình ảnh</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <Form>
+                        <Form.Group className="mb-3">
+                            <Form.Label>Hình ảnh</Form.Label>
+                        </Form.Group>
+                    </Form>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={hideImagesDetailsModal}>
                         Đóng
                     </Button>
                 </Modal.Footer>
@@ -616,6 +740,70 @@ function Room() {
                     </Button>
                     <Button type="submit" variant="primary" onClick={submitRoom}>
                         Thêm
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+
+            <Modal
+                className="new_modal"
+                show={showUpdateRoom}
+                onHide={hideUpdateRoom}
+                keyboard={false}
+                backdrop="static"
+            >
+                <Modal.Header closeButton>
+                    <Modal.Title>Sửa thông tin nhà</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <Form.Group className="mb-3" controlid="">
+                        <Form.Label>Địa chỉ</Form.Label>
+                        <Form.Control type="text" placeholder="Nhập địa chỉ" value={formUpdateRoomData?.address} onChange={(e) => {
+                            setFormUpdateRoomData({ ...formUpdateRoomData, address: e.target.value })
+                            setFormErrorMessageToFalse();
+                        }} />
+                        <Form.Text className="text-muted text-danger" style={{ display: showFormUpdateRoomErrorMessage.address ? 'block' : 'none' }}>
+                            Vui lòng nhập thông tin
+                        </Form.Text>
+                    </Form.Group>
+                    <Row>
+                        <Col className="mb-3" controlid="">
+                            <Form.Label>Giá</Form.Label>
+                            <Form.Control type="number" placeholder="Nhập giá" value={formUpdateRoomData?.price} onChange={(e) => {
+                                setFormUpdateRoomData({ ...formUpdateRoomData, price: parseInt(e.target.value) })
+                                setFormUpdateRoomErrorMessageToFalse();
+                            }} />
+                            <Form.Text className="text-muted text-danger" style={{ display: showFormUpdateRoomErrorMessage.price ? 'block' : 'none' }}>
+                                Vui lòng nhập thông tin
+                            </Form.Text>
+                        </Col>
+                        <Col>
+                            <Form.Label>Diện tích (m2)</Form.Label>
+                            <Form.Control type="number" placeholder="Nhập diện tich" value={formUpdateRoomData?.area} onChange={(e) => {
+                                setFormUpdateRoomData({ ...formUpdateRoomData, area: parseInt(e.target.value) })
+                                setFormUpdateRoomErrorMessageToFalse();
+                            }} />
+                            <Form.Text className="text-muted text-danger" style={{ display: showFormUpdateRoomErrorMessage.area ? 'block' : 'none' }}>
+                                Vui lòng nhập thông tin
+                            </Form.Text>
+                        </Col>
+                    </Row>
+                    <Form.Group>
+                        <Form.Label>Thông tin khác</Form.Label>
+                        <Form.Control as="textarea" rows={5} placeholder="Nhập thông tin khác" value={formUpdateRoomData?.addition_infor} onChange={(e) => {
+                            setFormUpdateRoomData({ ...formUpdateRoomData, addition_infor: e.target.value })
+                            setFormUpdateRoomErrorMessageToFalse();
+                        }} />
+                        <Form.Text className="text-muted text-danger" style={{ display: showFormUpdateRoomErrorMessage.addition_infor ? 'block' : 'none' }}>
+                            Vui lòng nhập thông tin
+                        </Form.Text>
+                    </Form.Group>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={hideUpdateRoom}>
+                        Đóng
+                    </Button>
+                    <Button type="submit" variant="primary" onClick={submitUpdateRoom}>
+                        Sửa
                     </Button>
                 </Modal.Footer>
             </Modal>
