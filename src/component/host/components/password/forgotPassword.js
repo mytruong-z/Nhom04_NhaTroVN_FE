@@ -5,8 +5,9 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 const ForgotPassword = () => {
     const [email, setEmail] = useState('');
-    const [code, setCode] = useState('');
-    const [password, setPassword] = useState('');
+    const [keycode, setKeyCode] = useState('');
+    const [userId, setUserId] = useState(0);
+    const [newPassword, setNewPassWord] = useState('');
     const [screen, setScreen] = useState(1);
     const history = useHistory();
 
@@ -34,7 +35,7 @@ const ForgotPassword = () => {
     };
 
     const confirmCode = () => {
-        let item = {code};
+        let item = {keycode};
         fetch('https://nhatrovn.herokuapp.com/api/password/keycode-verify', {
             method: 'POST',
             headers: {
@@ -45,9 +46,13 @@ const ForgotPassword = () => {
         }).then(function (response) {
             if (response.ok) {
                 setScreen(3);
-                return response;
+                return response.json();
             } else {
                 alert('Sai mã xác nhận. Vui lòng kiểm tra lại Email!');
+            }
+        }).then(function (response) {
+            if(typeof response) {
+                setUserId(response);
             }
         }).catch(function (error) {
             alert('Sai mã xác nhận. Vui lòng kiểm tra lại Email!');
@@ -55,7 +60,7 @@ const ForgotPassword = () => {
     };
 
     const changePass = () => {
-        let item = {password};
+        let item = {userId ,newPassword};
         fetch('https://nhatrovn.herokuapp.com/api/password/recover-password', {
             method: 'POST',
             headers: {
@@ -103,11 +108,14 @@ const ForgotPassword = () => {
                             </div>
                             < Form.Group className='mb-3' controlId='formBasicEmail'>
                                 <Form.Label className='float-left'>Mã xác nhận</Form.Label>
-                                <Form.Control type="number" onChange={(e) => setCode(e.target.value)}
+                                <Form.Control type="number" onChange={(e) => setKeyCode(e.target.value)}
                                               placeholder="Nhập mã xác nhận"/>
                             </Form.Group>
                             <Button className="mt-3 btn btn-default text-white" onClick={confirmCode} variant="primary">
                                 Gửi yêu cầu
+                            </Button>
+                            <Button className="mt-3 btn btn-default text-white" onClick={request} variant="primary">
+                                Gửi lại xác nhận
                             </Button>
                         </div> : ""
                 }
@@ -120,7 +128,7 @@ const ForgotPassword = () => {
                             </div>
                             < Form.Group className='mb-3' controlId='formBasicEmail'>
                                 <Form.Label className='float-left'>Mật Khẩu</Form.Label>
-                                <Form.Control type="password" onChange={(e) => setPassword(e.target.value)}
+                                <Form.Control type="password" onChange={(e) => setNewPassWord(e.target.value)}
                                               placeholder="Nhập mật khẩu"/>
                             </Form.Group>
                             <Button className="mt-3 btn btn-default text-white" onClick={changePass} variant="primary">
