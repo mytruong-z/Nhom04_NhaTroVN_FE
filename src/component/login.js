@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { useHistory, useParams } from 'react-router-dom';
+import {Route, useHistory, useParams } from 'react-router-dom';
 import { Form, Button } from 'react-bootstrap';
+//import ReactJsAlert from "reactjs-alert"
+import Alert from "./common/alert"
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const Login = (props) => {
@@ -9,10 +11,16 @@ const Login = (props) => {
     const [password, setPassword] = useState('');
     const history = useHistory();
     const params = useParams();
+
     const [errorMessage, setErrorMessage] = useState('');
+    const [alertStatus, setAlertStatus] = useState(false);
+    const [alertType, setAlertType] = useState('');
+
+    
     const {code} = params;
     const location = window.location.pathname;
 
+    
     useEffect(() => {
         if (localStorage.getItem('user')) {
             history.push('/');
@@ -49,12 +57,21 @@ const Login = (props) => {
         }
     };
 
+    function HideAlert() {
+        setAlertStatus(false)
+    }
+   
+
     async function login () {
         if(email == ""){
             setErrorMessage("Vui lòng nhập địa chỉ email")
+            setAlertStatus(true)
+            setAlertType("error")
         }
         else if (password == "") {
             setErrorMessage("Vui lòng nhập mật khẩu")
+            setAlertStatus(true)
+            setAlertType("error")
         } else {
     
         let item = {email, password};
@@ -121,6 +138,7 @@ const Login = (props) => {
                     Đăng nhập
                 </Button>
             </Form>
+
         </div>
     );
 };
