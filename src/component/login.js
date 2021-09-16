@@ -9,6 +9,7 @@ const Login = (props) => {
     const [password, setPassword] = useState('');
     const history = useHistory();
     const params = useParams();
+    const [errorMessage, setErrorMessage] = useState('');
     const {code} = params;
     const location = window.location.pathname;
 
@@ -49,7 +50,13 @@ const Login = (props) => {
     };
 
     async function login () {
-        console.warn(email, password);
+        if(email == ""){
+            setErrorMessage("Vui lòng nhập địa chỉ email")
+        }
+        else if (password == "") {
+            setErrorMessage("Vui lòng nhập mật khẩu")
+        } else {
+    
         let item = {email, password};
         await fetch('https://nhatrovn.herokuapp.com/api/login', {
             method: 'POST',
@@ -66,19 +73,18 @@ const Login = (props) => {
         }).then(async function (response) {
             const result = await response.json();
             if (result.status === 0) {
-                alert('Tài Khoản chưa được kích hoạt, Vui lòng vào Email kích hoạt');
+                setErrorMessage("Tài Khoản chưa được kích hoạt, Vui lòng vào Email kích hoạt")
             }
             else {
                 localStorage.setItem('user', JSON.stringify(result));
                 setUserLogin();
                 console.log(result);
-                //history.push('/');
+                history.push('/');
             }
         }).catch(function (error) {
-            alert('Sai email hoặc password');
+            setErrorMessage("Sai email hoặc mật khẩu")
         });
-        history.push('/');
-
+    }
     }
 
     return (
@@ -87,6 +93,10 @@ const Login = (props) => {
                 <div className="form-title">
                     <h2>Đăng Nhập</h2>
                 </div>
+                <Form.Group className="mb-3" controlId="formBasicEmail">
+                    <Form.Label className="text-danger">{errorMessage}</Form.Label>
+                </Form.Group>
+                
                 <Form.Group className="mb-3" controlId="formBasicEmail">
                     <Form.Label className="float-left">Email</Form.Label>
                     <Form.Control type="email" onChange={(e) => setEmail(e.target.value)} placeholder="Nhập email"/>

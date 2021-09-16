@@ -9,10 +9,15 @@ function Register() {
     const [cardId, setCardId] = useState("")
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
+    const [errorMessage, setErrorMessage] = useState('');
+
     const history = useHistory()
 
     async function register() {
-        console.warn(name, phone, cardId ,email, password )
+        if (name == "" || phone== "" || cardId == "" ||email== "" || password == "") {
+            setErrorMessage("Vui lòng nhập đầy đủ thông tin")
+        } else {
+
         let item = {name, phone, cardId ,email, password }
         await fetch("https://nhatrovn.herokuapp.com/api/register", {
             method: 'POST',
@@ -30,9 +35,9 @@ function Register() {
             history.push("/login")
             alert("Đăng kí thành công")
         }).catch(function (error) {
-            alert("email đã được đăng kí")
+            setErrorMessage("Email đã được đăng kí")
         });
-
+    }
     }
 
     return (
@@ -41,6 +46,10 @@ function Register() {
             <div className="form-title">
                 <h2>Đăng Kí</h2>
             </div>
+            <Form.Group className="mb-3" controlId="formBasicEmail">
+                    <Form.Label className="text-danger">{errorMessage}</Form.Label>
+            </Form.Group>
+
             <Form.Group className="mb-3" controlId="formBasicName">
                 <Form.Label className="float-left">Họ Tên</Form.Label>
                 <Form.Control type="text" onChange={(e) => setName(e.target.value)} placeholder="Nhập Họ Tên" />
@@ -65,7 +74,7 @@ function Register() {
                 <Form.Label className="float-left">Mật Khẩu</Form.Label>
                 <Form.Control type="password" onChange={(e) => setPassword(e.target.value)} placeholder="Nhập mật khẩu" />
             </Form.Group>
-            <Button className="mt-3 btn btn-default text-white" onClick={() => { if (window.confirm('Bạn muốn tiếp tục không')) register()}} variant="primary">
+            <Button className="mt-3 btn btn-default text-white" onClick={register} variant="primary">
                 Đăng kí
             </Button>
         </Form>
