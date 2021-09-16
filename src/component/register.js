@@ -1,6 +1,7 @@
 import React, { Component, useState, useEffect } from "react";
 import { useHistory } from 'react-router-dom';
 import { Form, Button } from 'react-bootstrap';
+import Alert from "./common/alert"
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 function Register() {
@@ -9,13 +10,18 @@ function Register() {
     const [cardId, setCardId] = useState("")
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
+
     const [errorMessage, setErrorMessage] = useState('');
+    const [alertStatus, setAlertStatus] = useState(false);
+    const [alertType, setAlertType] = useState('');
 
     const history = useHistory()
 
     async function register() {
         if (name == "" || phone== "" || cardId == "" ||email== "" || password == "") {
             setErrorMessage("Vui lòng nhập đầy đủ thông tin")
+            setAlertStatus(true)
+            setAlertType("error")
         } else {
 
         let item = {name, phone, cardId ,email, password }
@@ -33,9 +39,13 @@ function Register() {
             return response;
         }).then(async function (response) {
             history.push("/login")
-            alert("Đăng kí thành công")
+            setErrorMessage("Đăng kí thành công!\n Vui lòng kích hoạt tài khoản ở địa chỉ email")
+            setAlertStatus(true)
+            setAlertType("success")
         }).catch(function (error) {
             setErrorMessage("Email đã được đăng kí")
+            setAlertStatus(true)
+            setAlertType("error")
         });
     }
     }
@@ -46,9 +56,6 @@ function Register() {
             <div className="form-title">
                 <h2>Đăng Kí</h2>
             </div>
-            <Form.Group className="mb-3" controlId="formBasicEmail">
-                    <Form.Label className="text-danger">{errorMessage}</Form.Label>
-            </Form.Group>
 
             <Form.Group className="mb-3" controlId="formBasicName">
                 <Form.Label className="float-left">Họ Tên</Form.Label>
@@ -78,6 +85,13 @@ function Register() {
                 Đăng kí
             </Button>
         </Form>
+
+        <Alert
+                status={alertStatus}   // true or false
+                type={alertType}   // success, warning, error, info
+                title={errorMessage}   // title you want to display
+                setIsAlert = {setAlertStatus}
+            />
         </div>
     );
 }
