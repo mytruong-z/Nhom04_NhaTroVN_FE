@@ -1,8 +1,7 @@
 import React, {useState, useEffect} from 'react';
-import CardItem from "./partials/cardItem";
 import Header from "./partials/header";
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
-import {API_URL} from "../../config";
+import {API_URL, CLOUD_IMG} from "../../config";
 import NumberFormat from "react-number-format";
 import {Badge} from "react-bootstrap";
 import NewsTable from "./News/NewsTable";
@@ -19,15 +18,17 @@ function News() {
                 }
                 throw response;
             }).then(data => {
+                // console.log(data);
                 let listNews = data.map((val) => {
+                    const imgLink = val.image.length > 0 ? `${CLOUD_IMG}${val.image[0].name}` : '';
                     return {
                         "id": val.id,
                         "address": val.address,
-                        "image": <img src={`/assets/images/rooms/${val.image[0].name}`} width="160"/>,
+                        "image": <img src={imgLink} width="160"/>,
                         "host": val.host,
                         "price": <NumberFormat value={val.price} displayType={'text'} thousandSeparator={true} />,
                         "status": val.status ? <Badge bg="success">Active</Badge> : <Badge bg="secondary">Inactive</Badge>,
-                        "des": val.post.title,
+                        "des": val.post.length > 0 ? val.post[0].title : '',
                         "actions": <a href={`/admin/new/${val.id}`} className="btn btn-sm btn-dark">Chi tiết</a>
                     }
                 });
