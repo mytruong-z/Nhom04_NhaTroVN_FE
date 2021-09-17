@@ -11,31 +11,31 @@ function Posts() {
     const [loading, setLoading] = useState(false);
 
     useEffect(async () => {
-        if(!loading) {
-            await fetch(API_URL + "room",{ method: 'GET'}).then((response) => {
-                if(response.ok){
+        if (!loading) {
+            await fetch(API_URL + "room", {method: 'GET'}).then((response) => {
+                if (response.ok) {
                     return response.json();
                 }
                 throw response;
             }).then(data => {
                 let listPostsVerification = data.filter(val => val.status === 1).map((val) => {
-                    const imgLink = val.image.length > 0 ? `${CLOUD_IMG}${val.image[0].name}` : '';
+                    const imgLink = val.image.length > 0 ? `${CLOUD_IMG}${val.image[0].name}` : '/no-img.png';
                     return {
                         "id": val.id,
                         "title": val.post.length > 0 ? val.post[0].title : '',
                         "image": imgLink,
                         "description": val.post.length > 0 ? val.post[0].description : '',
-                        "status": val.isdelete ? <Badge bg="secondary">Inactive</Badge> : <Badge bg="success">Active</Badge>
+                        "status": val.isdelete ? <Badge bg="secondary">Inactive</Badge> :
+                            <Badge bg="success">Active</Badge>
                     }
                 });
                 let listPostsWaiting = data.filter(val => val.status === 0).map((val) => {
-                    const imgLink = val.image.length > 0 ? `${CLOUD_IMG}${val.image[0].name}` : '';
+                    const imgLink = val.image.length > 0 ? `${CLOUD_IMG}${val.image[0].name}` : '/no-img.png';
                     return {
                         "id": val.id,
-                        "title": val.post.length > 0 ? val.post[0].title : '',
+                        "title": val.post.length > 0 ? val.post[0].title : 'No title',
                         "image": imgLink,
-                        "description": val.post.length > 0 ? val.post[0].description : '',
-                        "status": val.isdelete ? <Badge bg="secondary">Inactive</Badge> : <Badge bg="success">Active</Badge>
+                        "description": val.post.length > 0 ? val.post[0].description : 'Empty'
                     }
                 });
                 setListPostsVerification(listPostsVerification);
@@ -56,7 +56,7 @@ function Posts() {
     }, [listPostsVerification, listPostsWaiting])
     return (
         <>
-            <Header title={'Xác minh bài viết'} />
+            <Header title={'Xác minh bài viết'}/>
             <Tabs className="admin-tabs mt-2">
                 <TabList>
                     <Tab>Chưa duyệt</Tab>
@@ -65,16 +65,28 @@ function Posts() {
 
                 <TabPanel>
                     <div className="container py-5">
-                        {listPostsWaiting.map((item, i) => (
-                            <CardItem key={i} src={item.image} title={item.title} subTitle={item.description} btnText={'Chi tiết'} linkBtn={`/admin/post/${item.id}`}/>
-                        ))}
+                        {loading ?
+                            <>
+                                {listPostsWaiting.map((item, i) => (
+                                    <CardItem key={i} src={item.image} title={item.title} subTitle={item.description}
+                                              btnText={'Chi tiết'} linkBtn={`/admin/post/${item.id}`}/>
+                                ))}
+                            </> :
+                            <div>Loading...</div>
+                        }
                     </div>
                 </TabPanel>
                 <TabPanel>
                     <div className="container py-5">
-                        {listPostsVerification.map((item, i) => (
-                            <CardItem key={i} src={item.image} title={item.title} subTitle={item.description} btnText={'Chi tiết'} linkBtn={`/admin/post/${item.id}`}/>
-                        ))}
+                        {loading ?
+                            <>
+                                {listPostsVerification.map((item, i) => (
+                                    <CardItem key={i} src={item.image} title={item.title} subTitle={item.description}
+                                              btnText={'Chi tiết'} linkBtn={`/admin/post/${item.id}`}/>
+                                ))}
+                            </> :
+                            <div>Loading...</div>
+                        }
                     </div>
                 </TabPanel>
             </Tabs>
