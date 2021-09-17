@@ -2,6 +2,7 @@ import React, { Component, useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Button, Modal, Card, Table, Form } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import Alert from "../../../common/alert"
 import './payment.css';
 import { div } from 'antd';
 
@@ -12,6 +13,10 @@ function Payment() {
     const [userID, setId] = useState([]);
     const [Notification, setNotification] = useState('');
     const [showNotification, setShowNotification] = useState(false);
+
+    const [errorMessage, setErrorMessage] = useState('');
+    const [alertStatus, setAlertStatus] = useState(false);
+    const [alertType, setAlertType] = useState('');
 
     const history = useHistory();
 
@@ -43,12 +48,14 @@ function Payment() {
             body: JSON.stringify(item)
         }).then(async function (response) {
             const result = await response.json();
-            setNotification('Hóa đơn ' + result.uuid + ' đã được ghi nhận chờ xử lý');
+            setNotification('Hóa đơn ' + result.uuid + ' đã được ghi nhận. \nVui lòng chuyển khoản vào số ngân hàng trên (ghi rõ số hóa đơn) và chờ xử lý');
             showNotificationModal();
 
         }).catch(function (error) {
-            setNotification('Thanh toán trước đó chưa được xử lý vui lòng chờ');
-            showNotificationModal();
+
+            setErrorMessage('Thanh toán trước đó chưa được xử lý vui lòng chờ')
+            setAlertStatus(true)
+            setAlertType('error')
         });
 
     }
@@ -60,8 +67,8 @@ function Payment() {
                     <h2>Mua quyền <b>Đăng Nhà trọ</b></h2>
                     <div>Để có thể tăng số lượng và thời gian bài đăng</div>
                 </div>
-                <div className="plan">
-                    <h3>Gói Đồng</h3>
+                <div className="plan mt-4">
+                    <h3><b>Gói Đồng</b></h3>
                     <div>$199.000 vnd</div>
                     <Button className="mt-3 mb-3 btn btn-default text-white "
                         onClick={() => { payment(2); }}>Mua</Button>
@@ -73,8 +80,8 @@ function Payment() {
                         </ul>
                     </div>
                 </div>
-                <div className="plan">
-                    <h3>Gói Bạc</h3>
+                <div className="plan mt-4">
+                    <h3><b>Gói Bạc</b></h3>
                     <div>$399.000 vnd</div>
                     <div></div>
                     <Button className="mt-3 mb-3 btn btn-default text-white "
@@ -87,8 +94,8 @@ function Payment() {
                         </ul>
                     </div>
                 </div>
-                <div className="plan">
-                    <h3>Gói Vàng</h3>
+                <div className="plan mt-4">
+                    <h3><b>Gói Vàng</b></h3>
                     <div>$599.000 vnd</div>
                     <Button className="mt-3 mb-3 btn btn-default text-white "
                         onClick={() => { payment(4); }}>Mua</Button>
@@ -115,12 +122,20 @@ function Payment() {
                 <Modal.Body>
                     <Form className="mt-3 mb-3">
                         <Form.Group className="mb-3" controlId="formBasicName">
-                            <Form.Label className="float-left">{Notification}</Form.Label>
+                            <Form.Label className="">From: Admin Nhà Trọ VN</Form.Label><br/>
+                            <Form.Label className="">Số ngân hàng: 0254159898416</Form.Label><br/>
+                            <Form.Label className="float-left">Thông báo : {Notification}</Form.Label>
                         </Form.Group>
                     </Form>
                 </Modal.Body>
-
             </Modal>
+
+            <Alert
+                status={alertStatus}   // true or false
+                type={alertType}   // success, warning, error, info
+                title={errorMessage}   // title you want to display
+                setIsAlert = {setAlertStatus}
+            />
         </div>
     );
 }

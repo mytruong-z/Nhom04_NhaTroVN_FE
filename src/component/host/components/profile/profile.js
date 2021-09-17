@@ -2,6 +2,7 @@ import React, { Component, useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Button, Modal, Card, Table, Form } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import Alert from "../../../common/alert"
 import './profile.css';
 import { div } from 'antd';
 
@@ -24,6 +25,10 @@ function Profile () {
     const [phone, setPhone] = useState([]);
     const [cardId, setCardId] = useState([]);
     const [transactions, setTransactions] = useState([]);
+
+    const [errorMessage, setErrorMessage] = useState('');
+    const [alertStatus, setAlertStatus] = useState(false);
+    const [alertType, setAlertType] = useState('');
 
     useEffect(async () => {
         if (!localStorage.getItem('user')) {
@@ -53,6 +58,7 @@ function Profile () {
                 return error;
             });
         }
+        
 
     }, []);
 
@@ -93,6 +99,23 @@ function Profile () {
     async function saveProfile () {
         const  initial = JSON.parse(saved);
         console.warn(id, name, email, phone, cardId);
+        if (phone.length > 10) {
+            setErrorMessage("Số điện thoại không vượt quá 10 số")
+            setAlertStatus(true)
+            setAlertType("error")
+            setName(profile.name);
+            setEmail(profile.email);
+            setPhone(profile.phone);
+            setCardId(profile.cardId);
+        } else if(cardId.length > 12) {
+            setErrorMessage("Số chứng minh không vượt quá 12 số")
+            setAlertStatus(true)
+            setAlertType("error")
+            setName(profile.name);
+            setEmail(profile.email);
+            setPhone(profile.phone);
+            setCardId(profile.cardId);
+        }else{
         let item = {id, name, email, phone, cardId};
         await fetch('https://nhatrovn.herokuapp.com/api/user/update', {
             method: 'PATCH',
@@ -107,10 +130,14 @@ function Profile () {
             }
             return response;
         }).then(async function (response) {
-            alert('Cập nhật thành công');
+            setErrorMessage("Cập nhật thành công")
+            setAlertStatus(true)
+            setAlertType("success")
             hideProfileModal();
         }).catch(function (error) {
-            alert('Cập nhật thất bại');
+            setErrorMessage("Cập nhật thất bại")
+            setAlertStatus(true)
+            setAlertType("error")
         });
 
         await fetch('https://nhatrovn.herokuapp.com/api/user/information/' + initial.id, {
@@ -125,6 +152,7 @@ function Profile () {
         }).catch((error) => {
             return error;
         });
+    }
     }
 
     return (
@@ -269,6 +297,13 @@ function Profile () {
                     </Button>
                 </Modal.Footer>
             </Modal>
+
+            <Alert
+                status={alertStatus}   // true or false
+                type={alertType}   // success, warning, error, info
+                title={errorMessage}   // title you want to display
+                setIsAlert = {setAlertStatus}
+            />
         </div>
     );
 }
