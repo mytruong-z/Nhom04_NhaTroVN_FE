@@ -31,7 +31,6 @@ const Login = (props) => {
             activeAccount();
         }
     }, []);
-
     const activeAccount = () => {
         if (code) {
             let item = {code};
@@ -48,9 +47,13 @@ const Login = (props) => {
                 }
             }).then(data => {
                 if(typeof (data) !== 'undefined') {
-                    alert("Kích hoạt thành công. Vui lòng đăng nhập lại!");
+                    setErrorMessage("Kích hoạt thành công. Vui lòng đăng nhập lại!")
+                    setAlertStatus(true)
+                    setAlertType("success")
                 } else {
-                    alert("Đường dẫn kích hoạt không đúng hoặc đã tồn tại!");
+                    setErrorMessage("Đường dẫn kích hoạt không đúng hoặc đã tồn tại!")
+                    setAlertStatus(true)
+                    setAlertType("error")
                 }
 
             });
@@ -63,11 +66,19 @@ const Login = (props) => {
    
 
     async function login () {
+        // var atposition = email.indexOf("@");
+        //var dotposition = email.lastIndexOf(".");
         if(email == ""){
             setErrorMessage("Vui lòng nhập địa chỉ email")
             setAlertStatus(true)
             setAlertType("error")
         }
+        /*else if (atposition < 1 || dotposition < (atposition + 2)
+                || (dotposition + 2) >= email.length) {
+            setErrorMessage("Hãy nhập địa chỉ email hợp lệ.\nExample@gmail.com")
+            setAlertStatus(true)
+            setAlertType("error")
+        }*/
         else if (password == "") {
             setErrorMessage("Vui lòng nhập mật khẩu")
             setAlertStatus(true)
@@ -90,7 +101,9 @@ const Login = (props) => {
         }).then(async function (response) {
             const result = await response.json();
             if (result.status === 0) {
-                setErrorMessage("Tài Khoản chưa được kích hoạt, Vui lòng vào Email kích hoạt")
+                setErrorMessage("Tài Khoản chưa được kích hoạt!\n Vui lòng vào Email kích hoạt")
+                setAlertStatus(true)
+                setAlertType("error")
             }
             else {
                 localStorage.setItem('user', JSON.stringify(result));
@@ -100,6 +113,8 @@ const Login = (props) => {
             }
         }).catch(function (error) {
             setErrorMessage("Sai email hoặc mật khẩu")
+            setAlertStatus(true)
+            setAlertType("error")
         });
     }
     }
@@ -110,9 +125,6 @@ const Login = (props) => {
                 <div className="form-title">
                     <h2>Đăng Nhập</h2>
                 </div>
-                <Form.Group className="mb-3" controlId="formBasicEmail">
-                    <Form.Label className="text-danger">{errorMessage}</Form.Label>
-                </Form.Group>
                 
                 <Form.Group className="mb-3" controlId="formBasicEmail">
                     <Form.Label className="float-left">Email</Form.Label>
@@ -121,8 +133,7 @@ const Login = (props) => {
 
                 <Form.Group className="mb-3" controlId="formBasicPassword">
                     <Form.Label className="float-left">Mật Khẩu</Form.Label>
-                    <Form.Control type="password" onChange={(e) => setPassword(e.target.value)}
-                                  placeholder="Nhập mật khẩu"/>
+                    <Form.Control type="password" onChange={(e) => setPassword(e.target.value)} placeholder="Nhập mật khẩu"/>
                 </Form.Group>
 
                 <Form.Group className="mb-3" controlId="formBasicCheckbox">
@@ -139,6 +150,12 @@ const Login = (props) => {
                 </Button>
             </Form>
 
+            <Alert
+                status={alertStatus}   // true or false
+                type={alertType}   // success, warning, error, info
+                title={errorMessage}   // title you want to display
+                setIsAlert = {setAlertStatus}
+            />
         </div>
     );
 };

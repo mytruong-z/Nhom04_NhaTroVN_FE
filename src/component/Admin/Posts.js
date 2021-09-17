@@ -1,57 +1,59 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import CardItem from "./partials/cardItem";
 import {Tab, TabList, TabPanel, Tabs} from "react-tabs";
 import Header from "./partials/header";
+import {API_URL, CLOUD_IMG} from "../../config";
+import {Badge} from "react-bootstrap";
 
-const listPostsVerification = [
-    {
-        id: 1,
-        title: 'Cho thuê phòng đẹp như khách sạn',
-        image: 'room_1.jpeg',
-        roomID: 1,
-        description: 'cho thuê phòng đẹp như khách sạn, đầy đủ nội thất, mới xây, gần trung tâm, yên tĩnh và tự do về giờ giấc. Diện tích 30m2, giá thuê chỉ 5 triệu/tháng.',
-        service: 2
-    },
-    {
-        id: 3,
-        title: 'Cho thuê phòng đẹp như khách sạn',
-        image: 'room_3.jpeg',
-        roomID: 3,
-        description: 'cho thuê phòng đẹp như khách sạn, đầy đủ nội thất, mới xây, gần trung tâm, yên tĩnh và tự do về giờ giấc. Diện tích 30m2, giá thuê chỉ 5 triệu/tháng.',
-        service: 2
-    }
-]
-const listPostsWaiting = [
-    {
-        id: 1,
-        title: 'Cho thuê phòng đẹp như khách sạn',
-        image: 'room_2.jpeg',
-        roomID: 1,
-        description: 'cho thuê phòng đẹp như khách sạn, đầy đủ nội thất, mới xây, gần trung tâm, yên tĩnh và tự do về giờ giấc. Diện tích 30m2, giá thuê chỉ 5 triệu/tháng.',
-        service: 2
-    },
-    {
-        id: 2,
-        title: 'Phòng trọ cho thuê đầy đủ nội thất mới đối diện Landmart 81, thuận tiện qua lại nhiều khu vực quận trung tâm',
-        image: 'room_4.jpeg',
-        roomID: 2,
-        description: 'Để chung tay đồng hành cùng khách hàng vượt qua dịch covid 19 Tặng ngay 1tr cho khách hàng cọc và ở trong tháng 6/2021.\n' +
-            '\n' +
-            'Vị trí: Số 117/17 Nguyễn Hữu Cảnh, P. 22, Q.Bình Thạnh, TP.HCM.\n' +
-            '\n' +
-            '+ Phòng cho thuê full nội thất đối diện Vinhome Tân Cảng, khu vực yên tĩnh tách biệt, hẻm ô tô sát bên The Manor, Saigon Pearl, khu du lịch Văn Thánh, gần đại học Ngoại Thương, Hutech,...',
-        service: 2
-    },
-    {
-        id: 3,
-        title: 'Cho thuê phòng đẹp như khách sạn',
-        image: 'room_5.jpeg',
-        roomID: 3,
-        description: 'cho thuê phòng đẹp như khách sạn, đầy đủ nội thất, mới xây, gần trung tâm, yên tĩnh và tự do về giờ giấc. Diện tích 30m2, giá thuê chỉ 5 triệu/tháng.',
-        service: 2
-    }
-]
 function Posts() {
+    const [listPostsVerification, setListPostsVerification] = useState([]);
+    const [listPostsWaiting, setListPostsWaiting] = useState([]);
+    const [loading, setLoading] = useState(false);
+
+    useEffect(async () => {
+        if(!loading) {
+            await fetch(API_URL + "room",{ method: 'GET'}).then((response) => {
+                if(response.ok){
+                    return response.json();
+                }
+                throw response;
+            }).then(data => {
+                let listPostsVerification = data.filter(val => val.status === 1).map((val) => {
+                    const imgLink = val.image.length > 0 ? `${CLOUD_IMG}${val.image[0].name}` : '';
+                    return {
+                        "id": val.id,
+                        "title": val.post.length > 0 ? val.post[0].title : '',
+                        "image": imgLink,
+                        "description": val.post.length > 0 ? val.post[0].description : '',
+                        "status": val.isdelete ? <Badge bg="secondary">Inactive</Badge> : <Badge bg="success">Active</Badge>
+                    }
+                });
+                let listPostsWaiting = data.filter(val => val.status === 0).map((val) => {
+                    const imgLink = val.image.length > 0 ? `${CLOUD_IMG}${val.image[0].name}` : '';
+                    return {
+                        "id": val.id,
+                        "title": val.post.length > 0 ? val.post[0].title : '',
+                        "image": imgLink,
+                        "description": val.post.length > 0 ? val.post[0].description : '',
+                        "status": val.isdelete ? <Badge bg="secondary">Inactive</Badge> : <Badge bg="success">Active</Badge>
+                    }
+                });
+                setListPostsVerification(listPostsVerification);
+                setListPostsWaiting(listPostsWaiting);
+                setLoading(true);
+            }).catch((error) => {
+                return error;
+            });
+        }
+    }, []);
+
+    useEffect(async () => {
+        if (listPostsVerification.length > 0 || listPostsWaiting.length > 0) {
+            setLoading(true);
+        } else {
+            setLoading(false);
+        }
+    }, [listPostsVerification, listPostsWaiting])
     return (
         <>
             <Header title={'Xác minh bài viết'} />
@@ -63,15 +65,15 @@ function Posts() {
 
                 <TabPanel>
                     <div className="container py-5">
-                        {listPostsVerification.map((item, i) => (
-                            <CardItem src={item.image} title={item.title} subTitle={item.description} btnText={'Chi tiết'} linkBtn={`/admin/post/${item.id}`}/>
+                        {listPostsWaiting.map((item, i) => (
+                            <CardItem key={i} src={item.image} title={item.title} subTitle={item.description} btnText={'Chi tiết'} linkBtn={`/admin/post/${item.id}`}/>
                         ))}
                     </div>
                 </TabPanel>
                 <TabPanel>
                     <div className="container py-5">
-                        {listPostsWaiting.map((item, i) => (
-                            <CardItem src={item.image} title={item.title} subTitle={item.description} btnText={'Chi tiết'} linkBtn={`/admin/post/${item.id}`}/>
+                        {listPostsVerification.map((item, i) => (
+                            <CardItem key={i} src={item.image} title={item.title} subTitle={item.description} btnText={'Chi tiết'} linkBtn={`/admin/post/${item.id}`}/>
                         ))}
                     </div>
                 </TabPanel>
