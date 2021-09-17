@@ -20,6 +20,7 @@ function Room() {
     const [roomUpdateDetails, setRoomUpdateDetails] = useState(null);
     const [postDetails, setPostDetails] = useState(null);
     const [images, setImages] = useState([]);
+    const [imagesFormData, setImagesFormData] = useState(null);
     const [citiesData, setCitiesData] = useState([]);
     const [districts, setDistricts] = useState([]);
     const [wards, setWards] = useState([]);
@@ -202,6 +203,41 @@ function Room() {
         setSelectedDistrict(valueSplitted[0]);
     };
 
+    const handleImageSelectorOnChange = (e) => {
+        var files = e.target.files;
+        const formData = new FormData();
+        formData.append('roomID', images.roomID);
+        for (var i = 0; i < files.length; i++)
+        {
+            formData.append(`images`, files[i]);
+        }
+        setImagesFormData(formData);
+
+        // // Display the key/value pairs
+        // for(var pair of formData.entries()) {
+        //     console.log(pair[0]+ ', '+ pair[1]); 
+        // }
+    }
+
+    const handleSubmitImages = async () => {
+        if (imagesFormData) {
+            await axios({
+                method: "POST",
+                url: `${API_URL}room/uploadImage`,
+                data: imagesFormData,
+                headers: {
+                    "Content-Type": "multipart/form-data"
+                }
+            });
+            setShowImagesDetails(false);
+            alert.success("Lưu ảnh thành công");
+            getRooms(hostId);
+        } else {
+            setShowImagesDetails(false);
+            alert.error("Bạn chưa chọn hình ảnh");
+        }
+    }
+
     const handleWardOnChange = (e) => {
         var valueSplitted = e.target.value.split(',');
         var newFormData = {
@@ -337,12 +373,11 @@ function Room() {
             roomID: item.id
         }
 
-        console.log(imagesData);
-
         setImages(imagesData);
     }
 
     const hideImagesDetailsModal = () => {
+        setImagesFormData(null);
         setShowImagesDetails(false);
     }
 
@@ -609,6 +644,7 @@ function Room() {
                 show={showImagesDetails}
                 onHide={hideImagesDetailsModal}
                 keyboard={false}
+                backdrop="static"
             >
                 <Modal.Header closeButton>
                     <Modal.Title>Hình ảnh</Modal.Title>
@@ -617,22 +653,16 @@ function Room() {
                     <Form>
                         <Form.Group className="mb-3">
                             <div className="images-container">
-                            {
-                                (images?.image?.length > 0) ? images?.image?.map((item, index) => {
-                                    return <img key={index} className="room-image-detail" src={`${imageBaseUrl}${item?.name}`} alt="" />
-                                }) : null
-                            }
-                                                        {
-                                (images?.image?.length > 0) ? images?.image?.map((item, index) => {
-                                    return <img key={index} className="room-image-detail" src={`${imageBaseUrl}${item?.name}`} alt="" />
-                                }) : null
-                            }
-                                                        {
-                                (images?.image?.length > 0) ? images?.image?.map((item, index) => {
-                                    return <img key={index} className="room-image-detail" src={`${imageBaseUrl}${item?.name}`} alt="" />
-                                }) : null
-                            }
+                                {
+                                    (images?.image?.length > 0) ? images?.image?.map((item, index) => {
+                                        return <img key={index} className="room-image-detail" src={`${imageBaseUrl}${item?.name}`} alt="" />
+                                    }) : null
+                                }
                             </div>
+                        </Form.Group>
+                        <Form.Group controlId="formFileMultiple" className="mb-3">
+                            <Form.Label>Chọn hình ảnh</Form.Label>
+                            <Form.Control type="file" multiple onChange={(e) => handleImageSelectorOnChange(e)} />
                         </Form.Group>
                     </Form>
                 </Modal.Body>
@@ -640,7 +670,7 @@ function Room() {
                     <Button variant="secondary" onClick={hideImagesDetailsModal}>
                         Đóng
                     </Button>
-                    <Button variant="primary" onClick={hideImagesDetailsModal}>
+                    <Button variant="primary" onClick={handleSubmitImages}>
                         Cập nhật
                     </Button>
                 </Modal.Footer>
