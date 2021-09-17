@@ -19,7 +19,7 @@ function News() {
                 throw response;
             }).then(data => {
                 // console.log(data);
-                let listNews = data.map((val) => {
+                let listNews = data.filter(val => val.status === 1).map((val) => {
                     const imgLink = val.image.length > 0 ? `${CLOUD_IMG}${val.image[0].name}` : '';
                     return {
                         "id": val.id,
@@ -27,7 +27,7 @@ function News() {
                         "image": <img src={imgLink} width="160"/>,
                         "host": val.host,
                         "price": <NumberFormat value={val.price} displayType={'text'} thousandSeparator={true} />,
-                        "status": val.status ? <Badge bg="success">Active</Badge> : <Badge bg="secondary">Inactive</Badge>,
+                        "status": val.isdelete ? <Badge bg="secondary">Inactive</Badge> : <Badge bg="success">Active</Badge>,
                         "des": val.post.length > 0 ? val.post[0].title : '',
                         "actions": <a href={`/admin/new/${val.id}`} className="btn btn-sm btn-dark">Chi tiết</a>
                     }
