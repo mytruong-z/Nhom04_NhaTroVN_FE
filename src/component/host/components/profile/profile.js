@@ -25,6 +25,7 @@ function Profile () {
     const [phone, setPhone] = useState([]);
     const [cardId, setCardId] = useState([]);
     const [transactions, setTransactions] = useState([]);
+    const [transactionsProgram, setTransactionsProgram] = useState([]);
 
     const [errorMessage, setErrorMessage] = useState('');
     const [alertStatus, setAlertStatus] = useState(false);
@@ -57,10 +58,25 @@ function Profile () {
             }).catch((error) => {
                 return error;
             });
-        }
-        
 
+            await fetch('https://nhatrovn.herokuapp.com/api/payment/viewByUserId/' + initial.id, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+            }).then(async function (response) {
+                const result = await response.json();
+                setTransactionsProgram([result]);
+                
+            }).catch((error) => {
+                return error;
+            });
+            
+        }
     }, []);
+   
+   
 
     const onShowProfile = (e) => {
         showProfileModal();
@@ -206,7 +222,7 @@ function Profile () {
                     </div>
                 </div>
                 <div className="transactions">
-                    <h3 className="bold">Lịch Sử Thanh Toán</h3>
+                    <h3 className="bold">Lịch Sử Đã Thanh Toán</h3>
                     <Table striped bordered hover size="sm">
                         <thead>
                         <tr>
@@ -239,7 +255,7 @@ function Profile () {
 
                                     }
                                     return (
-                                        <tr>
+                                        <tr key ={index}>
                                             <td>{index + 1}</td>
                                             <td>{item.unique_key}</td>
                                             <td>{level}</td>
@@ -248,6 +264,52 @@ function Profile () {
                                     )
                                 })
                                 : ""
+                        }
+                        </tbody>
+                    </Table>
+                </div>
+
+                <div className="transactionsProgram">
+                    <h3 className="bold">Lịch Sử Chưa Thanh Toán</h3>
+                    <Table striped bordered hover size="sm">
+                        <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Mã Thanh Toán</th>
+                            <th>Loại Gói Đăng Ký</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                       
+                        { 
+                                transactionsProgram.map((item, index) => {
+                                    let level = "";
+                                    switch (item?.subscription_id) {
+                                        case TYPE_LEVEL_1:
+                                            level = "Gói Đồng";
+                                            break;
+                                        case TYPE_LEVEL_2:
+                                            level = "Gói Bạc";
+                                            break;
+                                        case TYPE_LEVEL_3:
+                                            level = "Gói Vàng";
+                                            break;
+                                        case TYPE_LEVEL_4:
+                                            level = "Gói Vàng";
+                                            break;
+                                        default:
+                                            level = "Không xác định"
+
+                                    }
+                                    return (
+                                        <tr>
+                                            <td>{1}</td>
+                                            <td>{item?.unique_key}</td>
+                                            <td>{level}</td>
+                                        </tr>
+                                    )
+                                })
+                                
                         }
                         </tbody>
                     </Table>
