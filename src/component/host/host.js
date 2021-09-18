@@ -75,7 +75,6 @@ export default function SimpleTabs() {
                     <Tabs value={value} onChange={handleChange} aria-label="simple tabs example">
                         <Tab label="Thông tin cá nhân" {...a11yProps(0)} />
                         <Tab label="Danh sách nhà" {...a11yProps(1)} />
-                        <Tab label="Danh sách bài đăng" {...a11yProps(2)} />
                         <Tab label="Thanh toán" {...a11yProps(3)} />
                         <Tab label="Thay đổi mật khẩu" {...a11yProps(4)} />
                     </Tabs>
@@ -85,9 +84,6 @@ export default function SimpleTabs() {
                 </TabPanel>
                 <TabPanel value={value} index={1}>
                     <Room />
-                </TabPanel>
-                <TabPanel value={value} index={2}>
-                    Item Three
                 </TabPanel>
                 <TabPanel value={value} index={3}>
                     <Payment />
