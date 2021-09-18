@@ -86,7 +86,7 @@ function SideBar(props) {
     return (
         <div className="admin-side-bar bg-dark shadow">
             <div className="d-flex flex-column flex-shrink-0 p-3 bg-dark">
-                <a href="/admin" className="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none">
+                <a href="/" className="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none">
                     <div className="logo">
                         <img src="/NTVN-logo.png" width="70" className="p-2"/>
                     </div>

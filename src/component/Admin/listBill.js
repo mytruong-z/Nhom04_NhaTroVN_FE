@@ -52,11 +52,11 @@ function ListBills() {
             accessor: 'userID',
         },
         {
-            Header: 'Unique Key',
+            Header: 'Mã thanh toán',
             accessor: 'unique_key',
         },
         {
-            Header: 'Subscription Id',
+            Header: 'Mã gói',
             accessor: 'subscription_id',
         },
         {
@@ -118,7 +118,7 @@ function ListBills() {
     }, []);
 
     const confirmPayment = async (uuid) => {
-        let item = {'uuid': 'zczxczxczxczxczxczcxz'};
+        let item = {'uuid': uuid};
         await fetch(API_URL + 'payment/confirm', {
             method: 'POST',
             headers: {
@@ -128,7 +128,7 @@ function ListBills() {
             body: JSON.stringify(item)
         }).then(async function (response) {
             const result = await response.json();
-            if (result.status === 0) {
+            if (result === null) {
                 setErrorMessage("Xác nhận không thành công!");
                 setAlertStatus(true);
                 setAlertType("error");
