@@ -39,7 +39,7 @@ function Dashboard() {
                     Báo cáo
                 </div>
             </div>
-            <div className="container pb-5 pt-2">
+            <div className="container pb-5 pt-2 px-0">
                 <h3 className="text-center">Thống kê doanh thu 12 tháng gần nhất</h3>
                 { loading ?
                     <Bar

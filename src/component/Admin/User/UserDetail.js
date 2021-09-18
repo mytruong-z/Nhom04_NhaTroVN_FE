@@ -3,7 +3,6 @@ import {Card} from 'react-bootstrap';
 import { Badge } from 'react-bootstrap';
 import Header from "../partials/header";
 import {API_URL} from "../../../config";
-import NumberFormat from "react-number-format";
 
 const User = (props) => {
     const {match} = props;
@@ -49,7 +48,6 @@ const User = (props) => {
                             <Card.Text>
                                 <span className="bold w-150px d-block d-sm-inline-block">Email:</span> {data.email} <br/>
                                 <span className="bold w-150px d-block d-sm-inline-block">Số điện thoại:</span> {data.phone} <br/>
-                                <span className="bold w-150px d-block d-sm-inline-block">Số dư:</span> <NumberFormat value={data.balance} displayType={'text'} thousandSeparator={true} /> <br/>
                                 <span className="bold w-150px d-block d-sm-inline-block">Ngày tạo tài khoản:</span> {(new Date(data.created_at)).toLocaleDateString('en-US', DATE_OPTIONS)} <br/>
                                 <span className="bold w-150px d-block d-sm-inline-block">Trạng thái:</span> {data.activate_status ? <Badge bg="success">Active</Badge> : <Badge bg="secondary">Inactive</Badge>} <br/>
                                 <span className="bold w-150px d-block d-sm-inline-block">Mã thẻ:</span> {data.cardId} <br/>

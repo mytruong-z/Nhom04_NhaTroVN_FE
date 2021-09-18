@@ -29,7 +29,7 @@ function News() {
                         "price": <NumberFormat value={val.price} displayType={'text'} thousandSeparator={true} />,
                         "status": val.isdelete ? <Badge bg="secondary">Inactive</Badge> : <Badge bg="success">Active</Badge>,
                         "des": val.post.length > 0 ? val.post[0].title : '',
-                        "actions": <a href={`/admin/new/${val.id}`} className="btn btn-sm btn-dark">Chi tiết</a>
+                        "actions": <a href={`/admin/post/${val.id}`} className="btn btn-sm btn-dark">Chi tiết</a>
                     }
                 });
                 setNews(listNews);
@@ -57,7 +57,7 @@ function News() {
                 </TabList>
 
                 <TabPanel>
-                    <div className="container py-5">
+                    <div className="container py-5 px-0">
                         { loading ?
                             <NewsTable userData={news}/>
                             :

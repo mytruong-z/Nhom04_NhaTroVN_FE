@@ -156,10 +156,6 @@ function UserTable({userData}) {
                 accessor: 'phone',
             },
             {
-                Header: 'Số dư TK',
-                accessor: 'balance',
-            },
-            {
                 Header: 'Trạng thái',
                 accessor: 'status',
             },
