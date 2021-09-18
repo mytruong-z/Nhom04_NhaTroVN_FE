@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import './App.css';
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch, Redirect } from "react-router-dom";
 import Menu from './component/Menu';
 import Footer from './component/footer';
 import routes from './routes/routes';
@@ -8,7 +8,6 @@ import adminRoutes from './routes/admin';
 import Sidebar from "./component/Admin/partials/sidebar";
 import Login from "./component/login";
 import AdminLogin from "./component/Admin/login";
-import Redirect from "react-router-dom/es/Redirect";
 
 function App() {
     const [adminPage, setAdminPage] = useState(false);

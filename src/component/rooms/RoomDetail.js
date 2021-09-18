@@ -76,8 +76,6 @@ const RoomDetail = (props) => {
                             <span
                                 className="bold">Liên Hệ: </span> {room.host.name} - {room.host.phone} - {room.host.email}
                         </p>
-
-                        <Button variant="primary">Đặt Phòng</Button>
                     </div>
                     : ''
             }

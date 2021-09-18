@@ -12,9 +12,11 @@ const ForgotPassword = () => {
     const [screen, setScreen] = useState(1);
     const history = useHistory();
     const [alertError, setAlertError] = useState('');
+    const [alertSuccess, setAlertSuccess] = useState('');
     const [isAlert, setIsAlert] = useState(false);
+    const [isAlertSuccess, setIsAlertSuccess] = useState(false);
 
-    const request = () => {
+    const request = (type) => {
         let item = {email};
         fetch('https://nhatrovn.herokuapp.com/api/password/recover-request', {
             method: 'POST',
@@ -25,8 +27,13 @@ const ForgotPassword = () => {
             body: JSON.stringify(item)
         }).then(function (response) {
             if (response.status === 204) {
+                setIsAlert(true);
                 setAlertError('Vượt quá số lượt cho phép trong ngày (3 lượt). Vui lòng quay lại sau!');
             } else if (response.ok) {
+                if(type === 2) {
+                    setIsAlertSuccess(true);
+                    setAlertSuccess('Yêu cầu tạo lại mã đã được gửi. Vui lòng kiểm tra Email!');
+                }
                 setScreen(2);
                 return response;
             } else {
@@ -87,6 +94,7 @@ const ForgotPassword = () => {
     return (
         <div className="Login">
             <Alert status={isAlert} setIsAlert={setIsAlert} type="error" title={alertError}/>
+            <Alert status={isAlertSuccess} setIsAlert={setIsAlertSuccess} type="success" title={alertSuccess}/>
             <Form className="mt-5">
                 {
                     screen === 1 ?
@@ -99,7 +107,7 @@ const ForgotPassword = () => {
                                 <Form.Control required type="email" onChange={(e) => setEmail(e.target.value)}
                                               placeholder="Nhập email"/>
                             </Form.Group>
-                            <Button className="mt-3 btn btn-default text-white" onClick={request} variant="primary">
+                            <Button className="mt-3 btn btn-default text-white" onClick={() => request(1)} variant="primary">
                                 Gửi yêu cầu
                             </Button>
                         </div> : ''
@@ -117,9 +125,9 @@ const ForgotPassword = () => {
                                               placeholder="Nhập mã xác nhận"/>
                             </Form.Group>
                             <Button className="mt-3 btn btn-default text-white" onClick={confirmCode} variant="primary">
-                                Gửi yêu cầu
+                                Xác Nhận Mã OTP
                             </Button>
-                            <Button className="mt-3 btn btn-default text-white" onClick={request} variant="primary">
+                            <Button className="mt-3 btn btn-default text-white" onClick={() => request(2)} variant="primary">
                                 Gửi lại xác nhận
                             </Button>
                         </div> : ''

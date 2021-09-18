@@ -1,24 +1,36 @@
 import React, {useState, useEffect} from 'react';
 import { Bar } from "react-chartjs-2";
+import {API_URL} from "../../config";
 
 function Dashboard() {
-    const label = [
-        "Tháng 1",
-        "Tháng 2",
-        "Tháng 3",
-        "Tháng 4",
-        "Tháng 5",
-        "Tháng 6",
-        "Tháng 7",
-        "Tháng 8",
-        "Tháng 9",
-        "Tháng 10",
-        "Tháng 11",
-        "Tháng 12",
-    ];
+    const [loading, setLoading] = useState(false);
+    const [label, setLabel] = useState([]);
+    const [chartData, setChartData] = useState([]);
 
-    const chartData = [2478, 5267, 734, 784, 433, 2478, 5267, 734, 784, 433, 784, 433];
+    useEffect(async () => {
+        if(!loading) {
+            await fetch(API_URL + "report/year",{ method: 'GET'}).then((response) => {
+                if(response.ok){
+                    return response.json();
+                }
+                throw response;
+            }).then(data => {
+                setLabel(data.name);
+                setChartData(data.data);
+                setLoading(true);
+            }).catch((error) => {
+                return error;
+            });
+        }
+    }, []);
 
+    useEffect(async () => {
+        if (chartData.length > 0 || label.length > 0) {
+            setLoading(true);
+        } else {
+            setLoading(false);
+        }
+    }, [label, chartData])
 
     return (
         <>
@@ -29,32 +41,36 @@ function Dashboard() {
             </div>
             <div className="container pb-5 pt-2">
                 <h3 className="text-center">Thống kê doanh thu 12 tháng gần nhất</h3>
-                <Bar
-                    data={{
-                        labels: label,
-                        datasets: [
-                            {
-                                label: "Doanh thu (VND)",
-                                backgroundColor: [
-                                    "#efd6d5",
-                                    "#8d8e93",
-                                    "#d8d9d3",
-                                    "#a5afa9",
-                                    "#deb0ae",
-                                    "#c0cac2",
-                                ],
-                                data: chartData
+                { loading ?
+                    <Bar
+                        data={{
+                            labels: label,
+                            datasets: [
+                                {
+                                    label: "Doanh thu (VND)",
+                                    backgroundColor: [
+                                        "#efd6d5",
+                                        "#8d8e93",
+                                        "#d8d9d3",
+                                        "#a5afa9",
+                                        "#deb0ae",
+                                        "#c0cac2",
+                                    ],
+                                    data: chartData
+                                }
+                            ]
+                        }}
+                        options={{
+                            legend: { display: false },
+                            title: {
+                                display: true,
+                                text: "Predicted world population (millions) in 2050"
                             }
-                        ]
-                    }}
-                    options={{
-                        legend: { display: false },
-                        title: {
-                            display: true,
-                            text: "Predicted world population (millions) in 2050"
-                        }
-                    }}
-                />
+                        }}
+                    />
+                    :
+                    <div>Loading...</div>
+                }
             </div>
         </>
     )
