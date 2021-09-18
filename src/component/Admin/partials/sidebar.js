@@ -1,9 +1,10 @@
 import React, {Component, useEffect, useState} from 'react';
 import { Route, Link } from 'react-router-dom';
 import {Nav, NavLink} from 'react-bootstrap';
-import {FaChartBar, FaCoins, FaNewspaper, FaClipboardCheck, FaUserAlt} from "react-icons/fa";
+import {FaChartBar, FaCoins, FaNewspaper, FaClipboardCheck, FaUserAlt, FaSignOutAlt} from "react-icons/fa";
 
-function SideBar() {
+function SideBar(props) {
+    const {adminLogin} = props;
     const menus = [
         {
             name: 'Báo Cáo',
@@ -45,10 +46,10 @@ function SideBar() {
                 exact={activeOnlyWhenExact}
                 children={({match}) => {
                     const active = match ? 'active bg-pink' : '';
-                    const loginStatus = (localStorage.user && (to === '/login' || to === '/register')) ? 'hidden' : '';
+                    const loginStatus = (adminLogin && (to === '/admin/login')) ? 'hidden' : '';
 
                     return (
-                        <li className="nav-item admin-item rounded-3 mb-1">
+                        <li className={`nav-item admin-item rounded-3 mb-1 ${loginStatus}`}>
                             <a href={to} className={`nav-link ${active}`} aria-current="page">
                                 <svg className="bi me-2" width="16" height="16">
                                     {icon}
@@ -85,7 +86,7 @@ function SideBar() {
     return (
         <div className="admin-side-bar bg-dark shadow">
             <div className="d-flex flex-column flex-shrink-0 p-3 bg-dark">
-                <a href="/" className="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none">
+                <a href="/admin" className="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none">
                     <div className="logo">
                         <img src="/NTVN-logo.png" width="70" className="p-2"/>
                     </div>
@@ -95,6 +96,14 @@ function SideBar() {
                     {showMenus(menus)}
                 </ul>
                 <hr className="text-pink"/>
+                <ul className="nav nav-pills flex-column mb-auto">
+                    <MenuLink
+                        label={'Đăng xuất'}
+                        to={'/admin/logout'}
+                        activeOnlyWhenExact={true}
+                        icon={<FaSignOutAlt/>}
+                    />
+                </ul>
             </div>
         </div>
     );

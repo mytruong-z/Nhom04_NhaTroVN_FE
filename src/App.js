@@ -7,6 +7,8 @@ import routes from './routes/routes';
 import adminRoutes from './routes/admin';
 import Sidebar from "./component/Admin/partials/sidebar";
 import Login from "./component/login";
+import AdminLogin from "./component/Admin/login";
+import Redirect from "react-router-dom/es/Redirect";
 
 function App() {
     const [adminPage, setAdminPage] = useState(false);
@@ -18,22 +20,38 @@ function App() {
         setUserLogin(false);
     };
 
+    const adminLogout = () => {
+        localStorage.setItem("admin", "");
+        setAdminLogin(false);
+    };
+
     const handleUserLogin = () => {
         setUserLogin(true);
     };
 
+    const handleAdminLogin = () => {
+        setAdminLogin(true);
+    };
+
     console.log("userLogin", userLogin);
+    console.log("adminLogin", adminLogin);
 
     useEffect(() => {
         const location = window.location.pathname;
         if(location.startsWith('/admin')){
             setAdminPage(true);
         }
-        if(location.startsWith('/admin/login')){
+        /*if(location.startsWith('/admin/login')){
+            setAdminLogin(true);
+        }*/
+        if (location.startsWith('/admin/logout')) {
+            adminLogout();
+        }
+        if(localStorage.getItem('admin')) {
             setAdminLogin(true);
         }
 
-    }, [adminPage]);
+    }, [adminLogin]);
 
     useEffect(() => {
         const location = window.location.pathname;
@@ -55,6 +73,9 @@ function App() {
             result = routes.map((route, index) => {
                 if (route.path === '/login') {
                     route.main = ({location}) => <Login setUserLogin={handleUserLogin} location={location}/>;
+                }
+                if (route.path === '/admin/login') {
+                    route.main = ({location}) => <AdminLogin setAdminLogin={handleAdminLogin} location={location}/>;
                 }
                 return (
                     <Route
@@ -85,11 +106,12 @@ function App() {
                 </Router>
                 : //Admin pages
                 <Router>
+                    <Redirect from="/admin/logout" to="/admin/login" />
                     <div className="App row w-100 p-0">
-                        {!adminLogin ?
+                        {adminLogin ?
                             <>
                                 <div className="col-3 p-0">
-                                    <Sidebar/>
+                                    <Sidebar adminLogin={adminLogin}/>
                                 </div>
                                 <div className="col-9 p-0">
                                     <Switch>
