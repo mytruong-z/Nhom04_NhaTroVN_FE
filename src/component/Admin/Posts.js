@@ -77,7 +77,7 @@ function Posts() {
                     </div>
                 </TabPanel>
                 <TabPanel>
-                    <div className="container py-5">
+                    <div className="container py-5 px-0">
                         {loading ?
                             <>
                                 {listPostsVerification.map((item, i) => (

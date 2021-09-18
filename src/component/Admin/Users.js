@@ -55,7 +55,7 @@ function Users() {
                 </TabList>
 
                 <TabPanel>
-                    <div className="container py-5">
+                    <div className="container py-5 px-0">
                         { loading ?
                             <UserTable userData={data}/>
                             :
