@@ -71,9 +71,7 @@ function Table({columns, data}) {
                 {headerGroups.map(headerGroup => (
                     <tr {...headerGroup.getHeaderGroupProps()}>
                         {headerGroup.headers.map(column => (
-                            <th {...column.getHeaderProps({
-                                style: { minWidth: column.minWidth, width: column.width },
-                            })}>{column.render('Header')}</th>
+                            <th {...column.getHeaderProps()}>{column.render('Header')}</th>
                         ))}
                     </tr>
                 ))}
@@ -84,12 +82,7 @@ function Table({columns, data}) {
                     return (
                         <tr {...row.getRowProps()}>
                             {row.cells.map(cell => {
-                                return <td {...cell.getCellProps({
-                                    style: {
-                                        minWidth: cell.column.minWidth,
-                                        width: cell.column.width,
-                                    },
-                                })}>{cell.render('Cell')}</td>
+                                return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
                             })}
                         </tr>
                     )
@@ -143,7 +136,7 @@ function Table({columns, data}) {
     )
 }
 
-function NewsTable({userData}) {
+function PostsTable({userData}) {
     const columns = React.useMemo(
         () => [
             {
@@ -161,17 +154,12 @@ function NewsTable({userData}) {
             },
             {
                 Header: 'Mô tả',
-                accessor: 'des',
+                accessor: 'description',
                 width: 250
             },
             {
                 Header: 'Giá',
                 accessor: 'price',
-            },
-            {
-                Header: 'Trạng thái',
-                accessor: 'status',
-                width: 100
             },
             {
                 Header: 'Thao tác',
@@ -189,4 +177,4 @@ function NewsTable({userData}) {
     )
 }
 
-export default NewsTable
+export default PostsTable

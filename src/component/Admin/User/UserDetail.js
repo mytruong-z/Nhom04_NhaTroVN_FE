@@ -3,6 +3,7 @@ import {Card} from 'react-bootstrap';
 import { Badge } from 'react-bootstrap';
 import Header from "../partials/header";
 import {API_URL} from "../../../config";
+import {FaArrowLeft} from "react-icons/fa";
 
 const User = (props) => {
     const {match} = props;
@@ -38,6 +39,9 @@ const User = (props) => {
         <>
             <Header title={'Chi tiết người dùng'} hideSearch={true}/>
             <div className="mt-4">
+                <div className="text-end pb-2">
+                    <a href="/admin/users" className="btn btn-sm btn-outline-dark"><FaArrowLeft/> Trở về</a>
+                </div>
                 { loading ?
                     <Card>
                         <Card.Header as="h5">
@@ -49,7 +53,7 @@ const User = (props) => {
                                 <span className="bold w-150px d-block d-sm-inline-block">Email:</span> {data.email} <br/>
                                 <span className="bold w-150px d-block d-sm-inline-block">Số điện thoại:</span> {data.phone} <br/>
                                 <span className="bold w-150px d-block d-sm-inline-block">Ngày tạo tài khoản:</span> {(new Date(data.created_at)).toLocaleDateString('en-US', DATE_OPTIONS)} <br/>
-                                <span className="bold w-150px d-block d-sm-inline-block">Trạng thái:</span> {data.activate_status ? <Badge bg="success">Active</Badge> : <Badge bg="secondary">Inactive</Badge>} <br/>
+                                <span className="bold w-150px d-block d-sm-inline-block">Trạng thái:</span> {data.activate_status ? <Badge bg="success">Đã kích hoạt</Badge> : <Badge bg="secondary">Chưa kích hoạt</Badge>} <br/>
                                 <span className="bold w-150px d-block d-sm-inline-block">Mã thẻ:</span> {data.cardId} <br/>
                             </Card.Text>
                         </Card.Body>

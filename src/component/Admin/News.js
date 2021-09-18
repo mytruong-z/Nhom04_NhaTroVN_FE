@@ -20,15 +20,16 @@ function News() {
             }).then(data => {
                 // console.log(data);
                 let listNews = data.filter(val => val.status === 1).map((val) => {
-                    const imgLink = val.image.length > 0 ? `${CLOUD_IMG}${val.image[0].name}` : '';
+                    const imgLink = val.image.length > 0 ? `${CLOUD_IMG}${val.image[0].name}` : '/no-img.png';
                     return {
                         "id": val.id,
                         "address": val.address,
                         "image": <img src={imgLink} width="160"/>,
                         "host": val.host,
                         "price": <NumberFormat value={val.price} displayType={'text'} thousandSeparator={true} />,
-                        "status": val.isdelete ? <Badge bg="secondary">Inactive</Badge> : <Badge bg="success">Active</Badge>,
-                        "des": val.post.length > 0 ? val.post[0].title : '',
+                        "status": val.isdelete ? <Badge bg="secondary">Chưa xác nhận</Badge> : <Badge bg="success">Đã xác nhận</Badge>,
+                        "des": val.post.length > 0 ? val.post[0].description : '',
+                        "title": val.post.length > 0 ? val.post[0].title : '',
                         "actions": <a href={`/admin/post/${val.id}`} className="btn btn-sm btn-dark">Chi tiết</a>
                     }
                 });
@@ -57,7 +58,7 @@ function News() {
                 </TabList>
 
                 <TabPanel>
-                    <div className="container py-5 px-0">
+                    <div className="container py-4 px-0">
                         { loading ?
                             <NewsTable userData={news}/>
                             :

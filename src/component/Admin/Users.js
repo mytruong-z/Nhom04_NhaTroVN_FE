@@ -25,7 +25,7 @@ function Users() {
                         "name": val.name,
                         "email": val.email,
                         "balance": <NumberFormat value={val.balance} displayType={'text'} thousandSeparator={true} />,
-                        "status": val.activate_status ? <Badge bg="success">Active</Badge> : <Badge bg="secondary">Inactive</Badge>,
+                        "status": val.activate_status ? <Badge bg="success">Đã kích hoạt</Badge> : <Badge bg="secondary">Chưa kích hoạt</Badge>,
                         "cardId": val.cardId,
                         "actions": <a href={`/admin/user/${val.Id}`} className="btn btn-sm btn-dark">Chi tiết</a>
                     }
@@ -55,7 +55,7 @@ function Users() {
                 </TabList>
 
                 <TabPanel>
-                    <div className="container py-5 px-0">
+                    <div className="container py-4 px-0">
                         { loading ?
                             <UserTable userData={data}/>
                             :

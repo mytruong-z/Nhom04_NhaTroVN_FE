@@ -80,7 +80,7 @@ const Posts = (props) => {
                                 <span className="bold">Ngày tạo: </span> {(new Date(room.create_at)).toLocaleDateString('en-US', DATE_OPTIONS)}
                             </p>
                         </div>
-                        : 'Không có dữ liệu'
+                        : 'Đang tải dữ liệu...'
                 }
 
             </div>

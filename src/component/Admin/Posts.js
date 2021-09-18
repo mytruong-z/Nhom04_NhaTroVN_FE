@@ -4,6 +4,8 @@ import {Tab, TabList, TabPanel, Tabs} from "react-tabs";
 import Header from "./partials/header";
 import {API_URL, CLOUD_IMG} from "../../config";
 import {Badge} from "react-bootstrap";
+import NumberFormat from "react-number-format";
+import PostsTable from "./Post/PostsTable";
 
 function Posts() {
     const [listPostsVerification, setListPostsVerification] = useState([]);
@@ -23,19 +25,24 @@ function Posts() {
                     return {
                         "id": val.id,
                         "title": val.post.length > 0 ? val.post[0].title : '',
-                        "image": imgLink,
+                        "image": <img src={imgLink} width="160"/>,
                         "description": val.post.length > 0 ? val.post[0].description : '',
-                        "status": val.isdelete ? <Badge bg="secondary">Inactive</Badge> :
-                            <Badge bg="success">Active</Badge>
+                        "price": <NumberFormat value={val.price} displayType={'text'} thousandSeparator={true} />,
+                        "actions": <a href={`/admin/post/${val.id}`} className="btn btn-sm btn-dark">Chi tiết</a>
                     }
                 });
                 let listPostsWaiting = data.filter(val => val.status === 0).map((val) => {
                     const imgLink = val.image.length > 0 ? `${CLOUD_IMG}${val.image[0].name}` : '/no-img.png';
                     return {
                         "id": val.id,
-                        "title": val.post.length > 0 ? val.post[0].title : 'No title',
-                        "image": imgLink,
-                        "description": val.post.length > 0 ? val.post[0].description : 'Empty'
+                        "title": val.post.length > 0 ? val.post[0].title : 'Không có tiêu đề',
+                        "image": <img src={imgLink} width="160"/>,
+                        "description": val.post.length > 0 ? val.post[0].description : 'Không có mô tả',
+                        "price": <NumberFormat value={val.price} displayType={'text'} thousandSeparator={true} />,
+                        "actions": <div>
+                            <a href={`/admin/post/${val.id}`} className="btn btn-sm btn-dark">Chi tiết</a>
+                            <button onClick={() => confirmRoom(val.id)} className="btn btn-sm btn-warning mx-1">Xác minh</button>
+                        </div>
                     }
                 });
                 setListPostsVerification(listPostsVerification);
@@ -54,6 +61,11 @@ function Posts() {
             setLoading(false);
         }
     }, [listPostsVerification, listPostsWaiting])
+
+    const confirmRoom = async (roomId) => {
+        console.log(roomId);
+    }
+
     return (
         <>
             <Header title={'Xác minh bài viết'} hideSearch={true}/>
@@ -64,28 +76,22 @@ function Posts() {
                 </TabList>
 
                 <TabPanel>
-                    <div className="container py-5">
+                    <div className="container py-4 px-0">
                         {loading ?
                             <>
-                                {listPostsWaiting.map((item, i) => (
-                                    <CardItem key={i} src={item.image} title={item.title} subTitle={item.description}
-                                              btnText={'Chi tiết'} linkBtn={`/admin/post/${item.id}`}/>
-                                ))}
+                                <PostsTable userData={listPostsWaiting} />
                             </> :
-                            <div>Loading...</div>
+                            <div>Không có dữ liệu</div>
                         }
                     </div>
                 </TabPanel>
                 <TabPanel>
-                    <div className="container py-5 px-0">
+                    <div className="container py-4 px-0">
                         {loading ?
                             <>
-                                {listPostsVerification.map((item, i) => (
-                                    <CardItem key={i} src={item.image} title={item.title} subTitle={item.description}
-                                              btnText={'Chi tiết'} linkBtn={`/admin/post/${item.id}`}/>
-                                ))}
+                                <PostsTable userData={listPostsVerification} />
                             </> :
-                            <div>Loading...</div>
+                            <div>Không có dữ liệu</div>
                         }
                     </div>
                 </TabPanel>

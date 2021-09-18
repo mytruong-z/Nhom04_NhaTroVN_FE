@@ -179,7 +179,7 @@ function ListBills() {
                 </TabList>
 
                 <TabPanel>
-                    <div className="container py-5 px-0">
+                    <div className="container py-4 px-0">
                         { loadingBill ?
                             <BillTable userData={bills} column={billColumn} />
                             :
@@ -188,7 +188,7 @@ function ListBills() {
                     </div>
                 </TabPanel>
                 <TabPanel>
-                    <div className="container py-5 px-0">
+                    <div className="container py-4 px-0">
                         { loading ?
                             <BillTable userData={noPayment} column={paymentColumn} />
                             :
