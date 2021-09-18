@@ -277,6 +277,7 @@ function Profile () {
                             <th>#</th>
                             <th>Mã Thanh Toán</th>
                             <th>Loại Gói Đăng Ký</th>
+                            <th>Ngày tạo</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -298,14 +299,15 @@ function Profile () {
                                             level = "Gói Vàng";
                                             break;
                                         default:
-                                            level = "Không xác định"
+                                            level = null
 
                                     }
                                     return (
-                                        <tr>
-                                            <td>{1}</td>
+                                        <tr key = {index}>
+                                            <td>{index + 1}</td>
                                             <td>{item?.unique_key}</td>
                                             <td>{level}</td>
+                                            <td>{item?.created_at}</td>
                                         </tr>
                                     )
                                 })
