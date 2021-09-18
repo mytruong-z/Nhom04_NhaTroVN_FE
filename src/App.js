@@ -106,7 +106,6 @@ function App() {
                 </Router>
                 : //Admin pages
                 <Router>
-                    <Redirect from="/admin/logout" to="/admin/login" />
                     <div className="App row w-100 p-0">
                         {adminLogin ?
                             <>
@@ -121,6 +120,7 @@ function App() {
                             </>
                         : //Login to admin
                         <div id="login-page" className="col">
+                            <Redirect from="/admin/logout" to="/admin/login" />
                             <Switch>
                                 { showContentMenu(adminRoutes) }
                             </Switch>
