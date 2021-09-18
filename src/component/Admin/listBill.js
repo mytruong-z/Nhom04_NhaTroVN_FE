@@ -118,7 +118,7 @@ function ListBills() {
     }, []);
 
     const confirmPayment = async (uuid) => {
-        let item = {'uuid': 'zczxczxczxczxczxczcxz'};
+        let item = {'uuid': uuid};
         await fetch(API_URL + 'payment/confirm', {
             method: 'POST',
             headers: {
