@@ -190,11 +190,7 @@ code {
     overflow: hidden !important;
     text-overflow: ellipsis;
 }
-.admin-tabs .react-tabs__tab-list {
-    position: absolute;
-    top: 80px;
-    left: 370px;
-}
+
 .room-items .card-img-top {
     height: 250px;
 }
@@ -256,5 +252,17 @@ code {
 
     .form button:active, .form button:focus {
         background: #f35a4c;
+    }
+}
+@media screen and (max-width: 576px){
+    .admin-side-bar {
+        height: 100%;
+        width: 68px;
+    }
+    .admin-side-bar .me-2 {
+        margin-right: 0!important;
+    }
+    .admin-side-bar .logo img {
+        width: 50px;
     }
 }

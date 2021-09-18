@@ -50,7 +50,7 @@ function News() {
 
     return (
         <>
-            <Header title={' Quản lý tin'}/>
+            <Header title={' Quản lý tin'} hideSearch={true}/>
             <Tabs className="admin-tabs mt-2">
                 <TabList>
                     <Tab>Danh sách tin</Tab>

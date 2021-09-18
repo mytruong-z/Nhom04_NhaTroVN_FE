@@ -48,7 +48,7 @@ function Users() {
 
     return (
         <>
-            <Header title={'Quản lý người dùng'} />
+            <Header title={'Quản lý người dùng'} hideSearch={true} />
             <Tabs className="admin-tabs mt-2">
                 <TabList>
                     <Tab>Danh sách người dùng</Tab>

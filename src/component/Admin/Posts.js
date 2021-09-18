@@ -56,7 +56,7 @@ function Posts() {
     }, [listPostsVerification, listPostsWaiting])
     return (
         <>
-            <Header title={'Xác minh bài viết'}/>
+            <Header title={'Xác minh bài viết'} hideSearch={true}/>
             <Tabs className="admin-tabs mt-2">
                 <TabList>
                     <Tab>Chưa duyệt</Tab>

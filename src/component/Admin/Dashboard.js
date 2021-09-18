@@ -37,11 +37,11 @@ function Dashboard() {
                                 label: "Doanh thu (VND)",
                                 backgroundColor: [
                                     "#efd6d5",
-                                    "#deb0ae",
                                     "#8d8e93",
-                                    "#a5afa9",
-                                    "#c0cac2",
                                     "#d8d9d3",
+                                    "#a5afa9",
+                                    "#deb0ae",
+                                    "#c0cac2",
                                 ],
                                 data: chartData
                             }

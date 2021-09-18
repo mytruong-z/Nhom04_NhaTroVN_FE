@@ -54,7 +54,7 @@ function SideBar(props) {
                                 <svg className="bi me-2" width="16" height="16">
                                     {icon}
                                 </svg>
-                                {label}
+                                <span className="d-none d-sm-inline-block">{label}</span>
                             </a>
                         </li>
                     );
