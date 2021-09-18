@@ -18,14 +18,14 @@ function Room() {
     const [showNew, setShowNew] = useState(false);
     const [showUpdateRoom, setShowUpdateRoom] = useState(false);
     const [showDeleteRoomConfirm, setShowDeleteRoomConfirm] = useState(false);
-    
+
     const [details, setDetails] = useState(null);
     const [roomUpdateDetails, setRoomUpdateDetails] = useState(null);
     const [postDetails, setPostDetails] = useState({
-        id: 0,
         title: "",
         description: "",
-        roomID: 0
+        roomID: 0,
+        status: 1
     });
     const [images, setImages] = useState(null);
     const [imagesFormData, setImagesFormData] = useState(null);
@@ -37,11 +37,11 @@ function Room() {
     const [selectedWard, setSelectedWard] = useState();
     const [hostId, setHostId] = useState(0);
     const [deletingRoomID, setDeletingRoomID] = useState(null);
-    
+
     const [alertStatus, setAlertStatus] = useState(false);
     const [alert, setAlert] = useState({
-        status: false, 
-        type: "error", 
+        status: false,
+        type: "error",
         title: "Có gì đó không đúng",
     });
 
@@ -99,6 +99,8 @@ function Room() {
             if (Array.isArray(res.data)) {
                 console.log(res);
                 setData(res.data);
+            } else {
+                setData([]);
             }
         });
     }
@@ -223,7 +225,8 @@ function Room() {
         var formData = imagesFormData;
         if (!formData) {
             formData = new FormData();
-        }        
+        }
+        formData.delete("roomID");
         formData.append('roomID', images.roomID);
         for (var i = 0; i < files.length; i++) {
             formData.append(`images`, files[i]);
@@ -246,10 +249,14 @@ function Room() {
         if (!formData) {
             formData = new FormData();
         }
-        formData.delete("updatedImages");
+        var listImages = "";
         newImagesData.image.map(item => {
-            formData.append('updatedImages', item.name);
+            listImages = listImages + "," + item.name
         })
+        formData.delete("updatedImages");
+        formData.delete("roomID");
+        formData.append('roomID', newImagesData.roomID);
+        formData.append('updatedImages', listImages.substring(1));
         setImagesFormData(formData);
     }
 
@@ -265,14 +272,15 @@ function Room() {
             });
             setShowImagesDetails(false);
             // alert.success("");
-            setAlert({status: true, type: "success", title: "Lưu ảnh thành công"});
+            setAlert({ status: true, type: "success", title: "Lưu ảnh thành công" });
             setAlertStatus(true);
             getRooms(hostId);
         } else {
             setShowImagesDetails(false);
-            setAlert({status: true, type: "error", title: "Lưu ảnh không thành công, vui lòng thử lại"});
+            setAlert({ status: true, type: "error", title: "Lưu ảnh không thành công, vui lòng thử lại" });
             setAlertStatus(true);
         }
+        setImagesFormData(null);
     }
 
     const handleWardOnChange = (e) => {
@@ -311,12 +319,12 @@ function Room() {
                 setShowNew(false);
                 getRooms(hostId);
                 // alert.success("Thêm nhà thành công");
-                setAlert({status: true, type: "success", title: "Thêm nhà thành công"});
+                setAlert({ status: true, type: "success", title: "Thêm nhà thành công" });
                 setAlertStatus(true);
             })
             .catch(function (error) {
                 // alert.error(error);
-                setAlert({status: true, type: "error", title: "Thêm nhà không thành công"});
+                setAlert({ status: true, type: "error", title: "Thêm nhà không thành công" });
                 setAlertStatus(true);
             });
     };
@@ -349,13 +357,16 @@ function Room() {
                 setShowUpdateRoom(false);
                 getRooms(hostId);
                 // alert.success("Sửa nhà thành công");
-                setAlert({status: true, type: "success", title: "Sửa nhà thành công"});
+                setAlert({ status: true, type: "success", title: "Sửa nhà thành công" });
                 setAlertStatus(true);
             })
             .catch(function (error) {
                 // alert.error("Sửa không thành công");
-                setAlert({status: true, type: "error", title: "Sửa không thành công"});
+                setShowUpdateRoom(false);
+                setAlert({ status: true, type: "error", title: "Sửa không thành công" });
                 setAlertStatus(true);
+            }).finally(() => {
+                setShowUpdateRoom(false);
             });
     }
 
@@ -411,45 +422,77 @@ function Room() {
         setShowDeleteRoomConfirm(true);
     }
 
-    const onDeleteRoom = () => {
+    const onDeleteRoom = async () => {
         if (deletingRoomID != null) {
-            axios(
-                `http://localhost:4000/room/delete/${deletingRoomID}`,
+            await axios.delete(
+                `${API_URL}room/delete/${deletingRoomID}`,
             ).then((res) => {
-                setAlert({status: true, type: "success", title: "Xóa nhà thành công"});
+                setAlert({ status: true, type: "success", title: "Xóa nhà thành công" });
                 setAlertStatus(true);
+                setShowDeleteRoomConfirm(false);
             }).catch((e) => {
-                setAlert({status: true, type: "error", title: "Xóa nhà không thành công"});
+                setAlert({ status: true, type: "error", title: "Xóa nhà không thành công" });
                 setAlertStatus(true);
+                setShowDeleteRoomConfirm(false);
             });
+
+            getRooms(hostId);
+
+            // setAlert({status: true, type: "success", title: "Xóa nhà thành công"});
+            // setAlertStatus(true);
+            // setShowDeleteRoomConfirm(false);
+            // getRooms(hostId);
         }
-        setShowDeleteRoomConfirm(false);
     }
-    
+
     const onShowPostDetails = (item) => {
         setShowPostDetails(true);
         var newPostUpdate = postDetails;
 
         if (item?.post?.length > 0) {
             newPostUpdate = {
-                id: item?.post[0]?.id,
                 title: item?.post[0]?.title,
-                description: item?.post[0]?.description
+                description: item?.post[0]?.description,
             }
         }
 
         newPostUpdate.roomID = item.id;
-        console.log(newPostUpdate);
+        newPostUpdate.status = 1;
+        console.log("post update: ", newPostUpdate);
         setPostDetails(newPostUpdate);
     };
 
-    const onUpdatePost = () => {
+    const onUpdatePost = async () => {
         console.log(postDetails);
+
+        if (postDetails.title == "" && postDetails.description == "") {
+            return;
+        }
+
+        await axios.post(`${API_URL}post/add`, postDetails, {
+            headers: {
+                'Content-Type': 'application/json',
+                "Access-Control-Allow-Origin": "*"
+            }
+        })
+            .then(function (response) {
+                getRooms(hostId);
+                setAlert({ status: true, type: "success", title: "Sửa bài đăng thành công" });
+                setAlertStatus(true);
+            })
+            .catch(function (error) {
+                setAlert({ status: true, type: "error", title: "Sửa bài đăng không thành công" });
+                setAlertStatus(true);
+            });
+
+
+        setShowPostDetails(false);
+
         setPostDetails({
-            id: 0,
             title: "",
             description: "",
-            roomID: 0
+            roomID: 0,
+            status: 1
         });
     }
 
@@ -644,7 +687,7 @@ function Room() {
 
     return (
         <div className="wrapper m-auto pt-3 room-container">
-            <Alert type={alert.type} title={alert.title} status={alertStatus} setIsAlert = {setAlertStatus}/>
+            <Alert type={alert.type} title={alert.title} status={alertStatus} setIsAlert={setAlertStatus} />
             <Card>
                 <Card.Header className="d-flex justify-content-between align-items-center">
                     <div className="bold">Danh sách nhà</div>
@@ -729,11 +772,11 @@ function Room() {
                     <Form>
                         <Form.Group className="mb-3">
                             <Form.Label>Tiêu đề</Form.Label>
-                            <Form.Control type="text" value={postDetails?.title} onChange={(e) => setPostDetails({ ...postDetails, title: e.target.value })}/>
+                            <Form.Control type="text" value={postDetails?.title} onChange={(e) => setPostDetails({ ...postDetails, title: e.target.value })} />
                         </Form.Group>
                         <Form.Group className="mb-3">
                             <Form.Label>Chi tiết</Form.Label>
-                            <Form.Control as="textarea" rows={8} value={postDetails?.description} onChange={(e) => setPostDetails({ ...postDetails, description: e.target.value })}/>
+                            <Form.Control as="textarea" rows={8} value={postDetails?.description} onChange={(e) => setPostDetails({ ...postDetails, description: e.target.value })} />
                         </Form.Group>
                     </Form>
                 </Modal.Body>
@@ -752,6 +795,7 @@ function Room() {
                 show={showDeleteRoomConfirm}
                 onHide={hideDeleteRoomConfirm}
                 keyboard={false}
+                backdrop="static"
             >
                 <Modal.Header closeButton>
                     <Modal.Title>Bạn có chắc muốn xóa bài đăng này</Modal.Title>
