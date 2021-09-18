@@ -52,11 +52,11 @@ function ListBills() {
             accessor: 'userID',
         },
         {
-            Header: 'Unique Key',
+            Header: 'Mã thanh toán',
             accessor: 'unique_key',
         },
         {
-            Header: 'Subscription Id',
+            Header: 'Mã gói',
             accessor: 'subscription_id',
         },
         {
