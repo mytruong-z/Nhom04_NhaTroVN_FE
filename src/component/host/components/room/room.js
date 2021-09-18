@@ -4,9 +4,10 @@ import { Button, Modal, Card, Table, Form, Row, Col } from 'react-bootstrap';
 import './room.css';
 import { API_URL } from '../../../../config/index';
 import { DataGrid } from '@material-ui/data-grid';
-import { useAlert } from 'react-alert';
 import DoneOutlineIcon from '@material-ui/icons/DoneOutline';
 import Tooltip from '@material-ui/core/Tooltip';
+import CloseIcon from '@material-ui/icons/Close';
+import Alert from '../../../common/alert';
 
 function Room() {
     const [data, setData] = useState([]);
@@ -16,10 +17,17 @@ function Room() {
     const [showImagesDetails, setShowImagesDetails] = useState(false);
     const [showNew, setShowNew] = useState(false);
     const [showUpdateRoom, setShowUpdateRoom] = useState(false);
+    const [showDeleteRoomConfirm, setShowDeleteRoomConfirm] = useState(false);
+    
     const [details, setDetails] = useState(null);
     const [roomUpdateDetails, setRoomUpdateDetails] = useState(null);
-    const [postDetails, setPostDetails] = useState(null);
-    const [images, setImages] = useState([]);
+    const [postDetails, setPostDetails] = useState({
+        id: 0,
+        title: "",
+        description: "",
+        roomID: 0
+    });
+    const [images, setImages] = useState(null);
     const [imagesFormData, setImagesFormData] = useState(null);
     const [citiesData, setCitiesData] = useState([]);
     const [districts, setDistricts] = useState([]);
@@ -28,7 +36,14 @@ function Room() {
     const [selectedDistrict, setSelectedDistrict] = useState();
     const [selectedWard, setSelectedWard] = useState();
     const [hostId, setHostId] = useState(0);
-    const alert = useAlert();
+    const [deletingRoomID, setDeletingRoomID] = useState(null);
+    
+    const [alertStatus, setAlertStatus] = useState(false);
+    const [alert, setAlert] = useState({
+        status: false, 
+        type: "error", 
+        title: "Có gì đó không đúng",
+    });
 
     const [formData, setFormData] = useState({
         address: '',
@@ -205,10 +220,12 @@ function Room() {
 
     const handleImageSelectorOnChange = (e) => {
         var files = e.target.files;
-        const formData = new FormData();
+        var formData = imagesFormData;
+        if (!formData) {
+            formData = new FormData();
+        }        
         formData.append('roomID', images.roomID);
-        for (var i = 0; i < files.length; i++)
-        {
+        for (var i = 0; i < files.length; i++) {
             formData.append(`images`, files[i]);
         }
         setImagesFormData(formData);
@@ -217,6 +234,23 @@ function Room() {
         // for(var pair of formData.entries()) {
         //     console.log(pair[0]+ ', '+ pair[1]); 
         // }
+    }
+
+    const onDeleteImages = (index) => {
+        images.image.splice(index, 1);
+        var newImagesData = {};
+        newImagesData.image = images.image;
+        newImagesData.roomID = images.roomID;
+        setImages(newImagesData);
+        var formData = imagesFormData;
+        if (!formData) {
+            formData = new FormData();
+        }
+        formData.delete("updatedImages");
+        newImagesData.image.map(item => {
+            formData.append('updatedImages', item.name);
+        })
+        setImagesFormData(formData);
     }
 
     const handleSubmitImages = async () => {
@@ -230,11 +264,14 @@ function Room() {
                 }
             });
             setShowImagesDetails(false);
-            alert.success("Lưu ảnh thành công");
+            // alert.success("");
+            setAlert({status: true, type: "success", title: "Lưu ảnh thành công"});
+            setAlertStatus(true);
             getRooms(hostId);
         } else {
             setShowImagesDetails(false);
-            alert.error("Bạn chưa chọn hình ảnh");
+            setAlert({status: true, type: "error", title: "Lưu ảnh không thành công, vui lòng thử lại"});
+            setAlertStatus(true);
         }
     }
 
@@ -273,10 +310,14 @@ function Room() {
             .then(function (response) {
                 setShowNew(false);
                 getRooms(hostId);
-                alert.success("Thêm nhà thành công");
+                // alert.success("Thêm nhà thành công");
+                setAlert({status: true, type: "success", title: "Thêm nhà thành công"});
+                setAlertStatus(true);
             })
             .catch(function (error) {
-                alert.error(error);
+                // alert.error(error);
+                setAlert({status: true, type: "error", title: "Thêm nhà không thành công"});
+                setAlertStatus(true);
             });
     };
 
@@ -298,7 +339,7 @@ function Room() {
             }
         }
 
-        axios.post(`${API_URL}/room/update`, formUpdateRoomData, {
+        axios.post(`${API_URL}room/update`, formUpdateRoomData, {
             headers: {
                 'Content-Type': 'application/json',
                 "Access-Control-Allow-Origin": "*"
@@ -307,10 +348,14 @@ function Room() {
             .then(function (response) {
                 setShowUpdateRoom(false);
                 getRooms(hostId);
-                alert.success("Sửa nhà thành công");
+                // alert.success("Sửa nhà thành công");
+                setAlert({status: true, type: "success", title: "Sửa nhà thành công"});
+                setAlertStatus(true);
             })
             .catch(function (error) {
-                alert.error("Sửa không thành công");
+                // alert.error("Sửa không thành công");
+                setAlert({status: true, type: "error", title: "Sửa không thành công"});
+                setAlertStatus(true);
             });
     }
 
@@ -360,10 +405,53 @@ function Room() {
         setRoomUpdateDetails(item);
     }
 
+    const onShowDeleteRoomConfirm = (data) => {
+        console.log(data)
+        setDeletingRoomID(data?.id);
+        setShowDeleteRoomConfirm(true);
+    }
+
+    const onDeleteRoom = () => {
+        if (deletingRoomID != null) {
+            axios(
+                `http://localhost:4000/room/delete/${deletingRoomID}`,
+            ).then((res) => {
+                setAlert({status: true, type: "success", title: "Xóa nhà thành công"});
+                setAlertStatus(true);
+            }).catch((e) => {
+                setAlert({status: true, type: "error", title: "Xóa nhà không thành công"});
+                setAlertStatus(true);
+            });
+        }
+        setShowDeleteRoomConfirm(false);
+    }
+    
     const onShowPostDetails = (item) => {
         setShowPostDetails(true);
-        setPostDetails(item);
+        var newPostUpdate = postDetails;
+
+        if (item?.post?.length > 0) {
+            newPostUpdate = {
+                id: item?.post[0]?.id,
+                title: item?.post[0]?.title,
+                description: item?.post[0]?.description
+            }
+        }
+
+        newPostUpdate.roomID = item.id;
+        console.log(newPostUpdate);
+        setPostDetails(newPostUpdate);
     };
+
+    const onUpdatePost = () => {
+        console.log(postDetails);
+        setPostDetails({
+            id: 0,
+            title: "",
+            description: "",
+            roomID: 0
+        });
+    }
 
     const onShowImagesDetails = (item) => {
         setShowImagesDetails(true);
@@ -375,6 +463,19 @@ function Room() {
 
         setImages(imagesData);
     }
+
+    // useEffect(() => {
+    //     console.log("Images changed")
+    // }, [images.image])
+
+    // const renderImages = () => {
+    //     return images?.image?.map((item, index) => {
+    //         return <div className="image-container">
+    //             <CloseIcon onClick={(e) => onDeleteImages(index)} className="delete_image_icon" style={{ fill: "white" }} />
+    //             <img key={index} className="room-image-detail" src={`${imageBaseUrl}${item?.name}`} alt="" />
+    //         </div>
+    //     });
+    // }
 
     const hideImagesDetailsModal = () => {
         setImagesFormData(null);
@@ -402,6 +503,10 @@ function Room() {
         setShowUpdateRoom(false);
     }
 
+    const hideDeleteRoomConfirm = () => {
+        setShowDeleteRoomConfirm(false);
+    }
+
     const columns = [
         { field: 'id', headerName: 'ID' },
         {
@@ -409,11 +514,10 @@ function Room() {
             headerName: 'Bài đăng',
             editable: false,
             sortable: false,
-            width: 200,
+            width: 120,
             renderCell: (params) => (
                 <strong>
                     <a className="m-1" onClick={(e) => onShowPostDetails(params.value)}>Xem chi tiết</a>
-                    <a className="m-1 text-dark">Chỉnh sửa</a>
                 </strong>
             ),
         },
@@ -457,24 +561,24 @@ function Room() {
             editable: false,
             width: 200
         },
-        // {
-        //     field: 'province',
-        //     headerName: 'Tỉnh thành',
-        //     editable: false,
-        //     width: 150
-        // },
-        // {
-        //     field: 'district',
-        //     headerName: 'Quận huyện',
-        //     editable: false,
-        //     width: 200
-        // },
-        // {
-        //     field: 'ward',
-        //     headerName: 'Phường xã',
-        //     editable: false,
-        //     width: 150
-        // },
+        {
+            field: 'province',
+            headerName: 'Tỉnh thành',
+            editable: false,
+            width: 150
+        },
+        {
+            field: 'district',
+            headerName: 'Quận huyện',
+            editable: false,
+            width: 200
+        },
+        {
+            field: 'ward',
+            headerName: 'Phường xã',
+            editable: false,
+            width: 150
+        },
         {
             field: 'price',
             headerName: 'Giá',
@@ -507,7 +611,7 @@ function Room() {
                 <strong>
                     <button className="btn btn-sm btn-primary m-1" onClick={(e) => onShowDetails(params.value)}>Chi tiết</button>
                     <button className="btn btn-sm btn-secondary m-1" onClick={(e) => onShowUpdateRoom(params.value)}>Chỉnh sửa</button>
-                    <button className="btn btn-sm btn-danger m-1">Xóa</button>
+                    <button className="btn btn-sm btn-danger m-1" onClick={(e) => onShowDeleteRoomConfirm(params.value)}>Xóa</button>
                 </strong>
             ),
             width: 300
@@ -528,7 +632,7 @@ function Room() {
                     area: item?.area,
                     addition_infor: item?.addition_infor,
                     action: item,
-                    post: item?.post[0],
+                    post: item,
                     post_status: item?.post[0],
                     image: item
                 })
@@ -540,6 +644,7 @@ function Room() {
 
     return (
         <div className="wrapper m-auto pt-3 room-container">
+            <Alert type={alert.type} title={alert.title} status={alertStatus} setIsAlert = {setAlertStatus}/>
             <Card>
                 <Card.Header className="d-flex justify-content-between align-items-center">
                     <div className="bold">Danh sách nhà</div>
@@ -624,17 +729,39 @@ function Room() {
                     <Form>
                         <Form.Group className="mb-3">
                             <Form.Label>Tiêu đề</Form.Label>
-                            <Form.Control disabled type="text" value={postDetails?.title} />
+                            <Form.Control type="text" value={postDetails?.title} onChange={(e) => setPostDetails({ ...postDetails, title: e.target.value })}/>
                         </Form.Group>
                         <Form.Group className="mb-3">
                             <Form.Label>Chi tiết</Form.Label>
-                            <Form.Control disabled as="textarea" rows={8} value={postDetails?.description} />
+                            <Form.Control as="textarea" rows={8} value={postDetails?.description} onChange={(e) => setPostDetails({ ...postDetails, description: e.target.value })}/>
                         </Form.Group>
                     </Form>
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={hidePostDetailsModal}>
                         Đóng
+                    </Button>
+                    <Button variant="primary" onClick={onUpdatePost}>
+                        Lưu
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+
+            <Modal
+                className="delete_room_confirm_model"
+                show={showDeleteRoomConfirm}
+                onHide={hideDeleteRoomConfirm}
+                keyboard={false}
+            >
+                <Modal.Header closeButton>
+                    <Modal.Title>Bạn có chắc muốn xóa bài đăng này</Modal.Title>
+                </Modal.Header>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={hideDeleteRoomConfirm}>
+                        Đóng
+                    </Button>
+                    <Button variant="danger" onClick={onDeleteRoom}>
+                        Xóa
                     </Button>
                 </Modal.Footer>
             </Modal>
@@ -653,11 +780,12 @@ function Room() {
                     <Form>
                         <Form.Group className="mb-3">
                             <div className="images-container">
-                                {
-                                    (images?.image?.length > 0) ? images?.image?.map((item, index) => {
-                                        return <img key={index} className="room-image-detail" src={`${imageBaseUrl}${item?.name}`} alt="" />
-                                    }) : null
-                                }
+                                {images?.image?.map((item, index) => {
+                                    return <div key={index} className="image-container">
+                                        <CloseIcon onClick={(e) => onDeleteImages(index)} className="delete_image_icon" style={{ fill: "white" }} />
+                                        <img key={index} className="room-image-detail" src={`${imageBaseUrl}${item?.name}`} alt="" />
+                                    </div>
+                                })}
                             </div>
                         </Form.Group>
                         <Form.Group controlId="formFileMultiple" className="mb-3">
@@ -759,7 +887,7 @@ function Room() {
                             </Form.Text>
                         </Col>
                         <Col className="mb-3" controlid="">
-                            <Form.Label>Giá</Form.Label>
+                            <Form.Label>Giá (VND)</Form.Label>
                             <Form.Control type="number" placeholder="Nhập giá" onChange={(e) => {
                                 setFormData({ ...formData, price: parseInt(e.target.value) });
                                 setFormErrorMessageToFalse();
@@ -833,7 +961,7 @@ function Room() {
                     </Form.Group>
                     <Row>
                         <Col className="mb-3" controlid="">
-                            <Form.Label>Giá</Form.Label>
+                            <Form.Label>Giá (VND)</Form.Label>
                             <Form.Control type="number" placeholder="Nhập giá" value={formUpdateRoomData?.price} onChange={(e) => {
                                 setFormUpdateRoomData({ ...formUpdateRoomData, price: parseInt(e.target.value) })
                                 setFormUpdateRoomErrorMessageToFalse();

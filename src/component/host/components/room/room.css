@@ -27,3 +27,14 @@
   height: 200px;
   margin-right: 10px;
 }
+
+.image-container {
+  position: relative;
+}
+
+.delete_image_icon {
+  position: absolute;
+  top: 0;
+  right: 10px;
+  background-color: grey;
+}
