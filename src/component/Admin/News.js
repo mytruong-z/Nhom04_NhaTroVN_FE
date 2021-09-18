@@ -28,8 +28,8 @@ function News() {
                         "host": val.host,
                         "price": <NumberFormat value={val.price} displayType={'text'} thousandSeparator={true} />,
                         "status": val.isdelete ? <Badge bg="secondary">Chưa xác nhận</Badge> : <Badge bg="success">Đã xác nhận</Badge>,
-                        "des": val.post.length > 0 ? val.post[0].description : '',
-                        "title": val.post.length > 0 ? val.post[0].title : '',
+                        "des": val.post.length > 0 ? val.post[0].description : 'Không có tiêu đề',
+                        "title": val.post.length > 0 ? val.post[0].title : 'Không có mô tả',
                         "actions": <a href={`/admin/post/${val.id}`} className="btn btn-sm btn-dark">Chi tiết</a>
                     }
                 });
