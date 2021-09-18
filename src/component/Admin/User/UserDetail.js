@@ -53,13 +53,18 @@ const User = (props) => {
                                 <span className="bold w-150px d-block d-sm-inline-block">Email:</span> {data.email} <br/>
                                 <span className="bold w-150px d-block d-sm-inline-block">Số điện thoại:</span> {data.phone} <br/>
                                 <span className="bold w-150px d-block d-sm-inline-block">Ngày tạo tài khoản:</span> {(new Date(data.created_at)).toLocaleDateString('en-US', DATE_OPTIONS)} <br/>
+                                { data.activate_status ?
+                                    <>
+                                        <span className="bold w-150px d-block d-sm-inline-block">Ngày hết hạn:</span> {data.expired_date} <br/>
+                                    </> : ''
+                                }
                                 <span className="bold w-150px d-block d-sm-inline-block">Trạng thái:</span> {data.activate_status ? <Badge bg="success">Đã kích hoạt</Badge> : <Badge bg="secondary">Chưa kích hoạt</Badge>} <br/>
                                 <span className="bold w-150px d-block d-sm-inline-block">Mã thẻ:</span> {data.cardId} <br/>
                             </Card.Text>
                         </Card.Body>
                     </Card>
                     :
-                    <div>Loading...</div>
+                    <div>Đang tải dữ liệu...</div>
                 }
             </div>
         </>
