@@ -239,13 +239,13 @@ function Profile () {
                                     let level = "";
                                     switch (item.subscription_id) {
                                         case TYPE_LEVEL_1:
-                                            level = "Gói Đồng";
+                                            level = "Gói Dùng Thử";
                                             break;
                                         case TYPE_LEVEL_2:
-                                            level = "Gói Bạc";
+                                            level = "Gói Đồng";
                                             break;
                                         case TYPE_LEVEL_3:
-                                            level = "Gói Vàng";
+                                            level = "Gói Bạc";
                                             break;
                                         case TYPE_LEVEL_4:
                                             level = "Gói Vàng";
@@ -287,13 +287,13 @@ function Profile () {
                                     let level = "";
                                     switch (item?.subscription_id) {
                                         case TYPE_LEVEL_1:
-                                            level = "Gói Đồng";
+                                            level = "Gói Dùng Thử";
                                             break;
                                         case TYPE_LEVEL_2:
-                                            level = "Gói Bạc";
+                                            level = "Gói Đồng";
                                             break;
                                         case TYPE_LEVEL_3:
-                                            level = "Gói Vàng";
+                                            level = "Gói Bạc";
                                             break;
                                         case TYPE_LEVEL_4:
                                             level = "Gói Vàng";
