@@ -50,9 +50,9 @@ const Posts = (props) => {
                             <div className="room-box-img">
                                 <Image src={room.image.length > 0 ? `${CLOUD_IMG}${room.image[0].name}` : '/no-img.png'} fluid/>
                             </div>
-                            <h1>
-                                {typeof room.post.title !== 'undefined' ? room.post.title : ""}
-                            </h1>
+                            <h2>
+                                { room.post.length > 0 ? room.post[0].title : '' }
+                            </h2>
                             <p>
                                 <span className="bold">Địa chỉ: </span>{room.address},
                                 &nbsp;{room.ward.prefix} {room.ward.name},
@@ -61,24 +61,7 @@ const Posts = (props) => {
                             </p>
                             <p>
                                 <span className="bold">Chi tiết: </span>
-                                {
-                                    typeof room.post.description !== 'undefined' ? room.post.description : ""
-                                }
-                            </p>
-                            <p>
-                                <span className="bold">Dịch vụ: </span>
-                                {
-                                    typeof room.post.service !== 'undefined' && Object.keys(room.post.service).length ?
-                                        Object.entries(room.post.service).map(function (key, index) {
-                                            if (index > 0) {
-                                                return (
-                                                    <span key={index}>{key[1]} </span>
-                                                )
-                                            }
-                                        })
-
-                                        : ""
-                                }
+                                { room.post.length > 0 ? room.post[0].description : '' }
                             </p>
                             <p>
                                 <span className="bold">Diện tích: </span> {room.area} (m2)

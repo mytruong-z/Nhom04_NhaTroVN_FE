@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import {Carousel, Card } from 'react-bootstrap';
 import { API_URL, CLOUD_IMG } from "../config/index";
+import NumberFormat from "react-number-format";
 
 function Home() {
     const [rooms, setRooms] = useState([]);
@@ -92,7 +93,7 @@ function Home() {
             </section>
             <div className="container py-5 w-75">
                 <div className="row room-items">
-                    {rooms.map((item, i) => {
+                    {rooms.filter(val => val.status === 1).map((item, i) => {
                         let img = "no-img.png";
                         if (typeof item.image !== 'undefined' && item.image.length) {
                             if(typeof item.image[0].name !== 'undefined') {
@@ -108,7 +109,7 @@ function Home() {
                                         <Card.Title>{item.address && item.address}</Card.Title>
                                         <Card.Text>
                                             {item.addition_infor && item.addition_infor} <br/>
-                                            Giá: <span className="fw-bold">{item.price}</span> <br/>
+                                            Giá: <span className="fw-bold"><NumberFormat value={item.price} displayType={'text'} thousandSeparator={true} /> (VND)</span> <br/>
                                             {item.district.name &&
                                             <>
                                                 {item.district.prefix}: {item.district.name} <br/>
