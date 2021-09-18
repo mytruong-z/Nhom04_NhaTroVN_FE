@@ -134,7 +134,7 @@ function ListBills() {
                 setAlertType("error");
             } else {
                 setErrorMessage("Xác nhận thành công!");
-                setAlertStatus(false);
+                setAlertStatus(true);
                 setAlertType("success");
                 setTimeout(() => {
                     window.location.reload();
