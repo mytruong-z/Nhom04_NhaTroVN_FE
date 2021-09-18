@@ -1,56 +1,54 @@
-import React from 'react';
-import {Image} from 'react-bootstrap';
+import React, {useEffect, useState} from 'react';
+import {Badge, Image} from 'react-bootstrap';
 import Header from "../partials/header";
-
-const room = {
-    "id": 25,
-    "status": 1,
-    "address": "Hẻm 236 đường Điện Biên Phủ",
-    "image": {
-        "id": 25,
-        "name": "room_2.jpeg"
-    },
-    "host": {
-        "name": "Anh Hồ",
-        "email": "baoanh2003199@gmail.com",
-        "phone": "01234566"
-    },
-    "price": 5000000,
-    "area": 20,
-    "create_at": "2021-08-16T09:17:37.000Z",
-    "addition_infor": "Phòng Đẹp",
-    "city": "",
-    "district": "NULL",
-    "ward": "NULL",
-    "isdelete": 0,
-    "post": {
-        "id": 45,
-        "title": "Cho thuê phòng đẹp như khách sạn",
-        "description": "cho thuê phòng đẹp như khách sạn, đầy đủ nội thất, mới xây, gần trung tâm, yên tĩnh và tự do về giờ giấc. Diện tích 30m2, giá thuê chỉ 5 triệu/tháng.",
-        "status": {
-            "id": 1,
-            "name": "active"
-        },
-        "service": {
-            "id": 2,
-            "name": "Có Tủ"
-        }
-    }
-}
+import {API_URL, CLOUD_IMG} from "../../../config";
+import NumberFormat from "react-number-format";
 
 const Posts = (props) => {
     const {match} = props;
     const id = match.params.id;
+
+    const [room, setRoom] = useState(null);
+    const [loading, setLoading] = useState(false);
+
+    const DATE_OPTIONS = {year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit'};
+
+    useEffect(async () => {
+        if(!loading && id > 0) {
+            await fetch(API_URL + "room/searchByRoomId/" + id,{ method: 'GET'}).then((response) => {
+                if(response.ok){
+                    return response.json();
+                }
+                throw response;
+            }).then(data => {
+                if (data[0]) {
+                    setRoom(data[0]);
+                    console.log(room);
+                    setLoading(true);
+                }
+            }).catch((error) => {
+                return error;
+            });
+        }
+    }, []);
+
+    useEffect(async () => {
+        if (room != null) {
+            setLoading(true);
+        } else {
+            setLoading(false);
+        }
+    }, [room])
 
     return (
         <>
             <Header title={'Chi tiết bài viết'} hideSearch={true}/>
             <div className="mb-4">
                 {
-                    Object.keys(room).length !== 0 ?
+                    loading ?
                         <div className="room-box">
                             <div className="room-box-img">
-                                <Image src={`/assets/images/rooms/${room.image.name}`} fluid/>
+                                <Image src={room.image.length > 0 ? `${CLOUD_IMG}${room.image[0].name}` : '/no-img.png'} fluid/>
                             </div>
                             <h1>
                                 {typeof room.post.title !== 'undefined' ? room.post.title : ""}
@@ -86,14 +84,20 @@ const Posts = (props) => {
                                 <span className="bold">Diện tích: </span> {room.area} (m2)
                             </p>
                             <p>
-                                <span className="bold">Giá cả: </span> {room.price} (VND)
+                                <span className="bold">Giá cả: </span> <NumberFormat value={room.price} displayType={'text'} thousandSeparator={true} /> (VND)
                             </p>
                             <p>
                             <span
                                 className="bold">Liên Hệ: </span> {room.host.name} - {room.host.phone} - {room.host.email}
                             </p>
+                            <p>
+                                <span className="bold">Trạng thái: </span> {room.status ? <Badge bg="success">Đã xác nhận</Badge> : <Badge bg="secondary">Chưa xác nhận</Badge>}
+                            </p>
+                            <p>
+                                <span className="bold">Ngày tạo: </span> {(new Date(room.create_at)).toLocaleDateString('en-US', DATE_OPTIONS)}
+                            </p>
                         </div>
-                        : ''
+                        : 'Không có dữ liệu'
                 }
 
             </div>

@@ -128,12 +128,11 @@ function ListBills() {
             body: JSON.stringify(item)
         }).then(async function (response) {
             const result = await response.json();
-            if (result === null) {
+            if (result === null || result === 0) {
                 setErrorMessage("Xác nhận không thành công!");
                 setAlertStatus(true);
                 setAlertType("error");
-            }
-            else {
+            } else {
                 setErrorMessage("Xác nhận thành công!");
                 setAlertStatus(false);
                 setAlertType("success");
@@ -184,7 +183,7 @@ function ListBills() {
                         { loadingBill ?
                             <BillTable userData={bills} column={billColumn} />
                             :
-                            <div>Loading...</div>
+                            <div>Không có dữ liệu</div>
                         }
                     </div>
                 </TabPanel>
@@ -193,7 +192,7 @@ function ListBills() {
                         { loading ?
                             <BillTable userData={noPayment} column={paymentColumn} />
                             :
-                            <div>Loading...</div>
+                            <div>Không có dữ liệu</div>
                         }
                     </div>
                 </TabPanel>
