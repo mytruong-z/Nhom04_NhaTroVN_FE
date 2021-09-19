@@ -128,7 +128,7 @@ function ListBills() {
             body: JSON.stringify(item)
         }).then(async function (response) {
             const result = await response.json();
-            if (result === null || result === 0) {
+            if (result == null || result == 0) {
                 setErrorMessage("Xác nhận không thành công!");
                 setAlertStatus(true);
                 setAlertType("error");
@@ -147,9 +147,6 @@ function ListBills() {
             return response;
         }).catch(function (error) {
             console.log(error);
-            setErrorMessage("Xác nhận không thành công!");
-            setAlertStatus(true);
-            setAlertType("error");
         });
     }
 
