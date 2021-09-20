@@ -48,7 +48,7 @@ const RoomDetail = (props) => {
                         <p>
                             <span className="bold">Chi tiết: </span>
                             {
-                                typeof room.post.description !== 'undefined' ? room.post.description  : ""
+                                typeof room.addition_infor !== 'undefined' ? room.addition_infor: ""
                             }
                         </p>
                         <p>
